@@ -1,0 +1,12 @@
+<div *ngIf="paths" class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">Liste des Paths en DB</div>
+      <div class="panel-body">
+        <span *ngFor="let p of paths">
+          <button (click)="onGetOnePath(p)" class="btn btn-primary">{{p}}</button>
+        </span>
+      </div>
+    </div>
+  </div>
+
+
