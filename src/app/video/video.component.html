@@ -1,4 +1,6 @@
-<div *ngIf="paths" class="container">
+<div class="container-fluid">
+<div *ngIf="paths">
+  <div class="col-12">
   <div class="panel panel-primary">
     <div class="panel-heading">Liste des Paths en DB</div>
       <div class="panel-body">
@@ -8,5 +10,38 @@
       </div>
     </div>
   </div>
-
-
+  <div *ngIf="listVideowithName" class="col-12">
+    <div class="panel panel-primary">
+      <div class="panel-heading">Liste details</div>
+      <div class="panel-body">
+        <table class="table">
+          <thead>
+          <tr>
+            <th>File</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let i of listVideowithName">
+            <td (click)="getAllInfo(i.id)">{{getUrlFile(i)}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+  <div *ngIf="infoVideo" class="col-12">
+    <table class="table">
+      <thead>
+      <tr>
+        <td>Info</td><td>Video</td><td>Audio</td><td>Text</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <th>{{infoVideo.info.FileSize}} and {{infoVideo.info.Duration}}</th><th></th><th></th><th></th>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
