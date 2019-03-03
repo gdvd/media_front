@@ -1,17 +1,17 @@
 <div class="container-fluid">
   <div *ngIf="paths">
     <div class="col-12">
-      <div class="panel panel-primary">
+      <div class="panel panel-success">
         <div class="panel-heading">Liste des Paths en DB</div>
         <div class="panel-body">
         <span *ngFor="let p of paths">
-          <button (click)="onGetOnePath(p)" class="btn btn-primary">{{p}}</button>
+          <button (click)="onGetOnePath(p)" class="btn btn-success">{{p}}</button>
         </span>
         </div>
       </div>
     </div>
     <div *ngIf="listVideowithName" class="col-12">
-      <div class="panel panel-primary">
+      <div class="panel panel-info">
         <div class="panel-heading">Liste details</div>
         <div class="panel-body">
           <table class="table">
@@ -33,73 +33,78 @@
   </div>
 
   <div *ngIf="infoVideo" class="col-12">
+    <div class="panel panel-warning">
+      <div class="panel-heading">Details</div>
+      <div class="panel-body">
+        <table class="table table-condensed table-striped">
+          <thead>
+          <tr>
+            <th>Proprietes</th>
+            <th>Valeurs</th>
+          </tr>
+          <tr>
+            <th>INFO</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of infoVideo.info | keyvalue">
+            <td width=15%>{{item.key}}</td>
+            <td *ngIf="item.key==='Duration'">{{inHMS(item.value)}}</td>
+            <td *ngIf="item.key==='FileSize'">{{inGMK2(item.value)}}</td>
+            <td *ngIf="item.key!='Duration' && item.key!='FileSize'">{{item.value}}</td>
+          </tr>
+          </tbody>
 
-    <table class="table table-sm table-dark">
-      <thead>
-      <tr>
-        <th>Proprietes</th>
-        <th>Valeurs</th>
-      </tr>
-      <tr>
-        <th>INFO</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let item of infoVideo.info | keyvalue">
-        <td width=15%>{{item.key}}</td>
-        <td *ngIf="item.key==='Duration'">{{inHMS(item.value)}}</td>
-        <td *ngIf="item.key==='FileSize'">{{inGMK2(item.value)}}</td>
-        <td *ngIf="item.key!='Duration' && item.key!='FileSize'">{{item.value}}</td>
-      </tr>
-      </tbody>
+          <thead>
+          <tr>
+            <th>VIDEO</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <ng-container *ngFor="let vi of infoVideo.video">
+            <tr *ngFor="let item of vi | keyvalue">
+              <td width=15%>{{item.key}}</td>
+              <td>{{item.value}}</td>
+            </tr>
+          </ng-container>
+          </tbody>
 
-      <thead>
-      <tr>
-        <th>VIDEO</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <ng-container *ngFor="let vi of infoVideo.video">
-        <tr *ngFor="let item of vi | keyvalue">
-          <td width=15%>{{item.key}}</td>
-          <td>{{item.value}}</td>
-        </tr>
-      </ng-container>
-      </tbody>
+          <!--<thead>
+          <tr>
+            <th>AUDIO</th>
+            <th></th>
+          </tr>
+          </thead>-->
+          <tbody>
+          <ng-container *ngFor="let au of infoVideo.audio; index as i">
+            <th>AUDIO Track : {{i + 1}}</th>
+            <tr *ngFor="let item of au | keyvalue">
+              <td width=15%>{{item.key}}</td>
+              <td>{{item.value}}</td>
+            </tr>
+          </ng-container>
+          </tbody>
 
-      <!--<thead>
-      <tr>
-        <th>AUDIO</th>
-        <th></th>
-      </tr>
-      </thead>-->
-      <tbody>
-      <ng-container *ngFor="let au of infoVideo.audio; index as i">
-        <th>AUDIO Track : {{i+1}}</th>
-        <tr *ngFor="let item of au | keyvalue">
-          <td width=15%>{{item.key}}</td>
-          <td>{{item.value}}</td>
-        </tr>
-      </ng-container>
-      </tbody>
-
-      <!--<thead>
-      <tr>
-        <th>TEXT</th>
-        <th></th>
-      </tr>
-      </thead>-->
-      <tbody>
-      <ng-container *ngFor="let te of infoVideo.text; index as i">
-        <th>TEXT Track : {{i+1}}</th>
-        <tr *ngFor="let item of te | keyvalue">
-          <td width=15%>{{item.key}}</td>
-          <td>{{item.value}}</td>
-        </tr>
-      </ng-container>
-      </tbody>
-    </table>
+          <!--<thead>
+          <tr>
+            <th>TEXT</th>
+            <th></th>
+          </tr>
+          </thead>-->
+          <tbody>
+          <ng-container *ngFor="let te of infoVideo.text; index as i">
+            <th>TEXT Track : {{i + 1}}</th>
+            <tr *ngFor="let item of te | keyvalue">
+              <td width=15%>{{item.key}}</td>
+              <td>{{item.value}}</td>
+            </tr>
+          </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
+
