@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-config',
@@ -7,9 +8,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ConfigComponent implements OnInit {
 
-  constructor() { }
+  paths;
+  pathsOrder: Array<string>;
 
-  ngOnInit() {
+  constructor(private httpClient: HttpClient) {
   }
 
+  ngOnInit() {
+    this.httpClient.get('http://localhost:8085/path/allkeys')
+      .subscribe(data => {
+        this.paths = data;
+        this.pathsOrder = this.paths.sort(ConfigComponent.sortThings);
+        // this.pathsOrder = (this.paths).order;
+      }, err => {
+        console.log(err);
+      });
+  }
+
+  static sortThings(a, b) {
+    a = a.toLowerCase();
+    b = b.toLowerCase();
+    return a > b ? -1 : b > a ? 1 : 0;
+  }
 }

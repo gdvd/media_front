@@ -1,3 +1,20 @@
-<p>
-  config works!
-</p>
+<div class="container-fluid">
+  <div *ngIf="paths">
+    <div class="col-lg-4">
+      <div class="panel panel-success">
+        <div class="panel-heading">Liste des Paths en DB LOCAL</div>
+        <div class="panel-body">
+        <span *ngFor="let p of pathsOrder">
+          <button class="btn btn-success">{{p}}</button><br>
+        </span>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="panel panel-success">
+          <div class="panel-heading">Liste des Paths en DB DISTANT</div>
+          <div class="panel-body">
+
+          </div>
+        </div>
+    </div>
+  </div>

@@ -23,7 +23,7 @@
             <tbody>
             <tr *ngFor="let i of listVideowithName">
               <td [hidden]="(ligneVideoHidden==true && idSelctioned!=(i.id))"
-                  (click)="getAllInfo(i.id)">{{getUrlFile(i)}}</td>
+                  (click)="getAllInfo(i.id)" style="cursor: pointer">{{getUrlFile(i)}}</td>
             </tr>
             </tbody>
           </table>
