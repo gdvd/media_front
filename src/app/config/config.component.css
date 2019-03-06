@@ -1,0 +1,26 @@
+div#bloc1 {
+  float: left;
+  width: 50%;
+  padding-right: 1em;
+  /*padding-left: 1em;*/
+}
+div#bloc2 {
+  float: right;
+  width: 50%;
+  /*padding-right: 1em;*/
+  padding-left: 1em;
+}
+input.formu{
+  /*width: 40%;*/
+}
+
+.toRight{
+  float: right;
+}
+
+.margetoleft{
+  margin-left: 2em;
+}
+.padright{
+  padding-right: 1.5em;
+}

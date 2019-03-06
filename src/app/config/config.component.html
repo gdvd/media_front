@@ -1,20 +1,40 @@
-<div class="container-fluid">
+<div class="container">
   <div *ngIf="paths">
-    <div class="col-lg-4">
+    <div id="bloc1">
       <div class="panel panel-success">
         <div class="panel-heading">Liste des Paths en DB LOCAL</div>
         <div class="panel-body">
-        <span *ngFor="let p of pathsOrder">
-          <button class="btn btn-success">{{p}}</button><br>
-        </span>
+        <ul class="list-group" *ngFor="let p of pathsOrder">
+          <li class="list-group-item list-group-item-success">{{getKey(p)}}<span class="badge badge-primary badge-pill">{{getValue(p)}}</span></li>
+        </ul>
         </div>
       </div>
-      <div class="col-lg-4">
-        <div class="panel panel-success">
-          <div class="panel-heading">Liste des Paths en DB DISTANT</div>
-          <div class="panel-body">
-
+    </div>
+    <div id="bloc2">
+      <div class="panel panel-warning">
+        <div class="panel-heading">Liste des Paths en
+          <span *ngIf="!allPathsReceive">DB DISTANT</span>
+          <span *ngIf="allPathsReceive" >{{url}}<span class="glyphicon glyphicon-remove toRight" (click)="removeAllPathsReceive()"></span></span>
+          <div>
+          <form *ngIf="!allPathsReceive" (ngSubmit)="onSubmitURL()">
+            <div><br><label>URL</label>
+              <input type="text" class="form-control" [(ngModel)]="myurl" name="myurl" required>
+            </div><br>
+            <button type="submit" class="btn btn-warning">Submit</button>
+          </form>
+        </div></div>
+        <div class="panel-body">
+          <div class="form-group">
+            <div *ngIf="allPathsReceive">
+              <ul class="list-group" *ngFor="let p of allPathsReceive">
+                <li class="list-group-item list-group-item-warning"><span class="glyphicon glyphicon-download padright" (click)="askDl(getKey(p))"></span>{{getKey(p)}}
+                  <span class="badge badge-primary badge-pill">{{getValue(p)}}</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
+      </div>
     </div>
   </div>
+</div>

@@ -60,7 +60,6 @@ export class VideoComponent implements OnInit {
         this.ligneVideoHidden = true;
         this.idSelctioned = id;
         this.infoVideo = data;
-        // console.log(data);
       }, err => {
         console.log(err);
       });
@@ -75,7 +74,7 @@ export class VideoComponent implements OnInit {
     let s = Math.trunc(d % 60);
     let m = Math.trunc(((d - s) / 60) % 60);
     let h = Math.trunc((d - (m * 60) - (s)) / 3600);
-    return '' + h + ' h ' + m + ' mn ' + s + ' sec (' + d + 'sec)';
+    return '' + h + 'h' + m + 'mn' + s + 'sec (' + d + 'sec)';
   }
   inGMK2(ot) {
     var res = ot;
