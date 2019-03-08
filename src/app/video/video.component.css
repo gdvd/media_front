@@ -1,0 +1,30 @@
+
+.alignLeft {
+  white-space: nowrap;
+  display: inline-block;
+  float: left;
+}
+
+.alignRight {
+  white-space: nowrap;
+  display: inline-block;
+  float: right;
+}
+
+.sizeMedium {
+  white-space: nowrap;
+  display: inline-block;
+  width: 25em;
+}
+.heightMedium{
+  height: 4em;
+}
+.marginMedium{
+  margin-right: 2em;
+}
+.marginSmall{
+  margin-right: 1em;
+}
+.marginXSmall{
+  margin: 0.2em;
+}

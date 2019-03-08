@@ -14,7 +14,7 @@
       <div class="panel panel-warning">
         <div class="panel-heading">Liste des Paths en
           <span *ngIf="!allPathsReceive">DB DISTANT</span>
-          <span *ngIf="allPathsReceive" >{{url}}<span class="glyphicon glyphicon-remove toRight" (click)="removeAllPathsReceive()"></span></span>
+          <span class="glyphicon glyphicon-remove toRight" (click)="removeAllPathsReceive()" *ngIf="allPathsReceive" >{{url}}</span>
           <div>
           <form *ngIf="!allPathsReceive" (ngSubmit)="onSubmitURL()">
             <div><br><label>URL</label>
@@ -27,7 +27,8 @@
           <div class="form-group">
             <div *ngIf="allPathsReceive">
               <ul class="list-group" *ngFor="let p of allPathsReceive">
-                <li class="list-group-item list-group-item-warning"><span class="glyphicon glyphicon-download padright" (click)="askDl(getKey(p))"></span>{{getKey(p)}}
+                <li class="list-group-item list-group-item-warning">
+                  <span class="glyphicon glyphicon-download padright" (click)="askDl(getKey(p))"></span>{{getKey(p)}}
                   <span class="badge badge-primary badge-pill">{{getValue(p)}}</span>
                 </li>
               </ul>

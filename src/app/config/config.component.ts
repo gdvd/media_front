@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {CatalogueService} from '../catalogue.service';
+import {forEach} from '@angular/router/src/utils/collection';
 
 
 @Component({
@@ -11,58 +13,79 @@ export class ConfigComponent implements OnInit {
 
   paths;
   pathsOrder: Array<string>;
-  myurl: string='';
+  myurl: string = '';
   allPathsReceive: Array<object>;
-  url:string;
+  url: string;
   pathsOrderRemote: Array<string>;
+  dataTmp;
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private catalogueService: CatalogueService) {
   }
 
   ngOnInit() {
-    this.httpClient.get('http://localhost:8085/path/allPaths')
+    this.catalogueService.getRessource(this.catalogueService.host + '/path/allPaths')
       .subscribe(data => {
         this.paths = data;
-        // this.pathsOrder = this.paths.sort(this.sortThings);
-        this.pathsOrder = this.paths.sort(this.sortThings2);
-
+        this.pathsOrder = this.paths.sort(this.sortThings);
       }, err => {
         console.log(err);
       });
   }
 
-  sortThings(a, b) {
-    a = a.toLowerCase();
-    b = b.toLowerCase();
-    return a < b ? -1 : b > a ? 1 : 0;
+  askDl(id) {
+    if (!this.verrifyIfPathExistInLocal(id)) {
+      console.log("************* This path DOESN'T exist");
+      this.saveNewPath(id);
+    } else {//id existe already -> change the name
+      console.log("************* This path EXIST");
+    }
   }
 
-  sortThings2(a, b){
+  private saveNewPath(id) {
+    let id2search = id[0];
+    for (let pathRemote of this.pathsOrderRemote) {
+      if (Object.keys(pathRemote)[0] === id2search) {
+        console.log('---->' + Object.keys(pathRemote));
+        let onePathToSend = Object.values(pathRemote)[0];
+        console.log(onePathToSend);
+        this.catalogueService.patchRessource(this.catalogueService.host + '/path/saveOnePath/' + escape(id2search),
+          onePathToSend)
+          .subscribe(data => {
+            this.dataTmp = data;
+          }, err => {
+            console.log(err);
+          });
+      }
+    }
+  }
+
+  private sortThings(a, b) {
     var x = Object.keys(a).join('').toLowerCase().split('');
     var y = Object.keys(b).join('').toLowerCase().split('');
-    if (x < y) {return -1;}
-    if (x > y) {return 1;}
+    if (x < y) {
+      return -1;
+    }
+    if (x > y) {
+      return 1;
+    }
     return 0;
   };
 
   onSubmitURL() {
-    if(this.myurl!='') {
-      this.url = 'http://'+this.myurl+':8085/path/allPaths';
-      console.log(this.url);
-      this.httpClient.get(this.url)
+    if (this.myurl != '') {
+      this.catalogueService.getRessourceDistant(this.myurl, '/path/allPaths')
         .subscribe(data => {
           // @ts-ignore
           this.allPathsReceive = data;
           // @ts-ignore
-          this.pathsOrderRemote = this.allPathsReceive.sort(this.sortThings2);
+          this.pathsOrderRemote = this.allPathsReceive.sort(this.sortThings);
           console.log(this.allPathsReceive.length, data);
 
         }, err => {
           console.log(err);
         });
       this.myurl = '';
-    }
-    else {
+    } else {
       console.log('Nothing');
     }
   }
@@ -78,9 +101,17 @@ export class ConfigComponent implements OnInit {
   }
 
   removeAllPathsReceive() {
-    this.allPathsReceive=null;
+    this.allPathsReceive = null;
   }
-  askDl(id){
-    console.log(id);
+
+  private verrifyIfPathExistInLocal(id: string) {
+    for (let nbpath = 0 ;nbpath<this.pathsOrder.length; nbpath++) {
+      let obj = (this.getKey(this.pathsOrder[nbpath]))[0];
+      console.log(obj);
+      if(obj==id){
+        return true;
+      }
+    }
+    return false;
   }
 }

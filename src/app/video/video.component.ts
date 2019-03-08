@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {CatalogueService} from '../catalogue.service';
 
 @Component({
   selector: 'app-video',
@@ -14,18 +15,20 @@ export class VideoComponent implements OnInit {
   listVideowithName;
   ligneVideoHidden: boolean = false;
   idSelctioned: String;
+  keyword: string = '';
+  allInfo;
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private catalogueService:CatalogueService) {
   }
 
   ngOnInit() {
     this.idSelctioned = '';
     this.infoVideo = null;
     this.ligneVideoHidden = false;
-    this.httpClient.get('http://localhost:8085/path/allkeys')
+    // this.httpClient.get('http://localhost:8085/path/allkeys')
+    this.catalogueService.getRessource(this.catalogueService.host+'/path/allkeys')
       .subscribe(data => {
         this.paths = data;
-        // console.log(data);
       }, err => {
         console.log(err);
       });
@@ -34,14 +37,15 @@ export class VideoComponent implements OnInit {
   onGetOnePath(p: string) {
     this.idSelctioned = '';
     this.ligneVideoHidden = false;
-    this.httpClient.get('http://localhost:8085/path/' + escape(p))
+    let url = this.catalogueService.host+'/path/' + escape(p);
+    this.catalogueService.getRessource(url)
       .subscribe(data => {
         this.idVideo = data;
         this.infoVideo = null;
         this.listVideowithName = [];
         for (let id of this.idVideo) {
-          let srturl = 'http://localhost:8085/videoByIdToInfo/name/' + id;
-          this.httpClient.get(srturl)
+          let uri = this.catalogueService.host+'/video/videoByIdToInfo/' + id + '/name';
+          this.catalogueService.getRessource(uri)
             .subscribe(data => {
               this.listVideowithName.push(data);
             }, err => {
@@ -55,7 +59,8 @@ export class VideoComponent implements OnInit {
   }
 
   getAllInfo(id) {
-    this.httpClient.get('http://localhost:8085/videoByIdToInfo/' + id + '/default')
+    let url = this.catalogueService.host+'/video/videoByIdToInfo/' + id + '/default';
+    this.catalogueService.getRessource(url)
       .subscribe(data => {
         this.ligneVideoHidden = true;
         this.idSelctioned = id;
@@ -102,5 +107,9 @@ export class VideoComponent implements OnInit {
       }
     }
     return result;
+  }
+
+  onSubmitKeyword() {
+    console.log('KeyWord asked! : '+this.keyword+' AllInfo : '+this.allInfo);
   }
 }

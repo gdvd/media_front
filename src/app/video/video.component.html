@@ -2,10 +2,20 @@
   <div *ngIf="paths">
     <div class="col-12">
       <div class="panel panel-success">
-        <div class="panel-heading">Liste des Paths en DB</div>
+        <div class="panel-heading heightMedium">
+          <div class="alignLeft">Liste des Paths en DB</div>
+          <div class="alignRight">
+            <form (ngSubmit)="onSubmitKeyword()">
+              <input class="form-control sizeMedium marginMedium" [(ngModel)]="keyword" name="keyword" required>
+              <button type="submit" class="btn btn-warning marginMedium">Submit</button>
+              <input class="marginSmall" type="checkbox" ng-checked="allInfo" name="allInfo">
+              <label class="">allInfo</label>
+            </form>
+          </div>
+        </div>
         <div class="panel-body">
         <span *ngFor="let p of paths">
-          <button (click)="onGetOnePath(p)" class="btn btn-success">{{p}}</button>
+          <button (click)="onGetOnePath(p)" class="btn btn-success marginXSmall">{{p}}</button>
         </span>
         </div>
       </div>
