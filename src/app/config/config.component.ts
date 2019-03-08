@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {CatalogueService} from '../catalogue.service';
 import {forEach} from '@angular/router/src/utils/collection';
+import {parseHttpResponse} from 'selenium-webdriver/http';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class ConfigComponent implements OnInit {
         this.paths = data;
         this.pathsOrder = this.paths.sort(this.sortThings);
       }, err => {
+        // let er = err.headers.get('JWTerror');
         console.log(err);
       });
   }
@@ -45,6 +47,23 @@ export class ConfigComponent implements OnInit {
     let id2search = id[0];
     for (let pathRemote of this.pathsOrderRemote) {
       if (Object.keys(pathRemote)[0] === id2search) {
+        // @ts-ignore
+        let coll:Array<string> = Object.values(pathRemote)[0];
+        for(let idremote of coll){
+          this.catalogueService.getRessourceDistant(this.myurl, '/video/videoByIdToInfo/'+idremote)
+            .subscribe(data => {
+              // let dataid = {idremote : data};
+              this.catalogueService.postRessource(this.catalogueService.host + '/video/saveid', data)
+                .subscribe(datares => {
+                    console.log('insert of :'+idremote+' ok');
+                }, erres => {
+                  console.log(erres);
+                  console.log('insert of :'+idremote+' CRASH');
+                });
+            }, err => {
+              console.log(err);
+            });
+        }
         console.log('---->' + Object.keys(pathRemote));
         let onePathToSend = Object.values(pathRemote)[0];
         console.log(onePathToSend);
@@ -55,6 +74,7 @@ export class ConfigComponent implements OnInit {
           }, err => {
             console.log(err);
           });
+        // Search ids
       }
     }
   }
@@ -84,7 +104,7 @@ export class ConfigComponent implements OnInit {
         }, err => {
           console.log(err);
         });
-      this.myurl = '';
+      // this.myurl = '';
     } else {
       console.log('Nothing');
     }
