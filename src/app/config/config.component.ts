@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {CatalogueService} from '../catalogue.service';
-import {forEach} from '@angular/router/src/utils/collection';
-import {parseHttpResponse} from 'selenium-webdriver/http';
 
 
 @Component({
@@ -24,6 +22,11 @@ export class ConfigComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.showTable();
+    // this.pathsOrder.values().
+  }
+
+  private showTable() {
     this.catalogueService.getRessource(this.catalogueService.host + '/path/allPaths')
       .subscribe(data => {
         this.paths = data;
@@ -36,10 +39,10 @@ export class ConfigComponent implements OnInit {
 
   askDl(id) {
     if (!this.verrifyIfPathExistInLocal(id)) {
-      console.log("************* This path DOESN'T exist");
+      // console.log("************* This path DOESN'T exist");
       this.saveNewPath(id);
     } else {//id existe already -> change the name
-      console.log("************* This path EXIST");
+      // console.log("************* This path EXIST");
     }
   }
 
@@ -57,24 +60,26 @@ export class ConfigComponent implements OnInit {
                 .subscribe(datares => {
                     console.log('insert of :'+idremote+' ok');
                 }, erres => {
-                  console.log(erres);
-                  console.log('insert of :'+idremote+' CRASH');
+                  // console.log('insert of :'+idremote+' CRASH');
                 });
             }, err => {
               console.log(err);
             });
         }
-        console.log('---->' + Object.keys(pathRemote));
+        // console.log('---->' + Object.keys(pathRemote));
         let onePathToSend = Object.values(pathRemote)[0];
-        console.log(onePathToSend);
         this.catalogueService.patchRessource(this.catalogueService.host + '/path/saveOnePath/' + escape(id2search),
           onePathToSend)
           .subscribe(data => {
             this.dataTmp = data;
+            //Refresh Tbl
+            this.showTable();
           }, err => {
             console.log(err);
           });
         // Search ids
+
+
       }
     }
   }
@@ -99,7 +104,7 @@ export class ConfigComponent implements OnInit {
           this.allPathsReceive = data;
           // @ts-ignore
           this.pathsOrderRemote = this.allPathsReceive.sort(this.sortThings);
-          console.log(this.allPathsReceive.length, data);
+          // console.log(this.allPathsReceive.length, data);
 
         }, err => {
           console.log(err);
@@ -127,7 +132,7 @@ export class ConfigComponent implements OnInit {
   private verrifyIfPathExistInLocal(id: string) {
     for (let nbpath = 0 ;nbpath<this.pathsOrder.length; nbpath++) {
       let obj = (this.getKey(this.pathsOrder[nbpath]))[0];
-      console.log(obj);
+      // console.log(obj);
       if(obj==id){
         return true;
       }
