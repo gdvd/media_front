@@ -5,7 +5,11 @@
         <div class="panel-heading">Liste des Paths en DB LOCAL</div>
         <div class="panel-body">
         <ul class="list-group" *ngFor="let p of pathsOrder">
-          <li class="list-group-item list-group-item-success">{{getKey(p)}}<span class="badge badge-primary badge-pill">{{getValue(p)}}</span></li>
+          <li class="list-group-item list-group-item-success">{{p.nameExport}}
+            <span class="badge badge-primary badge-pill">{{(p.videoids).length}}</span>
+            <span class="badge badge-primary badge-pill"
+                  [ngClass]="p.active?'act':'nact'" (click)="changeState(p)">Active</span>
+          </li>
         </ul>
         </div>
       </div>
@@ -13,10 +17,10 @@
     <div id="bloc2">
       <div class="panel panel-warning">
         <div class="panel-heading">Liste des Paths en
-          <span *ngIf="!allPathsReceive">DB DISTANT</span>
-          <span class="glyphicon glyphicon-remove toRight" (click)="removeAllPathsReceive()" *ngIf="allPathsReceive" >{{url}}</span>
+          <span *ngIf="!pathsOrderRemote">DB DISTANT</span>
+          <span class="glyphicon glyphicon-remove toRight" (click)="removeAllPathsReceive()" *ngIf="pathsOrderRemote" >{{url}}</span>
           <div>
-          <form *ngIf="!allPathsReceive" (ngSubmit)="onSubmitURL()">
+          <form *ngIf="!pathsOrderRemote" (ngSubmit)="onSubmitURL()">
             <div><br><label>URL</label>
               <input type="text" class="form-control" [(ngModel)]="myurl" name="myurl" required>
             </div><br>
@@ -25,11 +29,11 @@
         </div></div>
         <div class="panel-body">
           <div class="form-group">
-            <div *ngIf="allPathsReceive">
-              <ul class="list-group" *ngFor="let p of allPathsReceive">
+            <div *ngIf="pathsOrderRemote">
+              <ul class="list-group" *ngFor="let p of pathsOrderRemote">
                 <li class="list-group-item list-group-item-warning">
-                  <span class="glyphicon glyphicon-download padright" (click)="askDl(getKey(p))"></span>{{getKey(p)}}
-                  <span class="badge badge-primary badge-pill">{{getValue(p)}}</span>
+                  <span class="glyphicon glyphicon-download padright" (click)="askDl(p)"></span>{{p.nameExport}}
+                  <span class="badge badge-primary badge-pill">{{(p.videoids).length}}</span>
                 </li>
               </ul>
             </div>

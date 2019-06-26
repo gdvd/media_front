@@ -5,21 +5,27 @@
         <div class="panel-heading heightMedium">
           <div class="alignLeft">Liste des Paths en DB</div>
           <div class="alignRight">
-            <form (ngSubmit)="onSubmitKeyword()">
-              <input class="form-control sizeMedium marginMedium" [(ngModel)]="keyword" name="keyword" required>
+            <form #f="ngForm" (ngSubmit)="onSubmitKeyword(f.value)">
+              <input class="form-control sizeMedium marginMedium" ngModel name="keyword" required>
               <button type="submit" class="btn btn-warning marginMedium">Submit</button>
-              <input class="marginSmall" type="checkbox" ng-checked="allInfo" name="allInfo">
+              <input class="marginSmall" type="checkbox" checked ngModel name="allInfo">
               <label class="">allInfo</label>
             </form>
           </div>
         </div>
         <div class="panel-body">
         <span *ngFor="let p of paths">
-          <button (click)="onGetOnePath(p)" class="btn btn-success marginXSmall">{{p}}</button>
+          <button (click)="onGetOnePath2(p)" class="btn btn-success marginXSmall glyphicon glyphicon-ok"> {{p.nameExport}}</button>
         </span>
         </div>
+        <!--
+        glyphicon glyphicon-remove
+        glyphicon glyphicon-ok
+        -->
       </div>
     </div>
+
+
     <div *ngIf="listVideowithName" class="col-12">
       <div class="panel panel-info">
         <div class="panel-heading">Liste details</div>
@@ -31,9 +37,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let i of listVideowithName">
-              <td [hidden]="(ligneVideoHidden==true && idSelctioned!=(i.id))"
-                  (click)="getAllInfo(i.id)" style="cursor: pointer">{{getUrlFile(i)}}</td>
+            <tr *ngFor="let itemVideo of listVideowithName">
+              <td [hidden]="(ligneVideoHidden==true && idSelctioned!=(itemVideo.id))"
+                  (click)="getAllInfo(itemVideo.id)" style="cursor: pointer">{{getValue((itemVideo.title)[0][0])}}</td>
             </tr>
             </tbody>
           </table>
@@ -41,6 +47,7 @@
       </div>
     </div>
   </div>
+
 
   <div *ngIf="infoVideo" class="col-12">
     <div class="panel panel-warning">
@@ -58,12 +65,14 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let item of infoVideo.info | keyvalue">
-            <td width=15%>{{item.key}}</td>
-            <td *ngIf="item.key==='Duration'">{{inHMS(item.value)}}</td>
-            <td *ngIf="item.key==='FileSize'">{{inGMK2(item.value)}}</td>
-            <td *ngIf="item.key!='Duration' && item.key!='FileSize'">{{item.value}}</td>
-          </tr>
+          <ng-container>
+            <tr *ngFor="let item of infoVideo.info[0] | keyvalue">
+              <td width=15%>{{item.key}}</td>
+              <td *ngIf="item.key==='Duration'">{{inHMS(item.value)}}</td>
+              <td *ngIf="item.key==='FileSize'">{{inGMK2(item.value)}}</td>
+              <td *ngIf="item.key!='Duration' && item.key!='FileSize'">{{item.value}}</td>
+            </tr>
+          </ng-container>
           </tbody>
 
           <thead>
@@ -76,42 +85,33 @@
           <ng-container *ngFor="let vi of infoVideo.video">
             <tr *ngFor="let item of vi | keyvalue">
               <td width=15%>{{item.key}}</td>
-              <td>{{item.value}}</td>
+              <!--<td>{{item.value}}</td>-->
+              <td *ngIf="item.key!='BitRate'">{{item.value}}</td>
+              <td *ngIf="item.key==='BitRate'">{{inGMK2(item.value)}}</td>
             </tr>
           </ng-container>
           </tbody>
 
-          <!--<thead>
-          <tr>
-            <th>AUDIO</th>
-            <th></th>
-          </tr>
-          </thead>-->
-          <tbody>
-          <ng-container *ngFor="let au of infoVideo.audio; index as i">
-            <th>AUDIO Track : {{i + 1}}</th>
+          <!--<tbody>-->
+          <ng-container *ngFor="let au of infoVideo.audio">
+          <thead><th>AUDIO</th><th></th></thead>
             <tr *ngFor="let item of au | keyvalue">
               <td width=15%>{{item.key}}</td>
               <td>{{item.value}}</td>
             </tr>
           </ng-container>
-          </tbody>
+          <!--</tbody>-->
 
-          <!--<thead>
-          <tr>
-            <th>TEXT</th>
-            <th></th>
-          </tr>
-          </thead>-->
-          <tbody>
-          <ng-container *ngFor="let te of infoVideo.text; index as i">
-            <th>TEXT Track : {{i + 1}}</th>
+          <!--<tbody>-->
+          <ng-container *ngFor="let te of infoVideo.text">
+          <thead><th>TEXT</th><th></th></thead>
             <tr *ngFor="let item of te | keyvalue">
               <td width=15%>{{item.key}}</td>
               <td>{{item.value}}</td>
             </tr>
           </ng-container>
-          </tbody>
+          <!--</tbody>-->
+
         </table>
       </div>
     </div>

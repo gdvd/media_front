@@ -1,0 +1,44 @@
+.chb{
+  float: right;
+  color: brown;
+  margin-left: 1em;
+}
+.form{
+  float: right;
+}
+.form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+.form-inline label {
+  color: #ffffff;
+  margin: 5px 10px 5px 0;
+}
+
+/* Style the input fields */
+.form-inline input {
+  vertical-align: middle;
+  margin: 10px 5px 10px 0;
+  padding: 5px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+.icon{
+  padding: 10px 10px 10px 10px;
+  vertical-align: middle;
+  font-size:30px;
+}
+/*.form-group{
+  !*width: 60%;*!
+  !*display: inline;*!
+  display: inline-block;
+  !*flex-direction: row;*!
+  align-items: center;
+}*/
+/*.form-login{
+  width: 8em;
+  display: block;
+  width: 100%;
+}*/

@@ -9,25 +9,30 @@ import {HttpClientModule} from '@angular/common/http';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { AppRoutingModule } from './app-routing.module';
 import { LoginComponent } from './login/login.component';
-// import {DemoMaterialModule} from './material-module';
-// import {MatNativeDateModule} from '@angular/material';
+import { AdminComponent } from './admin/admin.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ManagmentfilesComponent } from './managmentfiles/managmentfiles.component';
+import { ExportComponent } from './export/export.component';
+
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ConfigComponent,
+    ExportComponent,
     VideoComponent,
     ToolbarComponent,
     LoginComponent,
+    AdminComponent,
+    ManagmentfilesComponent,
+    ExportComponent,
   ],
   imports: [
-    BrowserModule, FormsModule, HttpClientModule, AppRoutingModule,
-    // DemoMaterialModule,
-    // MatNativeDateModule,
-    ReactiveFormsModule,
+    BrowserModule, FormsModule, HttpClientModule,
+    AppRoutingModule, ReactiveFormsModule, BrowserAnimationsModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

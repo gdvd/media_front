@@ -24,3 +24,9 @@ input.formu{
 .padright{
   padding-right: 1.5em;
 }
+.act{
+  background: rgba(0, 125, 0, 0.46);
+}
+.nact{
+  background: rgba(0, 22, 125, 0.46);
+}
