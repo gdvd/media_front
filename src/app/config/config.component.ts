@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {CatalogueService} from '../catalogue.service';
-import {forEach} from '@angular/router/src/utils/collection';
 import {AppComponent} from '../app.component';
 
 

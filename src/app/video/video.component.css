@@ -28,3 +28,63 @@
 .marginXSmall{
   margin: 0.2em;
 }
+.columnSizeInfo{
+  width: 12em;
+}
+.columnInfoele{
+
+}
+span {cursor:pointer; }
+.optiontbl{
+  display: inline-flex;
+  width: 100%;
+  height: 120px;
+}
+.elementoptiontbl{
+  margin:20px;
+}
+.filtertitle{
+  margin: 0px;
+}
+.minus, .plus{
+  width:30px;
+  height:30px;
+  background:#f2f2f2;
+  border-radius:4px;
+  padding:8px 5px 8px 5px;
+  border:1px solid #ddd;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+}
+input.elementoptiontbl{
+  width: 180px;
+}
+input {
+  height: 30px;
+  width: 80px;
+  text-align: center;
+  font-size: 26px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.infobulle {
+  position: relative;  /* les .infobulle deviennent référents */
+  cursor: help;
+}
+.infobulle:hover::after,
+.infobulle:focus::after {
+  content: attr(aria-label);
+  position: absolute;
+  top: -1.5em;
+  left: 50%;
+  transform: translateX(-15%);
+  z-index: 1;
+  white-space: nowrap;
+}
+div.infobulle{
+  display: none;
+  position: relative;
+}

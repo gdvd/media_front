@@ -13,6 +13,7 @@ import { AdminComponent } from './admin/admin.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ManagmentfilesComponent } from './managmentfiles/managmentfiles.component';
 import { ExportComponent } from './export/export.component';
+import {CookieService} from 'ngx-cookie-service';
 
 
 
@@ -32,7 +33,7 @@ import { ExportComponent } from './export/export.component';
     BrowserModule, FormsModule, HttpClientModule,
     AppRoutingModule, ReactiveFormsModule, BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
