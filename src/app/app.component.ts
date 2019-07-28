@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {AuthenticationService} from './authentication.service';
 import {HttpClient} from '@angular/common/http';
 import {CatalogueService} from './catalogue.service';
@@ -15,18 +15,31 @@ export class AppComponent implements OnInit {
               private router: Router,
               private authService: AuthenticationService,
               private catalogueService: CatalogueService,
+              private activatedRoute: ActivatedRoute,
               @Inject(DOCUMENT) private document: any) {
   }
 
-  keywordGeneral: string;
-  // regex: boolean = false;
+  private keywordGeneral: string;
   isConnected: boolean = false;
-  user: usr;
+  private user: usr;
+  private currentRoute: string;
 
   ngOnInit(): void {
     this.authService.loadToken();
     this.onInfo();
     this.test();
+    // currentRoute
+    let path = window.location.pathname;
+    path = path.replace('/', '');
+    this.currentRoute = path;
+    // console.log(this.currentRoute);
+    /*console.log(window.location.href);
+    console.log('Path:' + window.location.pathname);
+    console.log('Host:' + window.location.host);
+    console.log('Hostname:' + window.location.hostname);
+    console.log('Origin:' + window.location.origin);
+    console.log('Port:' + window.location.port);
+    console.log('Search String:' + window.location.search);*/
   }
 
   title = 'MediaVideoFront';
@@ -114,7 +127,30 @@ export class AppComponent implements OnInit {
       this.isConnected = false;
     }
   }
+  onVideo(){
+    this.currentRoute = 'video';
+    this.router.navigateByUrl('/video');
+  }
+   onExport() {
+    this.currentRoute = 'export';
+    this.router.navigateByUrl('/export');
+  }
+
+   onConfig() {
+    this.currentRoute = 'config';
+    this.router.navigateByUrl('/config');
+  }
+
+   onAdmin() {
+    this.currentRoute = 'admin';
+    this.router.navigateByUrl('/admin');
+  }
+   onManagment() {
+    this.currentRoute = 'managmentfiles';
+    this.router.navigateByUrl('/managmentfiles');
+  }
 }
+
 
 interface usr {
   info: string;

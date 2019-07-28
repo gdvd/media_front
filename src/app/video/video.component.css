@@ -1,4 +1,7 @@
-
+.tblmmi{
+  width: 90%;
+  position: center;
+}
 .alignLeft {
   white-space: nowrap;
   display: inline-block;
@@ -29,36 +32,84 @@
   margin: 0.2em;
 }
 .columnSizeInfo{
-  width: 12em;
+  width: 14em;
 }
 .columnInfoele{
 
+}
+.cellToRight{
+  display: inline-flex;
+  float: right;
+}
+.cellToLeft{
+  display: inline-flex;
+}
+.toclick{
+  cursor:pointer;
 }
 span {cursor:pointer; }
 .optiontbl{
   display: inline-flex;
   width: 100%;
-  height: 120px;
+  /*width: 280px;*/
+  /*height: 120px;*/
+  height: auto;
+}
+.containertable{
+  width: 100%;
+  margin-left: 5em;
+  margin-right: 5em;
 }
 .elementoptiontbl{
-  margin:20px;
+  display: inline-flex;
+  margin-left:10px;
+}
+.wordstosearch{
+  width: 12em;
+  font-size: 14px;
+  color: #953b39;
 }
 .filtertitle{
+  width: 10em;
   margin: 0px;
+  height: 1em;
+}
+input.filtertitle{
+  margin-top: 7px;
+
+}
+#byname{
+  display: inline-flex;
+}
+span{
+  /*font: inherit;*/
 }
 .minus, .plus{
-  width:30px;
-  height:30px;
+  width:25px;
+  height:25px;
   background:#f2f2f2;
   border-radius:4px;
-  padding:8px 5px 8px 5px;
+  padding:3px 3px 3px 3px;
   border:1px solid #ddd;
   display: inline-block;
   vertical-align: middle;
   text-align: center;
+  margin-block-start: 0.5em;
+  margin-block-end: 0.5em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
 }
 input.elementoptiontbl{
   width: 180px;
+}
+input.inputsize{
+  font-size: 1.2em;
+  width: 80px;
+  height: 25px;
+  margin-block-start: 0.5em;
+  margin-block-end: 0.5em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
 }
 input {
   height: 30px;
@@ -70,6 +121,9 @@ input {
   display: inline-block;
   vertical-align: middle;
 }
+h4.score{
+  margin-top: 0px;
+}
 .infobulle {
   position: relative;  /* les .infobulle deviennent référents */
   cursor: help;
@@ -78,8 +132,8 @@ input {
 .infobulle:focus::after {
   content: attr(aria-label);
   position: absolute;
-  top: -1.5em;
-  left: 50%;
+  top: 1em;
+  left: -10%;
   transform: translateX(-15%);
   z-index: 1;
   white-space: nowrap;
@@ -88,3 +142,183 @@ div.infobulle{
   display: none;
   position: relative;
 }
+/* Tooltip container */
+/*
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; !* If you want dots under the hoverable text *!
+}
+
+!* Tooltip text *!
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  !* Position the tooltip text *!
+  position: absolute;
+  z-index: 1020;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+
+  !* Fade in tooltip *!
+  opacity: 1;
+  !*transition: opacity 0.3s;*!
+}
+
+!* Tooltip arrow *!
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+!* Show the tooltip text when you mouse over the tooltip container *!
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+*/
+span.tooltipmi input, select{
+  size: 14px;
+  color: #444;
+}
+span.tooltipmi {
+  /*visibility: hidden;*/
+  opacity: 1;
+  position: relative;
+  border-bottom: 1px dotted black;
+  z-index: 10;
+  top: 0em;
+  left:  -1em;
+}
+div.tooltipmi {
+  width: 10em;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  width: 20em;
+  margin-left:1em;
+  opacity: 1;
+  transition: opacity 1s;
+}
+.hred{
+  color: red;
+  font-size:12px;
+}
+.infotitle{
+  display: block;
+}
+.infotitle1{
+  display: block;
+}
+.infotitle2{
+  display: block;
+}
+.eletitle{
+  display: inline-block;
+}
+
+.imgposter{
+  padding-right: 1em;
+}
+/*.tooltipmi div::after {
+  content: "";
+  position: absolute;
+  top: 1.5em;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent black transparent transparent;
+}*/
+/*.tooltipmi input {
+  display:none;
+}
+.tooltipmi input:checked+span {
+  visibility: visible;
+  opacity: 1;
+}*/
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 80px;
+  height: 28px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 5px;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+/*.slider:after {
+  content: "name";
+}*/
+
+.slider:before {
+  position: absolute;
+  content: "Title";
+  height: 24px;
+  width: 40px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(32px);
+  -ms-transform: translateX(32px);
+  transform: translateX(32);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 35px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+/*******************/
+/*******************/
+/*******************/

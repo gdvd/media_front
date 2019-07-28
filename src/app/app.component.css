@@ -30,6 +30,9 @@
   vertical-align: middle;
   font-size:30px;
 }
+ul.dropdown-menu{
+  padding: 0px;
+}
 /*.form-group{
   !*width: 60%;*!
   !*display: inline;*!

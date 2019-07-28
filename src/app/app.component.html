@@ -1,16 +1,20 @@
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">Catalogue</a>
+      <a class="navbar-brand" href="#">MediaVideo</a>
     </div>
     <ul class="nav navbar-nav">
-      <li class="active"><a href="/">Home</a></li>
+<!--      <li class="active"><a href="/">Home</a></li>-->
       <li class="dropdown" *ngIf="isAuthenticated()">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
           <span class="caret"></span></a>
         <ul class="dropdown-menu">
-          <li *ngIf="isAdmin()"><a href="#">Paths</a></li>
-          <li *ngIf="isUser()"><a href="#">Films</a></li>
+          <li class="list-group-item" [ngClass]="currentRoute=='video'?'active':''" *ngIf="isAdmin()" (click)="onVideo()" >Video</li>
+          <li class="list-group-item" [ngClass]="currentRoute=='video'?'active':''" *ngIf="isUser()" (click)="onVideo()" >Video</li>
+          <li class="list-group-item" [ngClass]="currentRoute=='export'?'active':''" *ngIf="isAdmin()" (click)="onExport()" >Export</li>
+          <li class="list-group-item" [ngClass]="currentRoute=='managmentfiles'?'active':''" *ngIf="isAdmin()" (click)="onManagment()" >Managment</li>
+          <li class="list-group-item" [ngClass]="currentRoute=='admin'?'active':''" *ngIf="isAdmin()" (click)="onAdmin()" >Admin</li>
+          <li class="list-group-item" [ngClass]="currentRoute=='video'?'active':''" *ngIf="isUser()"><a href="#">Films</a></li>
         </ul>
       </li>
     </ul>
@@ -23,7 +27,7 @@
           </div>
         </form>-->
     <div class="form">
-      <!--      <button (click)="test()" class="form-inline">Test</button>-->
+<!--            <button (click)="test()" class="form-inline">Test</button>-->
       <div class="form-inline">
         <div class="form-inline" *ngIf="isConnected">
           <span class="glyphicon glyphicon-user icon" (click)="test()" style="color: green;"></span>
@@ -46,9 +50,10 @@
 </nav>
 <div class="row">
   <div class="col-md-2">
-    <app-toolbar></app-toolbar>
+<!--    <app-toolbar></app-toolbar>-->
   </div>
-  <div class="col-md-10">
+  <div>
+<!--  <div class="col-md-10">-->
     <router-outlet>
     </router-outlet>
   </div>

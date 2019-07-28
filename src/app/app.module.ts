@@ -27,7 +27,7 @@ import {CookieService} from 'ngx-cookie-service';
     LoginComponent,
     AdminComponent,
     ManagmentfilesComponent,
-    ExportComponent,
+    ExportComponent
   ],
   imports: [
     BrowserModule, FormsModule, HttpClientModule,
