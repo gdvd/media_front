@@ -1,12 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, HostListener} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {CatalogueService} from '../catalogue.service';
 import {Router} from '@angular/router';
 import {AppComponent} from '../app.component';
 import {CookieService} from 'ngx-cookie-service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {getElementDepthCount} from '@angular/core/src/render3/state';
-import {copyObj} from '@angular/animations/browser/src/util';
+import {FormBuilder, FormGroup} from '@angular/forms';
 
 
 @Component({
@@ -23,14 +21,17 @@ export class VideoComponent implements OnInit {
   private toSort: string;
   private valueSizePage;
   private listIdVneToName: vnelight[];
+  private vneName = '';
   private myOrder = '';
   private limdb = 'http://www.imdb.com';
   private listTypeName: string[];
   private listTypeNameWithId: typeName[];
   private typenameForm: FormGroup;
+  private vnenameForm: FormGroup;
   private choice: any;
   private checkboxFlag: boolean = true;
-
+  private numberActorsWanted: number = 4;//NumberActorsWanted
+  private limiteOfWriters: number = 4;
 
   constructor(private httpClient: HttpClient,
               private catalogueService: CatalogueService,
@@ -39,6 +40,7 @@ export class VideoComponent implements OnInit {
               private cookieService: CookieService,
               private fb: FormBuilder) {
   }
+
   /*   this.router.navigateByUrl('/');//Re-Route */
 
   ngOnInit() {
@@ -46,7 +48,7 @@ export class VideoComponent implements OnInit {
       this.valueSizePage = this.cookieService.get('valueSizePage');
       this.size = parseInt(this.valueSizePage, 10);
     } else {
-      this.cookieService.set('valueSizePage', '20');
+      this.cookieService.set('valueSizePage', '5');
       this.size = 10;
     }
     this.page = 1;
@@ -61,6 +63,38 @@ export class VideoComponent implements OnInit {
     this.typenameForm = this.fb.group({
       listTypeNameWithId: [0]
     });
+    this.vnenameForm = this.fb.group({
+      listIdVneToName: [0]
+    });
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key === 'ArrowRight') {
+      this.incr('valuepage');
+    }
+    if (event.key === 'ArrowLeft') {
+      this.decr('valuepage');
+    }
+  }
+
+  setvalueformVneName(event) {
+    this.vneName = event.target.value;
+    this.page = 1;
+    this.getPageMmi();
+  }
+
+  cleanFilter() {
+    this.textFilter = '';
+    this.page = 1;
+    this.getPageMmi();
+  }
+
+  cleanAllFilter() {
+    this.textFilter = '';
+    this.vneName = '';
+    this.page = 1;
+    this.getPageMmi();
   }
 
   incr(data: string) {
@@ -118,9 +152,6 @@ export class VideoComponent implements OnInit {
       if (this.size < 2) {
         this.size = 1;
       }
-      /*if (this.size >= this.tablepage.totalPages) {
-        this.size = this.tablepage.totalPages;
-      }*/
       this.getPageMmi();
       this.setSizeToCookie(this.size);
     }
@@ -171,7 +202,6 @@ export class VideoComponent implements OnInit {
 
   getPageMmi() {
     //limit of stop orderBy...
-    // console.log(this.checkboxFlag);
     if (this.size > 500) {
       this.myOrder = 'nothing';
     } else {
@@ -180,43 +210,45 @@ export class VideoComponent implements OnInit {
       }
     }
     let strToSort = '&toSort=' + this.toSort;
-    if(this.checkboxFlag==true){
-    this.catalogueService.postRessourceWithData(
-      '/managment/listMmiForLoginPP?page=' + (this.page - 1) + '&size='
-      + this.size + strToSort, '%' + this.textFilter + '%')
-      .subscribe(data => {
-        //@ts-ignore
-        this.tablepage = data;
-        if (this.tablepage.content.length == 1) {
-          this.myOrder = 'nothing';
-        }
-        for (let mmi of this.tablepage.content) {
-          // console.log(mmi);
-          if (mmi != null) {
-            if (mmi.videoSupportPaths.length > 1) {
-              mmi.state = 1;
-            } else {
-              mmi.state = 0;
-            }
-            if(mmi.typeMmi!=null){
-              if(mmi.typeMmi.videoFilm!=null){
-                mmi.search = 3;
-              }else{
+    if (this.checkboxFlag == true) {
+      this.catalogueService.postRessourceWithData(
+        '/managment/listMmiForLoginPP?page=' + (this.page - 1)
+        + '&vneName=' + this.vneName + '&size='
+        + this.size + strToSort, '%' + this.textFilter + '%')
+        .subscribe(data => {
+          //@ts-ignore
+          this.tablepage = data;
+          if (this.tablepage.content.length == 1) {
+            this.myOrder = 'nothing';
+          }
+          for (let mmi of this.tablepage.content) {
+            // console.log(mmi);
+            if (mmi != null) {
+              if (mmi.videoSupportPaths.length > 1) {
+                mmi.state = 1;
+              } else {
+                mmi.state = 1;
+              }
+              if (mmi.typeMmi != null) {
+                if (mmi.typeMmi.videoFilm != null) {
+                  mmi.search = 3;
+                  mmi.state = 3;
+                } else {
+                  mmi.search = 0;
+                }
+              } else {
                 mmi.search = 0;
               }
-            }else{
-              mmi.search = 0;
             }
+            mmi.editTypeName = 0;
           }
-          mmi.editTypeName=0;
-        }
-        if (this.myOrder != 'nothing') {
-          this.reorderpage();
-        }
-      }, err => {
-        console.log(err);
-      });
-    }else{
+          if (this.myOrder != 'nothing') {
+            this.reorderpage();
+          }
+        }, err => {
+          console.log(err);
+        });
+    } else {
       this.catalogueService.postRessourceWithData(
         '/managment/listMmiForLoginWithNamePP?page=' + (this.page - 1) + '&size='
         + this.size + strToSort, '%' + this.textFilter + '%')
@@ -234,17 +266,18 @@ export class VideoComponent implements OnInit {
               } else {
                 mmi.state = 0;
               }
-              if(mmi.typeMmi!=null){
-                if(mmi.typeMmi.videoFilm!=null){
+              if (mmi.typeMmi != null) {
+                if (mmi.typeMmi.videoFilm != null) {
                   mmi.search = 3;
-                }else{
+                  mmi.state = 3;
+                } else {
                   mmi.search = 0;
                 }
-              }else{
+              } else {
                 mmi.search = 0;
               }
             }
-            mmi.editTypeName=0;
+            mmi.editTypeName = 0;
           }
           if (this.myOrder != 'nothing') {
             this.reorderpage();
@@ -256,23 +289,23 @@ export class VideoComponent implements OnInit {
   }
 
 
-
-  checkboxchange(event){
-    this.textFilter='';
-    let elem:HTMLElement = event.target.parentNode.parentNode;
+  checkboxchange(event) {
+    this.page = 1;
+    this.textFilter = '';
+    let elem: HTMLElement = event.target.parentNode.parentNode;
     //@ts-ignore
-    let te:HTMLElement = elem.getElementsByClassName('filtertitle');
-    if(this.checkboxFlag==true){
-      te[0].placeholder='Filter on title';
-    }else{
-      te[0].placeholder='Filter on name';
+    let te: HTMLElement = elem.getElementsByClassName('filtertitle');
+    if (this.checkboxFlag == true) {
+      te[0].placeholder = 'Filter on title';
+    } else {
+      te[0].placeholder = 'Filter on name';
     }
     this.getPageMmi();
   }
 
   textFilterChange() {
-    this.getPageMmi();
     this.page = 1;
+    this.getPageMmi();
     // console.log(this.textFilter);
   }
 
@@ -286,56 +319,9 @@ export class VideoComponent implements OnInit {
       });
   }
 
-
-  inHMS(d) {
-    let s = Math.trunc(d % 60);
-    let m = Math.trunc(((d - s) / 60) % 60);
-    let h = Math.trunc((d - (m * 60) - (s)) / 3600);
-    // return '' + h + 'h' + m + 'mn' + s + 'sec (' + d + 'sec)';
-    return '' + h + 'h' + m + 'mn' + s + 's';
-  }
-
-  inGMK2(ot) {
-    var res = ot;
-    let units = ['o', 'Ko', 'Mo', 'Go', 'To'];
-    var result: string = '';
-    for (var i = 1; i <= units.length; i++) {
-      res = res / 1024;
-      if (Math.trunc(res) != 0) {
-        let ve = Math.trunc(res);
-        let cal: number = (res - ve);
-        let calStr: string = cal + '';
-        let deci: string;
-        if (calStr.length > 4) {
-          deci = calStr.substring(2, 4);
-        } else {
-          if (calStr.length == 3) {
-            deci = calStr.substring(2, 3);
-          } else {
-            deci = '';
-          }
-        }
-        // result = '' + ve + units[i] + deci + ' (' + ot + 'oct)';
-        result = '' + ve + ',' + deci + units[i];
-        // result = '' + ve + units[i] + deci;
-      } else {
-        break;
-      }
-    }
-    return result;
-  }
-
   // Info in tbl
   private getInfo(ele) {
     console.log(ele);
-  }
-
-  private getId(ele: mmi) {
-
-  }
-
-  sizeOfArray(ele: mmi) {
-    return ele.myMediaTexts.length;
   }
 
 //============================================================================
@@ -603,7 +589,7 @@ export class VideoComponent implements OnInit {
 //=====================================================
   sortBySize() {
     // console.log('Order by Size asked' && this.myOrder != 'nothing');
-    if (this.myOrder != 'sizeup') {
+    if (this.myOrder != 'sizeup' && this.myOrder != 'nothing') {
       this.myOrder = 'sizeup';
       this.sortBySizeAsc();
       // console.log('Let\'s go to up');
@@ -740,19 +726,39 @@ export class VideoComponent implements OnInit {
     this.tablepage.content = mynewtable;
   }
 
-//=====================================================
-
-
   private getListIdVneToName() {
     this.catalogueService.getRessource('/managment/lVneIdToName')
       .subscribe(data => {
         this.listIdVneToName = null;
         //@ts-ignore
         this.listIdVneToName = data;
-        // console.log(this.listIdVneToName);
+        this.sortListIdVneToName(this.listIdVneToName);
       }, err => {
         console.log(err);
       });
+  }
+
+  private sortListIdVneToName(listToSort: vnelight[]){
+    var mynewtable: vnelight[] = [];
+    if (listToSort.length > 1) {
+      while (listToSort.length > 0) {
+        let nb = 0;
+        //@ts-ignore
+        let valOne = listToSort[0].nameExport;
+        for (var j = 1; j < listToSort.length; j++) {
+          //@ts-ignore
+          if ((valOne).localeCompare(listToSort[j].nameExport, 'fr') > 0) {
+            //@ts-ignore
+            valOne = listToSort[j].nameExport;
+            nb = j;
+          }
+        }
+        //Add listToSort[nb] to mynewtable
+        mynewtable = mynewtable.concat(listToSort[nb]);
+        listToSort.splice(nb, 1);
+      }
+    }
+    this.listIdVneToName = mynewtable;
   }
 
   private getnameVneWithId(id: number) {
@@ -804,31 +810,13 @@ export class VideoComponent implements OnInit {
     }
     if (text === '') {
       return;
-    }else{
-    let element = $event.target.parentNode.parentElement.parentElement;
-    let idelement = element.getElementsByClassName('titlemmi')[0].id;
-    // console.log(element);
-    let val={'keys': text, 'ele': idelement};
-    this.onSubmitSearch(val);
-  }
-    // console.log(element, idelement);
-/*    for (let mmi of this.tablepage.content) {
-      if (mmi.idMyMediaInfo === idelement) {
-        if(mmi.typeMmi!=null){
-          if(mmi.typeMmi.videoFilm!=null){
-            mmi.search = 3;
-          }else{
-            mmi.search = 0;
-          }
-        }else{
-          mmi.search = 0;
-        }
-        break;
-      }
+    } else {
+      let element = $event.target.parentNode.parentElement.parentElement;
+      let idelement = element.getElementsByClassName('titlemmi')[0].id;
+      // console.log(element);
+      let val = {'keys': text, 'ele': idelement};
+      this.onSubmitSearch(val);
     }
-    let box = element.getElementsByClassName('wordstosearch');
-    // element.getElementsByClassName("wordstosearch").ngM='azerty';
-    console.log(box);*/
   }
 
   gotosearch(ele: mmi) {
@@ -836,64 +824,52 @@ export class VideoComponent implements OnInit {
   }
 
   onSubmitSearch(value: any) {
-    console.log(value.keys);
-    console.log(value.ele);
     for (let mmi of this.tablepage.content) {
       if (mmi.idMyMediaInfo === value.ele) {
         mmi.search = 0;
-        this.catalogueService.postRessourceWithData('/video/requesttoimdb', (value.keys))
+        //TODO Add tmmi
+        let idmmi = 0;
+        if (mmi.typeMmi != null) {
+          idmmi = mmi.typeMmi.idTypeMmi;
+        }
+        this.catalogueService.postRessourceWithData('/video/requesttoimdb/'
+          + idmmi, (value.keys))
           .subscribe(data => {
             mmi.search = 2;
             //@ts-ignore
             mmi.myressearch = data;
-            // console.log(data);
-            // console.log(mmi);
           }, err => {
             console.log(err);
           });
         break;
       }
     }
-
   }
 
-  private linkMmi(mylink: string, idMyMediaInfo: string) {
-    // console.log(mylink, idMyMediaInfo);
-    if (mylink != '' && idMyMediaInfo != '') {
-      // Show Waiting
-      //mmi.search=X;
-      for (let mmi of this.tablepage.content) {
-        if (mmi.idMyMediaInfo === idMyMediaInfo) {
-          // console.log('ready to dl');
-          // console.log('mylink');
-          // console.log(mylink);
-          // console.log('idMyMediaInfo');
-          // console.log(idMyMediaInfo);
-          this.catalogueService.postRessourceWithData('/managment/getVideoFilm',
-            (mylink))
-            .subscribe(data => {
-              // console.log(data);
-              for (let mmi of this.tablepage.content) {
-                if (mmi.idMyMediaInfo === idMyMediaInfo) {
-                  for (let r of mmi.myressearch) {
-                    if (r.link === mylink) {
-                      r.state = true;
-                    }
-                  }
-                }
-              }
-            }, err => {
-              console.log(err);
-            });
-          break;
-        }
-        // If good -> show link ok
-        //mmi.search=X;
-      }
-    } else {
-      console.log('error, no data no valid');
+  private linkMmi(mylink: string, ele: mmi) {
+    if (mylink != '' && ele != null) {
+      ele.state = 2;
+      var vf: videoFilms;
+      this.catalogueService.postRessourceWithData('/managment/getVideoFilm/'
+        + ele.idMyMediaInfo, (mylink))
+        .subscribe(data => {
+          console.log(data);
+          //@ts-ignore
+          vf = data;
+          console.log(ele);
+          var eletbl: mmi[] = [];
+          for (let mmi of this.tablepage.content) {
+            if (mmi.state == 2) {
+              eletbl = eletbl.concat(mmi);
+            }
+          }
+          // ele.state = 3;
+          console.log(eletbl);
+          this.linkIdttWithIdmmi(vf, eletbl);
+        }, err => {
+          console.log(err);
+        });
     }
-    // console.log('End');
   }
 
   closesearchImdbresult(idMyMediaInfo: string) {
@@ -907,46 +883,25 @@ export class VideoComponent implements OnInit {
   // Edit typeName
   callEdit(ele: mmi) {
     // console.log(ele.typeMmi);
-    if (ele.typeMmi == null || ele.typeMmi.typeName.idTypeName==0) {
+    if (ele.typeMmi == null || ele.typeMmi.typeName.idTypeName == 0) {
       //@ts-ignore
       var tm: typeMmi = {
         'idTypeMmi': 0,
         'episode': 0, 'season': 0,
         'nameSerie': '', 'nameSerieVO': '',
         'myMediaInfo': ele,
-        // 'videoFilm': ele.typeMmi.videoFilm==null? null: ele.typeMmi.videoFilm,
         'typeName': this.listTypeNameWithId[0]
       }; // Init with film
       ele.typeMmi = tm;
-      // this.choice=ele.typeMmi.typeName.idTypeName;
-    } else {
     }
-    this.choice=ele.typeMmi.typeName.idTypeName;
-    ele.editTypeName=1;
-  }
-
-  // Apply the new typaName in the table
-  setvalueformtype(e, id) {
-    let idtype = e.target.value;
-    for (let mmi of this.tablepage.content) {
-      if (mmi.idMyMediaInfo === id) {
-        for(let typename of this.listTypeNameWithId){
-          if(typename.idTypeName == idtype){
-            mmi.typeMmi.typeName = typename;
-            return;
-          }
-        }
-      }
-    }
+    this.choice = ele.typeMmi.typeName.idTypeName;
+    ele.editTypeName = 1;
   }
 
   submitChangeTypeMmi(eletypeMmi, id) {
-    // console.log(id);
-    // console.log(eletypeMmi);
     let vf = eletypeMmi.videoFilm;
-    // console.log(eletypeMmi.typeName);
     var tm = {
-      'idTypeMmi':eletypeMmi.idTypeMmi,
+      'idTypeMmi': eletypeMmi.idTypeMmi,
       'episode': eletypeMmi.episode,
       'season': eletypeMmi.season,
       'nameSerie': eletypeMmi.nameSerie,
@@ -955,20 +910,20 @@ export class VideoComponent implements OnInit {
       'videoFilms': eletypeMmi.videoFilm,
       'typeName': eletypeMmi.typeName
     };
-    // console.log('/video/savetypemmi/'+id);
-    this.catalogueService.postRessource('/video/savetypemmi/'+id, tm)
-      .subscribe(data=>{
+    this.catalogueService.postRessource('/video/savetypemmi/'
+      + id + '/' + eletypeMmi.videoFilm.idVideo, tm)
+      .subscribe(data => {
         // console.log(data);
         for (let mmi of this.tablepage.content) {
           if (mmi.idMyMediaInfo === id) {
             //@ts-ignore
             mmi.typeMmi = data;
             mmi.typeMmi.videoFilm = vf;
-            mmi.editTypeName=0;
+            mmi.editTypeName = 0;
             break;
           }
         }
-      }, err=>{
+      }, err => {
         console.log(err);
       });
 
@@ -976,19 +931,15 @@ export class VideoComponent implements OnInit {
 
   cancelTypeName(ele) {
     console.log(ele);
-    ele.editTypeName=0;
-    if(ele.typeMmi.idTypeMmi==0){
+    ele.editTypeName = 0;
+    if (ele.typeMmi.idTypeMmi == 0) {
       //@ts-ignore
-      let tn:typeName ={
+      let tn: typeName = {
         'idTypeName': 0,
-          'typeName': ''
-      }
-      ele.typeMmi.typeName=tn;
+        'typeName': ''
+      };
+      ele.typeMmi.typeName = tn;
     }
-    // ele.typeMmi = null;
-    // console.log();
-    // var elementtooltip = document.getElementById('oneTooltip');
-    // elementtooltip.setAttribute('style', 'visibility:hidden;');
   }
 
   getAlltyname() {
@@ -1020,7 +971,6 @@ export class VideoComponent implements OnInit {
 
   }
 
-
   closeSearchImdb(idMyMediaInfo: string) {
     for (let mmi of this.tablepage.content) {
       if (mmi.idMyMediaInfo === idMyMediaInfo) {
@@ -1029,71 +979,35 @@ export class VideoComponent implements OnInit {
     }
   }
 
-  getNumberOfPath(videoSupportPaths: videoSupportPaths[]) {
-    let nb = videoSupportPaths.length;
-    console.log(nb);
-    //  &#9856; &#10102; U+02780
-    if (nb == 1) {
-      return 'U+02780';
-    }
-    if (nb == 2) {
-      return 'U+02780';
-    }
-    if (nb == 3) {
-      return 'U+02780';
-    }
-  }
 
-  linkIdttWithIdmmi(link: string, idMyMediaInfo: string) {
-    var idtt = '';
-    for (let str of link.split('/')) {
-      if (str != '') {
-        var reg = new RegExp('(tt[0-9]{7,9})');
-        if (reg.exec(str)) {
-          idtt = str;
-          break;
-        }
-      }
-    }
-    // console.log(idtt);
-    // console.log(idMyMediaInfo);
-    if (link != '' && idMyMediaInfo != '') {
-      this.catalogueService.getRessource('/video/linkIdttWithIdmmi/' + idMyMediaInfo + '/' + idtt)
+  linkIdttWithIdmmi(vf: videoFilms, eletbl: mmi[]) {
+    var idvf = vf.idVideo;
+    let ele = eletbl[0];
+    if (idvf != '' && ele.idMyMediaInfo != '') {
+      this.catalogueService.getRessource('/video/linkIdttWithIdmmi/' + ele.idMyMediaInfo + '/' + idvf)
         .subscribe(data => {
           if (data != null) {
-            // console.log(data);
             //@ts-ignore
             let vf: videoFilms = data;
             // console.log(vf);
-            if(vf!= null){
-            for (let mmi of this.tablepage.content) {
-              if (mmi.idMyMediaInfo === idMyMediaInfo) {
-                console.log(mmi);
-
-                mmi.myressearch=null;
-                if(mmi.typeMmi==null){
-                  // Get typeMmi with vf.idtt
-                  this.catalogueService.getRessource('/video/gettypemmiwithidtt/' + vf.idVideo)
-                    .subscribe(data => {
-                      //@ts-ignore
-                      let typemmi:typeMmi = data;
-                      // console.log(typemmi);
-                      mmi.typeMmi = typemmi;
-                      // console.log(mmi.typeMmi);
-                      mmi.typeMmi.videoFilm = vf;
-                    }, err => {
-                      console.log(err);
-                    });
-                  // and insert it;
-                }else{
-                  console.log(mmi.typeMmi);
-                  mmi.typeMmi.videoFilm = vf;
-                }
-                mmi.search=3;
-                break;
-              }
-            }
-          }else{
+            if (vf != null) {
+              ele.myressearch = null;
+              this.catalogueService.getRessource('/video/gettypemmiwithidmmi/' + ele.idMyMediaInfo)
+                .subscribe(data => {
+                  //@ts-ignore
+                  let typemmi: typeMmi = data;
+                  ele.typeMmi = typemmi;
+                  // console.log('eletbl.length : ' + eletbl.length);
+                  eletbl.splice(0, 1);
+                  if (eletbl.length > 0) {
+                    this.linkIdttWithIdmmi(vf, eletbl);
+                  }
+                }, err => {
+                  console.log(err);
+                });
+              ele.state = 3;
+              ele.search = 3;
+            } else {
               console.log(vf);
             }
           }
@@ -1103,84 +1017,53 @@ export class VideoComponent implements OnInit {
     }
   }
 
-  insertinfo(ele: mmi) {
-    if(ele.typeMmi!=null){
-      if(ele.typeMmi.videoFilm!=null){
-        console.log(ele.typeMmi.videoFilm.nbOfVote);
-        return '<h5>'+ele.typeMmi.videoFilm.nbOfVote+'</h5>';
-      }
-    }
-  }
-
   actors1toN(videoFilmArtists: VideoFilmArtist[]) {
-    let n = 5;//Number of actors
+    let n = this.numberActorsWanted;//NumberActorsWanted
+    n++;
     var vfa: VideoFilmArtist[] = [];
-    for(let act of videoFilmArtists){
-      if(act.actor==true){
-        if(act.numberOrderActor<=n){
+    for (let act of videoFilmArtists) {
+      if (act.actor == true) {
+        if (act.numberOrderActor <= n) {
           vfa = vfa.concat(act);
         }
       }
     }
     //SORT by number
     var actors: videoArtist[] = [];
-/*    console.log('vfa.length : '+vfa.length);
-    if(vfa.length){
-      console.log(videoFilmArtists);
-    }*/
-    if(vfa.length>1) {
-      // console.log('Fct ici : ');
-      // console.log(videoFilmArtists);
-      while(vfa.length>1){
+    if (vfa.length > 1) {
+      while (vfa.length > 1) {
         var act = vfa[0].numberOrderActor;
         var nb = 0;
-        for(var i=1; i<vfa.length; i++){
-          if(act>vfa[i].numberOrderActor){
+        for (var i = 1; i < vfa.length; i++) {
+          if (act > vfa[i].numberOrderActor) {
             act = vfa[i].numberOrderActor;
-            nb=i;
+            nb = i;
           }
         }
         actors = actors.concat(vfa[nb].videoArtist);
-        vfa.splice(nb,1);
+        vfa.splice(nb, 1);
       }
-    }else{
-      if(vfa.length=1) {
-        // console.log('Pb ici : ');
-        // console.log(videoFilmArtists);
-        // actors = actors.concat(vfa[0].videoArtist);
+    } else {
+      if (vfa.length = 1) {
       }
     }
-
     return actors;
-  }
-
-  manyactors(videoFilmArtists: VideoFilmArtist[]) {
-    var test = false;
-    // var nb = 0;
-    for(let act of videoFilmArtists){
-      if(act.actor==true){
-        test=true;
-        // nb++;
-        break;
-      }
-    }
-    // console.log(nb);
-    return test;
   }
 
   directors(videoFilmArtists: VideoFilmArtist[]) {
     var directors: videoArtist[] = [];
-    for(let dir of videoFilmArtists){
-      if(dir.director==true){
+    for (let dir of videoFilmArtists) {
+      if (dir.director == true) {
         directors = directors.concat(dir.videoArtist);
       }
     }
     return directors;
   }
+
   writers(videoFilmArtists: VideoFilmArtist[]) {
     var writers: videoArtist[] = [];
-    for(let dir of videoFilmArtists){
-      if(dir.writer==true){
+    for (let dir of videoFilmArtists) {
+      if (dir.writer == true) {
         writers = writers.concat(dir.videoArtist);
       }
     }
@@ -1188,26 +1071,40 @@ export class VideoComponent implements OnInit {
   }
 
   getImg(urlImg) {
-    // console.log(urlImg[0].ulrImg);
     return urlImg[0].ulrImg;
   }
-
 
   nmclicked(nm: string) {
     // console.log(nm);
   }
+
   nmdbclicked(nm: videoArtist) {
-    // console.log('Research with:'+nm.firstLastName);
     this.textFilter = nm.firstLastName;
-    this.checkboxFlag=false;
+    this.checkboxFlag = false;
+    this.page = 1;
     this.getPageMmi();
-    /*this.catalogueService.getRessource('/managment/researchByName/' + nm.idVideoArtist)
-      .subscribe(data => {
-        console.log(data);
-      }, err=>{
-        console.log(err);
-    });*/
   }
+
+  togglesearch(ele: mmi) {
+    console.log(ele);
+    if (ele.search == 3) {
+      for (let mmi of this.tablepage.content) {
+        if (mmi.idMyMediaInfo === ele.idMyMediaInfo) {
+          mmi.search = 1;
+        }
+      }
+    } else if (ele.search <= 1 && ele.typeMmi != null) {
+      if (ele.typeMmi.videoFilm != null) {
+        for (let mmi of this.tablepage.content) {
+          if (mmi.idMyMediaInfo === ele.idMyMediaInfo) {
+            mmi.search = 3;
+          }
+        }
+      }
+    }
+    console.log(ele);
+  }
+
 
 
 }
@@ -1272,6 +1169,13 @@ interface videoSupportPaths {
   type: string
 }
 
+interface idvsp {
+  idMyMediainfo: string;
+  idVideoNameExport: number;
+  title: string;
+  pathGeneral: string
+}
+
 interface myMediaAudio {
   bitrate: number,
   duration: number,
@@ -1281,17 +1185,10 @@ interface myMediaAudio {
   myMediaLanguage: MyMediaLanguage
 }
 
-interface MyMediaLanguage {
+/*interface MyMediaLanguage {
   idLanguage: number
   language: string
-}
-
-interface idvsp {
-  idMyMediainfo: string;
-  idVideoNameExport: number;
-  title: string;
-  pathGeneral: string
-}
+}*/
 
 interface MyMediaLanguage {
   idLanguage: number
@@ -1349,73 +1246,92 @@ interface videoFilms {
   videoResumes: VideoResume[],
   videoTitles: VideoTitle[],
   videoUserScores: VideoUserScore[],
-  videoKinds:VideoKind[],
+  videoKinds: VideoKind[],
   videoLanguages: videoLanguages[],
-  videoCountries:VideoCountry[],
+  videoCountries: VideoCountry[],
   videoKeywordSet: VideoKeyword[],
   videoFilmArtists: VideoFilmArtist[],
   remake: videoFilms,
   children: videoFilms[],
 }
-interface VideoPoster{
+
+interface VideoMoreInformation {
+  informap: object[];
+}
+
+interface VideoPoster {
   idPoster: number,
   fileName: string,
   idMd5poster: string,
   urlImg: string
 }
-interface VideoKind{
+
+interface VideoKind {
   idKind: number,
   kindEn: string,
   kindFr: string,
 }
-interface videoLanguages{
+
+interface videoLanguages {
   idVideoLanguage: number,
   language: string,
   urlLanguage: string
 }
-interface VideoCountry{
+
+interface VideoCountry {
   idCountry: number,
   country: string,
   urlCountry: string
 }
-interface VideoKeyword{
-  idKeword:number,
+
+interface VideoKeyword {
+  idKeword: number,
   keywordEn: string,
   keywordFr: string,
 }
-interface VideoTitle{
+
+interface VideoTitle {
   id: idVideoTitle,
   title: string
 }
-interface idVideoTitle{
+
+interface idVideoTitle {
   idCountry: number,
   idVideo: string,
 }
-interface VideoTrailler{
+
+interface VideoTrailler {
   idTrailler: number,
   trailler: string
 }
-interface VideoUserScore{
+
+interface VideoUserScore {
 
 }
-interface VideoMoreInformation{
+
+interface VideoMoreInformation {
 
 }
-interface VideoComment{
+
+interface VideoComment {
   idComment: number,
   comment: string,
 }
-interface VideoResume{
-idResume: number,
+
+interface VideoResume {
+  idResume: number,
   textResume: string
 }
-interface VideoSerie{
+
+interface VideoSerie {
 
 }
-interface VideoSourceInfo{
+
+interface VideoSourceInfo {
 
 }
-interface VideoFilmArtist{
+
+interface VideoFilmArtist {
   idVideoArtist: string,
   idVideoFilm: string,
   actor: boolean,
@@ -1426,7 +1342,8 @@ interface VideoFilmArtist{
   numberOrderActor: number
   videoArtist: videoArtist,
 }
-interface videoArtist{
-    idVideoArtist: string,
+
+interface videoArtist {
+  idVideoArtist: string,
   firstLastName: string
 }

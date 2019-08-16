@@ -33,6 +33,21 @@
 ul.dropdown-menu{
   padding: 0px;
 }
+.toleft{
+  float: left;
+}
+.toright{
+  float: right;
+}
+.fullwidth{
+  width: 100%;
+}
+.navbar{
+  border-radius: 0px;
+}
+.elementoptiontbl{
+  display: flex;
+}
 /*.form-group{
   !*width: 60%;*!
   !*display: inline;*!

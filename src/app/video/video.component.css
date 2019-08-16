@@ -1,6 +1,7 @@
 .tblmmi{
   width: 90%;
-  position: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 .alignLeft {
   white-space: nowrap;
@@ -13,7 +14,9 @@
   display: inline-block;
   float: right;
 }
-
+.columnInfoele{
+  alignment: right;
+}
 .sizeMedium {
   white-space: nowrap;
   display: inline-block;
@@ -21,6 +24,16 @@
 }
 .heightMedium{
   height: 4em;
+}
+.lineheight {
+line-height: 1em;
+}
+.columpos{
+  padding: 0;
+  display: list-item;
+}
+.titlemmi{
+  padding: 7px 35px 7px 7px;
 }
 .marginMedium{
   margin-right: 2em;
@@ -31,11 +44,15 @@
 .marginXSmall{
   margin: 0.2em;
 }
-.columnSizeInfo{
-  width: 14em;
+td.columnSizeInfo{
+  width: 210px;
+  padding: 0px 0px 0px 0px;
 }
-.columnInfoele{
-
+.eleoptiontbl{
+  display: inline-block;
+}
+.finder{
+  margin-right: 25px;
 }
 .cellToRight{
   display: inline-flex;
@@ -44,22 +61,24 @@
 .cellToLeft{
   display: inline-flex;
 }
+.appinline{
+  display: inline-flex;
+}
+.tblscore{
+  margin-left: 20px;
+}
 .toclick{
   cursor:pointer;
 }
 span {cursor:pointer; }
 .optiontbl{
   display: inline-flex;
-  width: 100%;
+  width: 80%;
   /*width: 280px;*/
   /*height: 120px;*/
   height: auto;
 }
-.containertable{
-  width: 100%;
-  margin-left: 5em;
-  margin-right: 5em;
-}
+
 .elementoptiontbl{
   display: inline-flex;
   margin-left:10px;
@@ -76,7 +95,21 @@ span {cursor:pointer; }
 }
 input.filtertitle{
   margin-top: 7px;
-
+}
+.btnclean{
+  position: relative;
+  opacity: 0.65;
+  top: 13px;
+  left: -16px;
+}
+.selectvnename{
+  position: relative;
+  display: inline-block;
+  top: -13px;
+  height: 2em;
+  width: 8em;
+  margin-top: 1.3em;
+  margin-right: 0.5em;
 }
 #byname{
   display: inline-flex;
@@ -143,54 +176,7 @@ div.infobulle{
   position: relative;
 }
 /* Tooltip container */
-/*
-.tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black; !* If you want dots under the hoverable text *!
-}
 
-!* Tooltip text *!
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  padding: 5px 0;
-  border-radius: 6px;
-
-  !* Position the tooltip text *!
-  position: absolute;
-  z-index: 1020;
-  bottom: 125%;
-  left: 50%;
-  margin-left: -60px;
-
-  !* Fade in tooltip *!
-  opacity: 1;
-  !*transition: opacity 0.3s;*!
-}
-
-!* Tooltip arrow *!
-.tooltip .tooltiptext::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
-}
-
-!* Show the tooltip text when you mouse over the tooltip container *!
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
-}
-*/
 span.tooltipmi input, select{
   size: 14px;
   color: #444;
@@ -217,6 +203,9 @@ div.tooltipmi {
   opacity: 1;
   transition: opacity 1s;
 }
+ul {
+  list-style-type: none;
+}
 .hred{
   color: red;
   font-size:12px;
@@ -232,29 +221,15 @@ div.tooltipmi {
 }
 .eletitle{
   display: inline-block;
+  line-height: 1.45em;
 }
 
 .imgposter{
   padding-right: 1em;
 }
-/*.tooltipmi div::after {
-  content: "";
-  position: absolute;
-  top: 1.5em;
-  right: 100%;
-  margin-top: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent black transparent transparent;
-}*/
-/*.tooltipmi input {
-  display:none;
+.trSelected{
+  border: 1mm dashed rgba(220, 122, 78, 0.6);
 }
-.tooltipmi input:checked+span {
-  visibility: visible;
-  opacity: 1;
-}*/
-/* The switch - the box around the slider */
 .switch {
   position: relative;
   display: inline-block;
@@ -319,6 +294,4 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
-/*******************/
-/*******************/
-/*******************/
+

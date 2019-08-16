@@ -24,6 +24,8 @@ export class AppComponent implements OnInit {
   private user: usr;
   private currentRoute: string;
 
+  private size: number;
+
   ngOnInit(): void {
     this.authService.loadToken();
     this.onInfo();
@@ -96,7 +98,7 @@ export class AppComponent implements OnInit {
     this.authService.login(data).subscribe(resp => {
       let jwt = resp.headers.get('authorization');
       this.authService.saveToken(jwt);
-      // this.router.navigateByUrl('/');
+      this.router.navigateByUrl('/video');
       this.test();
     }, err => {
       console.log(err);
@@ -148,6 +150,18 @@ export class AppComponent implements OnInit {
    onManagment() {
     this.currentRoute = 'managmentfiles';
     this.router.navigateByUrl('/managmentfiles');
+  }
+
+  decr(valuesize: string) {
+
+  }
+
+  dataChange(valuesize: string) {
+
+  }
+
+  incr(valuesize: string) {
+
   }
 }
 

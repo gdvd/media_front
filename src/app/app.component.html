@@ -1,34 +1,46 @@
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
+<nav class="navbar navbar-inverse fullwidth">
+  <div>
     <div class="navbar-header">
       <a class="navbar-brand" href="#">MediaVideo</a>
     </div>
     <ul class="nav navbar-nav">
-<!--      <li class="active"><a href="/">Home</a></li>-->
+      <!--      <li class="active"><a href="/">Home</a></li>-->
       <li class="dropdown" *ngIf="isAuthenticated()">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
           <span class="caret"></span></a>
         <ul class="dropdown-menu">
-          <li class="list-group-item" [ngClass]="currentRoute=='video'?'active':''" *ngIf="isAdmin()" (click)="onVideo()" >Video</li>
-          <li class="list-group-item" [ngClass]="currentRoute=='video'?'active':''" *ngIf="isUser()" (click)="onVideo()" >Video</li>
-          <li class="list-group-item" [ngClass]="currentRoute=='export'?'active':''" *ngIf="isAdmin()" (click)="onExport()" >Export</li>
-          <li class="list-group-item" [ngClass]="currentRoute=='managmentfiles'?'active':''" *ngIf="isAdmin()" (click)="onManagment()" >Managment</li>
-          <li class="list-group-item" [ngClass]="currentRoute=='admin'?'active':''" *ngIf="isAdmin()" (click)="onAdmin()" >Admin</li>
-          <li class="list-group-item" [ngClass]="currentRoute=='video'?'active':''" *ngIf="isUser()"><a href="#">Films</a></li>
+          <li class="list-group-item" [ngClass]="currentRoute=='video'?'active':''" *ngIf="isAdmin()"
+              (click)="onVideo()">Video
+          </li>
+          <li class="list-group-item" [ngClass]="currentRoute=='video'?'active':''" *ngIf="isUser()"
+              (click)="onVideo()">Video
+          </li>
+          <li class="list-group-item" [ngClass]="currentRoute=='export'?'active':''" *ngIf="isAdmin()"
+              (click)="onExport()">Export
+          </li>
+          <li class="list-group-item" [ngClass]="currentRoute=='managmentfiles'?'active':''" *ngIf="isAdmin()"
+              (click)="onManagment()">Managment
+          </li>
+          <li class="list-group-item" [ngClass]="currentRoute=='admin'?'active':''" *ngIf="isAdmin()"
+              (click)="onAdmin()">Admin
+          </li>
+          <li class="list-group-item" [ngClass]="currentRoute=='video'?'active':''" *ngIf="isUser()"><a
+            href="#">Films</a></li>
         </ul>
       </li>
     </ul>
-    <!--    <form #f="ngForm" (ngSubmit)="onSubmitKeywordGeneral(f.value)" class="navbar-form navbar-left">
-          <div class="form-group">
-            <input type="text" class="form-control" ngModel name="keywordGeneral" placeholder="Search Title" required>
-          </div>
-          <button style="margin-left: 1em;" type="submit" class="btn btn-default">Submit</button>
-          <div class="chb">
-          </div>
-        </form>-->
-    <div class="form">
-<!--            <button (click)="test()" class="form-inline">Test</button>-->
-      <div class="form-inline">
+    <div class="toleft">
+      <!--<span>
+          &lt;!&ndash;<h4>&ndash;&gt;&nbsp;|&nbsp;Size&nbsp;&lt;!&ndash;</h4>&ndash;&gt;
+          <span class="glyphicon glyphicon-minus minus" (click)="decr('valuesize')"></span>
+          <input class="inputsize" type="text" [(ngModel)]="size" (change)="dataChange('valuesize')"/>
+          <span class="glyphicon glyphicon-plus plus" (click)="incr('valuesize')"></span>
+      </span>-->
+    </div>
+
+    <div class="form elementoptiontbl toright">
+      <!--            <button (click)="test()" class="form-inline">Test</button>-->
+<!--      <div class="">-->
         <div class="form-inline" *ngIf="isConnected">
           <span class="glyphicon glyphicon-user icon" (click)="test()" style="color: green;"></span>
           <a class="btn" (click)="logout()">To Logout</a>
@@ -46,16 +58,22 @@
               style="color: darkred;"></span>
       </div>
     </div>
-  </div>
+<!--  </div>-->
 </nav>
 <div class="row">
   <div class="col-md-2">
-<!--    <app-toolbar></app-toolbar>-->
   </div>
   <div>
-<!--  <div class="col-md-10">-->
     <router-outlet>
     </router-outlet>
   </div>
 </div>
 
+<!--    <form #f="ngForm" (ngSubmit)="onSubmitKeywordGeneral(f.value)" class="navbar-form navbar-left">
+      <div class="form-group">
+        <input type="text" class="form-control" ngModel name="keywordGeneral" placeholder="Search Title" required>
+      </div>
+      <button style="margin-left: 1em;" type="submit" class="btn btn-default">Submit</button>
+      <div class="chb">
+      </div>
+    </form>-->

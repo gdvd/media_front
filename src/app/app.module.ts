@@ -14,6 +14,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ManagmentfilesComponent } from './managmentfiles/managmentfiles.component';
 import { ExportComponent } from './export/export.component';
 import {CookieService} from 'ngx-cookie-service';
+import { TooltipComponent } from './tooltip/tooltip.component';
+import { ChlangComponent } from './chlang/chlang.component';
+import { ScoreComponent } from './score/score.component';
+import { TypemediaComponent } from './typemedia/typemedia.component';
+import { TypeeditComponent } from './typeedit/typeedit.component';
 
 
 
@@ -27,7 +32,12 @@ import {CookieService} from 'ngx-cookie-service';
     LoginComponent,
     AdminComponent,
     ManagmentfilesComponent,
-    ExportComponent
+    ExportComponent,
+    TooltipComponent,
+    ChlangComponent,
+    ScoreComponent,
+    TypemediaComponent,
+    TypeeditComponent
   ],
   imports: [
     BrowserModule, FormsModule, HttpClientModule,

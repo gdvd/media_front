@@ -1,145 +1,144 @@
-<div class="container-fluid tblmmi">
-  <!--  <button (click)="test()">test</button>-->
+<div class=" tblmmi">
   <div *ngIf="tablepage">
-
-
-
-    <div class="containertable">
+    <div>
       <table class="table table-striped">
         <thead>
         <tr>
           <!--    list with details    glyphicon glyphicon-indent-left-->
           <td class="optiontbl"><h4 class="toclick" id="byname" (click)="sortByName()">Titre <span
             [ngClass]="myOrder=='nadown'?'glyphicon glyphicon-triangle-bottom':myOrder=='naup'?'glyphicon glyphicon-triangle-top':''">
-
-          </span></h4>
-
-          <div class="optiontbl">
-            <div class="elementoptiontbl">
-              <!--              test switch 1-->
-              <label class="switch">
-                <input type="checkbox" (change)="checkboxchange($event)" [(ngModel)]="checkboxFlag">
-                <span class="slider round"></span>
-              </label>&nbsp;
-              <!--            fin test switch -->
-              <input class="filtertitle" [(ngModel)]="textFilter" (keyup)="textFilterChange()"
-                     placeholder="Filter on title" type="text"/>
-                    &nbsp;<h4>{{tablepage.totalElements}}&nbsp;videos</h4>
+          </span>
+          </h4>
+            <div class="optiontbl">
+              <div class="elementoptiontbl">
+                <select class="form-control selectvnename"
+                        (change)="setvalueformVneName($event)"
+                        [formGroup]="typenameForm">
+                  <option value="">All</option>
+                  <option *ngFor="let vneName0 of listIdVneToName"
+                          [selected]="vneName0.nameExport==vneName"
+                          [value]="vneName0.nameExport" >
+                    {{vneName0.nameExport}}
+                  </option>
+                </select>
+                <label class="switch">
+                  <input type="checkbox" (change)="checkboxchange($event)"
+                         [(ngModel)]="checkboxFlag">
+                  <span class="slider round"></span>
+                </label>&nbsp;
+                <input class="filtertitle" [(ngModel)]="textFilter" (keyup)="textFilterChange()"
+                       placeholder="Filter on title" type="text"/>
+                <span class="glyphicon glyphicon-remove btnclean"
+                      (click)="cleanFilter()" (dblclick)="cleanAllFilter()"></span>
+                &nbsp;<h4 class="nbele">{{tablepage.totalElements}}&nbsp;videos</h4>
+              </div>
+              <div class="elementoptiontbl">
+                <h4>&nbsp;|&nbsp;Page nb&nbsp;</h4>
+                <span class="glyphicon glyphicon-minus minus" (click)="decr('valuepage')"></span>
+                <input class="inputsize" type="text" [(ngModel)]="page" (change)="dataChange('valuepage')"/>
+                <span class="glyphicon glyphicon-plus plus" (click)="incr('valuepage')"></span>
+              </div>
+              <br>
             </div>
-            <div class="elementoptiontbl">
-              <h4>&nbsp;|&nbsp;Page nb&nbsp;</h4>
-              <span class="glyphicon glyphicon-minus minus" (click)="decr('valuepage')"></span>
-              <input class="inputsize" type="text" [(ngModel)]="page" (change)="dataChange('valuepage')"/>
-              <span class="glyphicon glyphicon-plus plus" (click)="incr('valuepage')"></span>
+          </td>
+          <td class="toclick columnSizeInfo" id="byinfo">
+            <div class="eleoptiontbl">
+              <ul class="lineheight columpos">
+                <li class="toclick" id="byduration" (click)="sortByDuration()">Duree <span
+                  [ngClass]="myOrder=='dudown'?'glyphicon glyphicon-triangle-bottom':myOrder=='duup'?'glyphicon glyphicon-triangle-top':''"></span>
+                </li>
+                <li class="toclick" id="bydimension" (click)="sortByDimension()">Dimension <span
+                  [ngClass]="myOrder=='dmdown'?'glyphicon glyphicon-triangle-bottom':myOrder=='dmup'?'glyphicon glyphicon-triangle-top':''"></span>
+                </li>
+                <li class="toclick" id="bybitrate" (click)="sortByBitrate()">Bitrate <span
+                  [ngClass]="myOrder=='brdown'?'glyphicon glyphicon-triangle-bottom':myOrder=='brup'?'glyphicon glyphicon-triangle-top':''"></span>
+                </li>
+                <li class="toclick" id="bysize" (click)="sortBySize()">Taille <span
+                  [ngClass]="myOrder=='sizedown'?'glyphicon glyphicon-triangle-bottom':myOrder=='sizeup'?'glyphicon glyphicon-triangle-top':''"></span>
+                </li>
+              </ul>
             </div>
-            <div class="elementoptiontbl">
-              <h4>&nbsp;|&nbsp;Size&nbsp;</h4>
+            <div class="eleoptiontbl">
+              <h4>&nbsp;|&nbsp;Page Size</h4>
               <span class="glyphicon glyphicon-minus minus" (click)="decr('valuesize')"></span>
               <input class="inputsize" type="text" [(ngModel)]="size" (change)="dataChange('valuesize')"/>
               <span class="glyphicon glyphicon-plus plus" (click)="incr('valuesize')"></span>
             </div>
-          </div>
           </td>
-          <!--        glyphicon glyphicon-subtitles      glyphicon glyphicon-text-size-->
-
-          <td class="toclick columnSizeInfo" id="byinfo"  >info</td>
-          <td class="toclick" id="byduration" (click)="sortByDuration()">Duree <span
-            [ngClass]="myOrder=='dudown'?'glyphicon glyphicon-triangle-bottom':myOrder=='duup'?'glyphicon glyphicon-triangle-top':''"></span>
-          </td>
-          <td class="toclick" id="bydimension" (click)="sortByDimension()">Dimension <span
-            [ngClass]="myOrder=='dmdown'?'glyphicon glyphicon-triangle-bottom':myOrder=='dmup'?'glyphicon glyphicon-triangle-top':''"></span>
-          </td>
-          <td class="toclick" id="bybitrate" (click)="sortByBitrate()">Bitrate <span
-            [ngClass]="myOrder=='brdown'?'glyphicon glyphicon-triangle-bottom':myOrder=='brup'?'glyphicon glyphicon-triangle-top':''"></span>
-          </td>
-          <td class="toclick" id="bysize" (click)="sortBySize()">Taille <span
-            [ngClass]="myOrder=='sizedown'?'glyphicon glyphicon-triangle-bottom':myOrder=='sizeup'?'glyphicon glyphicon-triangle-top':''"></span>
-          </td>
-          <!--<td class="toclick" id="byvne" (click)="sortByVne()">NameExport <span
-            [ngClass]="myOrder=='vnedown'?'glyphicon glyphicon-triangle-bottom':myOrder=='vneup'?'glyphicon glyphicon-triangle-top':''"></span>
-          </td>-->
         </tr>
         </thead>
         <tbody>
         <ng-container *ngFor="let ele of tablepage.content">
-          <tr>
+          <tr [ngClass]="ele.state==2?'trSelected':''">
             <!--  ICON =>  https://www.toptal.com/designers/htmlarrows/symbols/  https://fontawesome.com   -->
             <td [id]="ele.idMyMediaInfo" class="titlemmi">
               <div class="cellToLeft">
-                <!-- {{getNumberOfPath(ele.videoSupportPaths)}} -->
-                <!--<h5>{{getNumberOfPath(ele.videoSupportPaths)}}</h5>-->
-                <!-- glyphicon glyphicon-film -->
-                <!-- glyphicon glyphicon-file -->
-                <!-- glyphicon glyphicon-picture -->
-                <!-- glyphicon glyphicon-comment -->
-                <!-- glyphicon glyphicon-eye-open -->
-                <!-- glyphicon glyphicon-fullscreen -->
-                <!-- glyphicon glyphicon-filter -->
-                <!-- glyphicon glyphicon-paperclip -->
-                <!-- glyphicon glyphicon-link -->
-                <!-- glyphicon glyphicon-pushpin -->
-                <!-- glyphicon glyphicon-sort-by-alphabet -->
-                <!-- glyphicon glyphicon-sort-by-alphabet-alt -->
-                <!-- glyphicon glyphicon-sort-by-order -->
-                <!-- glyphicon glyphicon-sort-by-order-alt -->
-                <!-- glyphicon glyphicon-sort-by-attributes -->
-                <!-- glyphicon glyphicon-sort-by-attributes-alt -->
-                <!-- glyphicon glyphicon-compressed -->
-                <!-- glyphicon glyphicon-resize-small -->
-                <!-- glyphicon glyphicon-resize-full -->
-                <!-- glyphicon glyphicon-blackboard -->
-                <!--  -->
                 <span class="infotitle imgposter" *ngIf="ele.typeMmi!=null && ele.typeMmi.videoFilm!=null">
-                  <div class="eletitle">
+                  <div *ngIf="(ele.typeMmi.videoFilm.videoPosters.length>0)" class="eletitle">
                     <img [src]="getImg(ele.typeMmi.videoFilm.videoPosters)" alt="Poster">
                   </div>
                 </span>
-                <span class="infotitle" *ngIf="ele.state==0"(mouseup)="showSelectedText($event)">&nbsp;
+                <span class="infotitle" *ngIf="ele.state==0" (mouseup)="showSelectedText($event)">&nbsp;
                   {{ele.videoSupportPaths[0].title}}</span><br>
                 <span class="infotitle2" *ngIf="ele.typeMmi!=null && ele.typeMmi.videoFilm!=null">
                   <div class="eletitle">
-                    <div>Titre : <ng-container *ngFor="let tit of ele.typeMmi.videoFilm.videoTitles; let isLast=last">
-                      <u><b>{{tit.title}}</b></u>{{isLast ? '' : ' | '}}</ng-container></div>
-                    <div>Pays : <ng-container *ngFor="let tit of ele.typeMmi.videoFilm.videoCountries; let isLast=last">
+                    <app-tooltip class="appinline"
+                                 [listIdVneToName]="listIdVneToName"
+                                 [titlevideo]="ele.typeMmi.videoFilm.videoTitles"
+                                 [elementsimple]="ele.videoSupportPaths"
+                                 [idVideo]="ele.typeMmi.videoFilm.idVideo"></app-tooltip>
+                    <app-score class="appinline tblscore lineheight" [thescore]="ele.typeMmi.videoFilm"></app-score>
+                    <br>
+                    <ng-container
+                      *ngIf="ele.typeMmi.videoFilm.year">Annee: {{ele.typeMmi.videoFilm.year}} | </ng-container>
+                    <ng-container>Pays : <ng-container
+                      *ngFor="let tit of ele.typeMmi.videoFilm.videoCountries; let isLast=last">
                       {{tit.country}}{{isLast ? '' : ', '}}</ng-container>
-                    <ng-container *ngIf="ele.typeMmi.videoFilm.year"> | Annee: {{ele.typeMmi.videoFilm.year}}</ng-container>
-                    </div>
-                    <div>Meteur en scene : <ng-container *ngFor="let dir of directors(ele.typeMmi.videoFilm.videoFilmArtists); let isLast=last">
-                      <b (mouseup)="nmclicked(dir.idVideoArtist)" (dblclick)="nmdbclicked(dir)">{{dir.firstLastName}}</b>{{isLast ? '' : ', '}}</ng-container>
-                     | Scenariste : <ng-container *ngFor="let dir of writers(ele.typeMmi.videoFilm.videoFilmArtists); let isLast=last">
-                      <b (mouseup)="nmclicked(dir.idVideoArtist)" (dblclick)="nmdbclicked(dir)">{{dir.firstLastName}}</b>{{isLast ? '' : ', '}}</ng-container></div>
+                    </ng-container>
+                    <div>Meteur en scene : <ng-container
+                      *ngFor="let dir of directors(ele.typeMmi.videoFilm.videoFilmArtists); let isLast=last">
+                      <b (mouseup)="nmclicked(dir.idVideoArtist)"
+                         (dblclick)="nmdbclicked(dir)">{{dir.firstLastName}}</b>{{isLast ? '' : ', '}}</ng-container>
+                     | Scenariste : <ng-container
+                        *ngFor="let dir of writers(ele.typeMmi.videoFilm.videoFilmArtists); let isLast=last; let i=index"><ng-container
+                        *ngIf="i<=limiteOfWriters">
+                      <b (mouseup)="nmclicked(dir.idVideoArtist)"
+                         (dblclick)="nmdbclicked(dir)">{{dir.firstLastName}}</b>{{i >= (limiteOfWriters - 1) || isLast ? '' : ', '}}</ng-container>
+                        <ng-container *ngIf="i==(limiteOfWriters+1)">...</ng-container></ng-container></div>
                     <div>Acteurs :
-                      <ng-container *ngFor="let act of actors1toN(ele.typeMmi.videoFilm.videoFilmArtists); let isLast=last">
-                      <b (mouseup)="nmclicked(act.idVideoArtist)" (dblclick)="nmdbclicked(act)">{{act.firstLastName}}</b>{{isLast ? ' ...' : ', '}}</ng-container></div>
+                      <ng-container
+                        *ngFor="let act of actors1toN(ele.typeMmi.videoFilm.videoFilmArtists); let isLast=last">
+                      <b (mouseup)="nmclicked(act.idVideoArtist)"
+                         (dblclick)="nmdbclicked(act)">{{act.firstLastName}}</b>{{isLast ? ' ...' : ', '}}</ng-container></div>
                     <div>Genre : <ng-container *ngFor="let kd of ele.typeMmi.videoFilm.videoKinds; let isLast=last">
                       {{kd.kindEn}}{{isLast ? '' : ', '}}</ng-container></div>
-                    <div>Mots-clefs : <ng-container *ngFor="let keyw of ele.typeMmi.videoFilm.videoKeywordSet; let isLast=last">
+                    <div>Mots-clefs : <ng-container
+                      *ngFor="let keyw of ele.typeMmi.videoFilm.videoKeywordSet; let isLast=last">
                       {{keyw.keywordEn}}{{isLast ? '' : ', '}}</ng-container></div>
                     <div>More info :
-                      <ng-container *ngIf="ele.typeMmi.videoFilm.videoSerie">Serie : {{ele.typeMmi.videoFilm.videoSerie.toString()}}</ng-container>
-                      <ng-container *ngIf="ele.typeMmi.videoFilm.videoTrailler">Trailler : {{ele.typeMmi.videoFilm.videoTrailler.toString()}}</ng-container>
-                      <ng-container *ngIf="ele.typeMmi.videoFilm.remake">Remake : {{ele.typeMmi.videoFilm.remake}}</ng-container>
+                      <ng-container
+                        *ngIf="ele.typeMmi.videoFilm.videoTrailler">Trailler : {{ele.typeMmi.videoFilm.videoTrailler.toString()}}</ng-container>
+                      <ng-container *ngIf="ele.typeMmi.videoFilm.videoMoreInformation">
+                      <ng-container *ngIf="ele.typeMmi.videoFilm.videoMoreInformation.informap!=null">
+                        <app-tooltip [element]="ele.typeMmi.videoFilm.videoMoreInformation.informap"></app-tooltip>
+                      </ng-container>
+                      </ng-container>
+                      <ng-container
+                        *ngIf="ele.typeMmi.videoFilm.remake">Remake : {{ele.typeMmi.videoFilm.remake}}</ng-container>
                         <ng-container *ngIf="ele.typeMmi.videoFilm.videoComment">
                         <ng-container *ngFor="let com of ele.typeMmi.videoFilm.videoComment.comment; let isLast=last">
                       {{com}}{{isLast ? '' : ', '}}</ng-container>
                       </ng-container>
-                        <!--<ng-container *ngIf="ele.typeMmi.videoFilm.videoResumes">
-                          <ng-container *ngFor="let res of ele.typeMmi.videoFilm.videoResumes; let isLast=last">
-                          {{res.textResume}}{{isLast ? '' : ', '}}</ng-container>
-                      </ng-container>-->
                     </div>
-
-<!-- link to : languages, country more info, trailler, remake-->
+                    <!-- link to : languages, country more info, trailler, remake-->
                   </div>
                 </span>
 
                 <span *ngIf="ele.state==1"
                       class="glyphicon glyphicon-indent-left"
                       (click)="getMoreInfo(ele)">&nbsp;
-<!--                <div class="hred" [innerHtml]="insertinfo(ele)"></div>-->
                 </span><h5 *ngIf="ele.state==1" (mouseup)="showSelectedText($event)">
                 {{ele.videoSupportPaths[0].title}}</h5>
-
                 <span *ngIf="ele.state==2">
               <span class="glyphicon glyphicon-indent-right"
                     (click)="removeMoreInfo(ele)"></span>
@@ -147,23 +146,20 @@
                 <BR>&nbsp;&nbsp;&nbsp;{{title.title}}&nbsp;->&nbsp;{{title.namevne}}</span>
               </span>
               </div>
-              <div class="cellToRight">
-                <div *ngIf="ele.search==3 && ele.typeMmi!=null&& ele.typeMmi.videoFilm!=null">
-                    <h4 class="score">{{ele.typeMmi.videoFilm.scoreOnHundred /10}}</h4>
-<!--                  / <h6>{{ele.typeMmi.videoFilm.nbOfVote}}</h6>-->
-                </div>
+              <div class="cellToRight finder">
+                <ul>
+                  <li *ngIf="ele.search==3 && ele.typeMmi!=null&& ele.typeMmi.videoFilm!=null">
+                  </li>
+                  <li></li>
+                </ul>
                 <div *ngIf="ele.search==2">
                 <span class="glyphicon glyphicon-remove"
                       (click)="closesearchImdbresult(ele.idMyMediaInfo)"></span>
                   <ng-container *ngFor="let res of ele.myressearch">
                     <br>
-                    <span class="glyphicon glyphicon-link"
-                          *ngIf="res.video&&res.state"
-                          (dblclick)="linkIdttWithIdmmi(res.link, ele.idMyMediaInfo)"></span>
                     <span class="glyphicon glyphicon-download"
                           *ngIf="res.video&& !(res.state)"
-                          (dblclick)="linkMmi(res.link, ele.idMyMediaInfo)"></span>
-                    &nbsp;
+                          (dblclick)="linkMmi(res.link, ele)"></span>&nbsp;
                     <ng-container *ngIf="res.urlImg!=null">
                       <a [href]="limdb+res.link" rel="noopener noreferrer" target="_blank">
                         <img [src]="res.urlImg"/>&nbsp;{{res.name}}</a>&nbsp;{{res.info}}
@@ -188,83 +184,10 @@
                 <div *ngIf="ele.search==0" class="glyphicon glyphicon-search" (click)="gotosearch(ele)"></div>&nbsp;
               </div>
             <td class="columnInfoele">
-            <ng-container *ngIf="ele.editTypeName==0" >
-              <span *ngIf="ele.typeMmi==null || ele.typeMmi.idTypeMmi==0"
-                    id="callEdit{{ele.idMyMediaInfo}}"
-                    (click)="callEdit(ele)"
-                    class="glyphicon glyphicon-edit">
-              </span>
-            <span *ngIf="ele.typeMmi!=null && ele.typeMmi.typeName.typeName=='film'"
-                  class="glyphicon glyphicon-film" (dblclick)="callEdit(ele)"></span>
-            <span *ngIf="ele.typeMmi!=null && ele.typeMmi.typeName.typeName=='film court'"
-                  class="glyphicon glyphicon-film" (dblclick)="callEdit(ele)"></span>
-            <span *ngIf="ele.typeMmi!=null && ele.typeMmi.typeName.typeName=='film moyen'"
-                  class="glyphicon glyphicon-film" (dblclick)="callEdit(ele)"></span>
-            <span *ngIf="ele.typeMmi!=null && ele.typeMmi.typeName.typeName=='doc'"
-                  class="glyphicon glyphicon-file" (dblclick)="callEdit(ele)"></span>
-            <span *ngIf="ele.typeMmi!=null && ele.typeMmi.typeName.typeName=='docufilm'"
-                  class="glyphicon glyphicon-file" (dblclick)="callEdit(ele)"></span>
-            <span *ngIf="ele.typeMmi!=null && ele.typeMmi.typeName.typeName=='dessin anime'"
-                  class="glyphicon glyphicon-picture" (dblclick)="callEdit(ele)"></span>
-             <span *ngIf="ele.typeMmi!=null && ele.typeMmi.typeName.typeName=='serie'"
-                  class="glyphicon glyphicon-eye-open" (dblclick)="callEdit(ele)"></span>
-             <span *ngIf="ele.typeMmi!=null && ele.typeMmi.typeName.typeName=='emissionTV'"
-                  class="glyphicon glyphicon-eye-open" (dblclick)="callEdit(ele)"></span>
-             <span *ngIf="ele.typeMmi!=null && ele.typeMmi.typeName.typeName=='theatre'"
-                  class="glyphicon glyphicon-eye-open" (dblclick)="callEdit(ele)"></span>
-              <span *ngIf="ele.typeMmi!=null && ele.typeMmi.typeName.typeName=='Autre'"
-                    class="glyphicon glyphicon-eye-close" (dblclick)="callEdit(ele)"></span>
-            </ng-container>
-              <span *ngIf="ele.editTypeName==1" class="tooltipmi">
-                 <div class="tooltipmi">
-                    <form class="form form-group" #f="ngForm"
-                          (ngSubmit)="submitChangeTypeMmi(ele.typeMmi, ele.idMyMediaInfo)">
-                      <label>Name of serie.fr</label>
-                      <input type="text" name="nameseriefr" [(ngModel)]="ele.typeMmi.nameSerie"><br>
-                      <label>Name of serie.vo</label>
-                      <input type="text" name="nameserievo" [(ngModel)]="ele.typeMmi.nameSerieVO"><br>
-                      <label>Saison</label>
-                      <input type="number" name="seasonnb" [(ngModel)]="ele.typeMmi.season"><br>
-                      <label>Episode</label>
-                      <input type="number" name="episodenb" [(ngModel)]="ele.typeMmi.episode"><br>
-                        <select class="custom-select"
-                                (change)="setvalueformtype($event, ele.idMyMediaInfo)"
-                                [formGroup]="typenameForm"
-                        >
-                          <option *ngFor="let choicetn of listTypeNameWithId"
-                                  [value]="choicetn.idTypeName"
-                                  [selected]="choicetn.idTypeName==choice"
-                                  >{{choicetn.typeName}}
-<!--                                  [selected]="choicetn.idTypeName==choice"-->
-                          </option>
-                        </select><br>
-                      <button class="btn btn-warning" type="reset" value="Reset"
-                              (click)="cancelTypeName(ele)">Cancel</button>
-                      <button class="btn btn-primary" type="submit">Submit</button>
-                    </form>
-                  </div>
-              </span>
-              &nbsp;
-              <span (click)="getInfo(ele)" class="glyphicon glyphicon-info-sign infobulle"
-                    (mouseover)="getId(ele)">
-                <div class="infobulle">{{ele.idMyMediaInfo}}</div>
-              </span>&nbsp;
-              &nbsp;
-              <span class="glyphicon glyphicon-volume-up">
-              <span *ngFor="let au of ele.myMediaAudios">.{{au.myMediaLanguage.language}}</span></span>
-              &nbsp;
-              <span *ngIf="ele.myMediaTexts.length!=0" class="glyphicon glyphicon-subtitles">
-              <span *ngFor="let au of ele.myMediaTexts">.{{au.myMediaLanguage.language}}</span></span>
-              &nbsp;
-
-
-              <!--          <span class="glyphicon glyphicon-film"></span>-->
+              <app-typemedia [ele]="ele"
+                             [listTypeNameWithId]="listTypeNameWithId">
+              </app-typemedia>
             </td>
-            <td>{{inHMS(ele.duration)}}</td>
-            <td>{{ele.width}} x {{ele.height}}</td>
-            <td>{{inGMK2(ele.bitrate)}}</td>
-            <td>{{inGMK2(ele.fileSize)}}</td>
-<!--            <td>{{getNameOfVne(ele)}}</td>-->
           </tr>
         </ng-container>
         </tbody>
