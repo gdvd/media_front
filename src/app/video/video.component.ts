@@ -5,6 +5,8 @@ import {Router} from '@angular/router';
 import {AppComponent} from '../app.component';
 import {CookieService} from 'ngx-cookie-service';
 import {FormBuilder, FormGroup} from '@angular/forms';
+import {MessageService} from '../message-service.service';
+import {Subscription} from 'rxjs';
 
 
 @Component({
@@ -21,6 +23,7 @@ export class VideoComponent implements OnInit {
   private toSort: string;
   private valueSizePage;
   private listIdVneToName: vnelight[];
+  private listUserWithId: userLight[];
   private vneName = '';
   private myOrder = '';
   private limdb = 'http://www.imdb.com';
@@ -30,19 +33,31 @@ export class VideoComponent implements OnInit {
   private vnenameForm: FormGroup;
   private choice: any;
   private checkboxFlag: boolean = true;
+  private checkboxfilterFlag: boolean = true;
   private numberActorsWanted: number = 4;//NumberActorsWanted
   private limiteOfWriters: number = 4;
+
+  messages: any[] = [];
+  subscription: Subscription;
 
   constructor(private httpClient: HttpClient,
               private catalogueService: CatalogueService,
               private router: Router,
               private appComponent: AppComponent,
               private cookieService: CookieService,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private messageService: MessageService) {
+    this.subscription = this.messageService.getMessage().subscribe(message => {
+      if (message) {
+        this.messages.push(message);
+      } else {
+        // clear messages when empty message received
+        this.messages = [];
+      }
+    });
   }
 
   /*   this.router.navigateByUrl('/');//Re-Route */
-
   ngOnInit() {
     if (this.cookieService.check('valueSizePage')) {
       this.valueSizePage = this.cookieService.get('valueSizePage');
@@ -52,13 +67,20 @@ export class VideoComponent implements OnInit {
       this.size = 10;
     }
     this.page = 1;
-    this.toSort = 'title';
-    this.textFilter = '';
+    this.toSort = 'dateModif';
+    this.textFilter='';
     this.myOrder = 'naup';
-    this.getPageMmi();
     this.getListIdVneToName();
     this.getAlltyname();
     this.getAlltynameWithId();
+
+    if (this.cookieService.check('valueFiltersupport')) {
+      this.vneName = this.cookieService.get('valueFiltersupport');
+    } else {
+      this.cookieService.set('valueFiltersupport', '');
+      this.vneName = '';
+    }
+    this.getPageMmi();
 
     this.typenameForm = this.fb.group({
       listTypeNameWithId: [0]
@@ -66,6 +88,8 @@ export class VideoComponent implements OnInit {
     this.vnenameForm = this.fb.group({
       listIdVneToName: [0]
     });
+    this.getListUserWithId();
+    // console.log(window.innerWidth);
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -78,19 +102,31 @@ export class VideoComponent implements OnInit {
     }
   }
 
+  getListUserWithId(){
+    this.catalogueService.getRessource('/videouser/listUserWithId')
+      .subscribe(data => {
+        //@ts-ignore
+        this.listUserWithId=data;
+      }, err => {
+        console.log(err);
+      });
+  }
   setvalueformVneName(event) {
     this.vneName = event.target.value;
+    this.cookieService.set('valueFiltersupport', this.vneName);
     this.page = 1;
     this.getPageMmi();
   }
 
   cleanFilter() {
     this.textFilter = '';
+    this.cookieService.set('valueFiltersupport', '');
     this.page = 1;
     this.getPageMmi();
   }
 
   cleanAllFilter() {
+    this.cookieService.set('valueFiltersupport', '');
     this.textFilter = '';
     this.vneName = '';
     this.page = 1;
@@ -212,10 +248,12 @@ export class VideoComponent implements OnInit {
     let strToSort = '&toSort=' + this.toSort;
     if (this.checkboxFlag == true) {
       this.catalogueService.postRessourceWithData(
-        '/managment/listMmiForLoginPP?page=' + (this.page - 1)
+        '/videouser/listMmiForLoginPP?page=' + (this.page - 1)
         + '&vneName=' + this.vneName + '&size='
-        + this.size + strToSort, '%' + this.textFilter + '%')
+        + this.size + strToSort +'&filename='+this.checkboxfilterFlag
+        , '%' + this.textFilter + '%')
         .subscribe(data => {
+          // console.log(data);
           //@ts-ignore
           this.tablepage = data;
           if (this.tablepage.content.length == 1) {
@@ -250,7 +288,7 @@ export class VideoComponent implements OnInit {
         });
     } else {
       this.catalogueService.postRessourceWithData(
-        '/managment/listMmiForLoginWithNamePP?page=' + (this.page - 1) + '&size='
+        '/videouser/listMmiForLoginWithNamePP?page=' + (this.page - 1) + '&size='
         + this.size + strToSort, '%' + this.textFilter + '%')
         .subscribe(data => {
           //@ts-ignore
@@ -292,13 +330,19 @@ export class VideoComponent implements OnInit {
   checkboxchange(event) {
     this.page = 1;
     this.textFilter = '';
-    let elem: HTMLElement = event.target.parentNode.parentNode;
-    //@ts-ignore
-    let te: HTMLElement = elem.getElementsByClassName('filtertitle');
+    let te: HTMLElement = document.getElementById("filtertitle");
+    let sw: HTMLElement = document.getElementById("selectvne");
     if (this.checkboxFlag == true) {
-      te[0].placeholder = 'Filter on title';
+      //@ts-ignore
+      te.placeholder = 'Filter on title';
+      //@ts-ignore
+      sw.disabled = false;
     } else {
-      te[0].placeholder = 'Filter on name';
+      //@ts-ignore
+      te.placeholder = 'Filter on name';
+      //@ts-ignore
+      sw.disabled = true;
+      // document.getElementById('switchtitlename').textContent = 'name';
     }
     this.getPageMmi();
   }
@@ -306,12 +350,11 @@ export class VideoComponent implements OnInit {
   textFilterChange() {
     this.page = 1;
     this.getPageMmi();
-    // console.log(this.textFilter);
   }
 
   test() { // ?page=0&size=10&pos=40
     event.stopPropagation();
-    this.catalogueService.getRessource('/managment/lVneIdToName')
+    this.catalogueService.getRessource('/videouser/lVneIdToName')
       .subscribe(data => {
         console.log(data);
       }, err => {
@@ -727,7 +770,7 @@ export class VideoComponent implements OnInit {
   }
 
   private getListIdVneToName() {
-    this.catalogueService.getRessource('/managment/lVneIdToName')
+    this.catalogueService.getRessource('/videouser/lVneIdToName')
       .subscribe(data => {
         this.listIdVneToName = null;
         //@ts-ignore
@@ -801,7 +844,6 @@ export class VideoComponent implements OnInit {
     var text = '';
     if (window.getSelection) {
       text = window.getSelection().toString();
-      console.log(text);
       //@ts-ignore
     } else if (document.selection && document.selection.type != 'Control') {
       //@ts-ignore
@@ -853,10 +895,10 @@ export class VideoComponent implements OnInit {
       this.catalogueService.postRessourceWithData('/managment/getVideoFilm/'
         + ele.idMyMediaInfo, (mylink))
         .subscribe(data => {
-          console.log(data);
+          // console.log(data);
           //@ts-ignore
           vf = data;
-          console.log(ele);
+          // console.log(ele);
           var eletbl: mmi[] = [];
           for (let mmi of this.tablepage.content) {
             if (mmi.state == 2) {
@@ -864,7 +906,7 @@ export class VideoComponent implements OnInit {
             }
           }
           // ele.state = 3;
-          console.log(eletbl);
+          // console.log(eletbl);
           this.linkIdttWithIdmmi(vf, eletbl);
         }, err => {
           console.log(err);
@@ -944,7 +986,7 @@ export class VideoComponent implements OnInit {
 
   getAlltyname() {
     this.listTypeName = [];
-    this.catalogueService.getRessource('/video/getAllTypeName')
+    this.catalogueService.getRessource('/videouser/getAllTypeName')
       .subscribe(data => {
         if (data != []) {
           for (let i in data) {
@@ -959,7 +1001,7 @@ export class VideoComponent implements OnInit {
 
   getAlltynameWithId() {
     this.listTypeNameWithId = [];
-    this.catalogueService.getRessource('/video/getAllTypeNameWithId')
+    this.catalogueService.getRessource('/videouser/getAllTypeNameWithId')
       .subscribe(data => {
         if (data != null) {
           //@ts-ignore
@@ -1044,7 +1086,8 @@ export class VideoComponent implements OnInit {
         vfa.splice(nb, 1);
       }
     } else {
-      if (vfa.length = 1) {
+      if (vfa.length == 1) {
+        actors = actors.concat(vfa[0].videoArtist);
       }
     }
     return actors;
@@ -1106,7 +1149,49 @@ export class VideoComponent implements OnInit {
   }
 
 
+  onVideoFilmModify($event: any) {
+    // console.log($event);
+    //@ts-ignore
+    let eleRemote: videoFilms = $event;
+    for(var ele of this.tablepage.content){
+      if(ele.typeMmi !=null &&
+        ele.typeMmi.videoFilm != null){
+        if(ele.typeMmi.videoFilm.idVideo == eleRemote.idVideo){
+          ele.typeMmi.videoFilm=eleRemote;
+        }
+      }
+    }
+  }
+  myswiperight() {
+    this.decr('valuepage');
+  }
 
+  myswipeleft() {
+    this.incr('valuepage');
+  }
+
+  onTouch(args: any) {
+    console.log(
+      "Touch point: [" + args.getX() + ", " + args.getY() +
+      "] activePointers: " + args.getActivePointers().length);
+  }
+
+
+  checkboxfilterchange($event: Event) {
+    this.page=1;
+    this.getPageMmi();
+  }
+  actionAddToBasket(id: string) {
+
+    this.messageService.sendMessage(id);
+    this.messageService.clearMessages();
+    /*
+    id_my_media_info: "00f6b9c50347abf105b0f6cd6584ac58"
+    id_video_name_export: 660
+    pathGeneral: "/Volumes/DD6To-Films03/DD1To-FilmsGD09/_LastFilms/"
+    title: "Begin.Again.2013.FRENCH.BRRip.XviD.AC3-DesTroY.zone-telechargement.com.avi"
+    */
+  }
 }
 
 interface onetitle {
@@ -1122,6 +1207,11 @@ interface onePath {
 interface vnelight {
   idVideoNameExport: number;
   nameExport: string;
+}
+
+interface userLight {
+  idMyUser: number;
+  login: string;
 }
 
 interface page {
@@ -1306,7 +1396,15 @@ interface VideoTrailler {
 }
 
 interface VideoUserScore {
-
+  idMyUser: number,
+  idVideo: string,
+  dateModifScoreUser:string,
+  noteOnHundred:number,
+  commentUserScore: CommentUserScore,
+}
+interface CommentUserScore{
+  idCommentScoreUser: number,
+  comment: string
 }
 
 interface VideoMoreInformation {
