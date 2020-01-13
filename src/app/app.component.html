@@ -16,6 +16,12 @@
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
           <span class="caret"></span></a>
         <ul class="dropdown-menu">
+          <li class="list-group-item" [ngClass]="currentRoute=='filmography'?'active':''" *ngIf="isUser()&&(!isAdmin())"
+              (click)="onFilmography()">Filmography
+          </li>
+          <li class="list-group-item" [ngClass]="currentRoute=='filmography'?'active':''" *ngIf="isAdmin()"
+              (click)="onFilmography()">Filmography
+          </li>
           <li class="list-group-item" [ngClass]="currentRoute=='video'?'active':''" *ngIf="isAdmin()"
               (click)="onVideo()">Video
           </li>
@@ -46,10 +52,10 @@
         <hr class="sepa">
         <div class="basketdirs" *ngIf="myLocalBaskets!=null && myLocalBaskets.length>0">
           <div *ngFor="let basketnametoshow of myLocalBaskets">
-            <div [ngClass]="basketnametoshow.selection?'activebasket basketdirele':'basketdirele noactivebasket'"
+            <div [ngClass]="basketnametoshow.selection?'sgreen basketdirele':'basketdirele noactivebasket'"
                  (click)="selectbasketdir(basketnametoshow.localBasketName)">
               {{basketnametoshow.localBasketName}} ({{basketnametoshow.localIdsMmi.length}})
-              <span class="glyphicon glyphicon-remove removebasket"
+              <span class="glyphicon glyphicon-remove removebasket sgreen"
                     (click)="deleteBasket(basketnametoshow.localBasketName)"></span>
             </div>
           </div>
@@ -80,8 +86,8 @@
        </object>-->
 
       <div class="form-inline" *ngIf="isConnected">
-        <span class="glyphicon glyphicon-user icon" (click)="test()" style="color: green;"></span>
-        <a class="btn" (click)="logout()">To Logout</a>
+        <span class="glyphicon glyphicon-user icon sgreen" (click)="test()"></span>
+        <a class="btn sgreen" (click)="logout()">To Logout</a>
       </div>
       <div *ngIf="!isConnected" class="form-inline">
         <form #f="ngForm" (ngSubmit)="onLogin(f.value)" class="form-inline">

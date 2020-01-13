@@ -18,7 +18,7 @@ import { TooltipComponent } from './tooltip/tooltip.component';
 import { ChlangComponent } from './chlang/chlang.component';
 import { ScoreComponent } from './score/score.component';
 import { TypemediaComponent } from './typemedia/typemedia.component';
-import { TypeeditComponent } from './typeedit/typeedit.component';
+import { FilmographyComponent } from './filmography/filmography.component';
 
 
 
@@ -37,7 +37,7 @@ import { TypeeditComponent } from './typeedit/typeedit.component';
     ChlangComponent,
     ScoreComponent,
     TypemediaComponent,
-    TypeeditComponent
+    FilmographyComponent
   ],
   imports: [
     BrowserModule, FormsModule, HttpClientModule,

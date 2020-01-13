@@ -1,8 +1,23 @@
 @viewport {
   width: auto;
-  min-zoom: 50%;
+  min-zoom: 100%;
   max-zoom: 500%;
 }
+@media only screen and (max-width: 768px){
+  div.contentbasket{
+    width: 270px;
+  }
+}
+@media only screen and (min-width: 769px)
+and (max-width: 1023px){
+  div.contentbasket{
+    width: 600px;
+  }
+}
+@media only screen and (min-width: 1024px){
+  div.contentbasket{
+    width: 900px;
+  }}
 div.eleinline{
    display: flex;
  }
@@ -101,11 +116,12 @@ div.contentTbl{
   background: #56576e;
   border: 1px solid #1c1c25;
 }
-.activebasket{
-  color: #047b05;
-  background: #001f03;
+/*.activebasket{
+  !*color: #047b05;*!
+  color: rgba(20, 158, 56, 0.66);
+  !*background: #001f03;*!
   border: 1px solid #009c01;
-}
+}*/
 .table{
   color: #c8c8c8;
 
@@ -147,7 +163,7 @@ div.contentbasket{
   z-index: 100;
   top:55px;
   right: 100px;
-  width: 800px;
+  /*width: 800px;*/
   height: 550px;
   background-color: #4b4b4b;
   padding: 20px;

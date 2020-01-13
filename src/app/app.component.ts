@@ -25,8 +25,8 @@ export class AppComponent implements OnInit {
     this.subscription = this.messageService.getMessage().subscribe(message => {
       if (message) {
         this.messages.push(message);
-        console.log('Message recu');
-        console.log(message.text);
+        // console.log('Message recu');
+        // console.log(message.text);
         this.addToBasket(message.text);
       } else {
         // clear messages when empty message received
@@ -45,14 +45,14 @@ export class AppComponent implements OnInit {
 
   private keywordGeneral: string;
   isConnected: boolean = false;
-  private user: usr;
+  private user: Usr;
   private currentRoute: string;
-  private myLocalBaskets: localBasket[];
-  private baskets: basket[] = [];
-  private showBasket: boolean = false;
+  private myLocalBaskets: LocalBasket[];
+  private baskets: Basket[] = [];
+  public showBasket: boolean = false;
   private nameBasketUsed: string;
   private basketInfo: BasketInfo;
-  private titleApp = 'MediaVideo';
+  public titleApp = 'MediaVideo';
 
   ngOnInit(): void {
     this.authService.loadToken();
@@ -95,7 +95,7 @@ export class AppComponent implements OnInit {
     this.test();
   }
 
-  onSubmitKeywordGeneral(data) {
+/*  onSubmitKeywordGeneral(data) {
     let kwg = btoa(data.keywordGeneral);
     // let reg = data.regex;
     this.keywordGeneral = '';
@@ -105,8 +105,7 @@ export class AppComponent implements OnInit {
       }, err => {
         console.log(err);
       });
-
-  }
+  }*/
 
   onInfo() {
     this.catalogueService.getRessource('/infos')
@@ -137,12 +136,12 @@ export class AppComponent implements OnInit {
     this.catalogueService.getRessource('/infos')
       .subscribe(data => {
           console.log(data);
-          this.user = <usr>data;
+          this.user = <Usr>data;
           this.nameBasketUsed = this.user.name;
           this.subtest();
           return this.isConnected;
         }, err => {
-          this.user = <usr>err;
+          this.user = <Usr>err;
           this.subtest();
           return this.isConnected;
         }
@@ -157,6 +156,11 @@ export class AppComponent implements OnInit {
       console.log('Disconnected');
       this.isConnected = false;
     }
+  }
+
+  onFilmography() {
+    this.currentRoute = 'filmography';
+    this.router.navigateByUrl('/filmography');
   }
 
   onVideo() {
@@ -247,7 +251,7 @@ export class AppComponent implements OnInit {
   }
 
   actionBasket() {
-    console.log('Action basket');
+    // console.log('Action basket');
     this.showBasket = !this.showBasket;
     if (this.showBasket) {
 
@@ -259,8 +263,10 @@ export class AppComponent implements OnInit {
       .subscribe(data => {
         //@ts-ignore
         this.baskets = data;
-        console.log(this.baskets);
-        if (this.baskets.length > 1) {
+        // console.log(this.baskets);
+        let basketlenght = this.baskets.length;
+        if (basketlenght > 1) {
+          console.log('The basket contain '+ basketlenght +' elements');
           //get the name of the last basket used
           let nameBasketMostRecent = this.baskets[this.findTheBasketTheMostRecent()]
             .basketName.basketName;
@@ -268,21 +274,20 @@ export class AppComponent implements OnInit {
           this.nameBasketUsed = nameBasketMostRecent;
           this.getfilenameofidsbasket(nameBasketMostRecent);
         } else {
-          if (this.baskets.length == 1) {
-            console.log('Only one element : ');
-            console.log(this.baskets);
+          if (basketlenght == 1) {
+            console.log('The basket contain only one element');
             this.nameBasketUsed = this.baskets[0].basketName.basketName;
             this.makeLocalBasket(this.nameBasketUsed);
             this.getfilenameofidsbasket(this.nameBasketUsed);
           }else{
-            if (this.baskets.length == 0) {
-              console.log('The basket is empty');
+            if (basketlenght == 0) {
+              // console.log('The basket is empty');
               this.myLocalBaskets=[];
             }
           }
         }
         if(basketName!='' && this.myLocalBaskets.length>1){
-          console.log('last basketName'+basketName);
+          // console.log('last basketName'+basketName);
           var test=false;
           for(var b of this.myLocalBaskets){
             if(b.localBasketName===basketName){
@@ -341,7 +346,7 @@ export class AppComponent implements OnInit {
             //@ts-ignore
             this.baskets = data;
             this.getAllBaskets('');
-            console.log(this.baskets);
+            // console.log(this.baskets);
           }, err => {
             console.log(err);
           });
@@ -402,7 +407,7 @@ export class AppComponent implements OnInit {
           }
         }
         if (!test) {
-          var bask: localBasket = {
+          var bask: LocalBasket = {
             'selection': this.baskets[i].basketName.basketName == nameBasketMostRecent,
             'localBasketName': this.baskets[i].basketName.basketName,
             'localBasketComment': this.baskets[i].basketName.comment,
@@ -442,12 +447,12 @@ export class AppComponent implements OnInit {
               break;
             }
           }
-          console.log(this.basketInfo);
+          // console.log(this.basketInfo);
         }, err => {
           console.log(err);
         });
     }
-    console.log(this.myLocalBaskets);
+    // console.log(this.myLocalBaskets);
   }
 
   deleteBasket(localBasketName: string) {
@@ -477,13 +482,15 @@ export class AppComponent implements OnInit {
     this.catalogueService.postRessourceWithData('/videouser/deleteOneId/' + idMmi,
       basketName)
       .subscribe(data => {
-        console.log('delete : ' + idMmi + ' name : ' + basketName + ' is deleted');
+        // console.log('delete : ' + idMmi + ' name : ' + basketName + ' is deleted');
         this.getAllBaskets(basketName);
       }, err => {
         console.log(err);
       });
   }
+
 }
+/*
 
 interface localBasket {
   selection: boolean,
@@ -504,7 +511,7 @@ interface usr {
 
 interface basket {
   dateModif: string,
-  id: idBasket,
+  id: IdBasket,
   basketName: basketName
 }
 
@@ -514,7 +521,7 @@ interface basketName {
   idBasketName: number
 }
 
-interface idBasket {
+interface IdBasket {
   idBasketName: number,
   idMyMediaInfo: string,
   idMyUser: number
@@ -538,3 +545,4 @@ interface BasketInfoPahs {
   path: string,
   nameExport: string
 }
+*/

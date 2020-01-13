@@ -1,71 +1,169 @@
-
 <aside class="asvidleft">
-  <H4>Filter</H4>
-  <div class="inputfilter">
-    <input id="filtertitle" class="filtertitle" [(ngModel)]="textFilter"
-           (keyup)="textFilterChange()"
-           placeholder="Filter on title" type="text"/>
-    <span class="glyphicon glyphicon-remove btnclean"
-          (click)="cleanFilter()" (dblclick)="cleanAllFilter()"></span>
-    <h4 *ngIf="tablepage" class="nbele">{{tablepage.totalElements}}&nbsp;videos</h4>
-  </div>
+  <div class="myfilter">
+    <H4>Filter</H4>
+    <ul class="inputfilter">
+      <li>
+        <input id="filtertitle" class="filtertitle" [(ngModel)]="textFilter"
+               (keyup)="textFilterChange()"
+               placeholder="Filter on title" type="text"/>
+        <span class="glyphicon glyphicon-remove btnclean"
+              (click)="cleanFilter()" (dblclick)="cleanAllFilter()"></span>
+      </li>
+      <li>
+        <select class="form-control selectvnename fil"
+                id="selectvne"
+                (change)="setvalueformVneName($event)"
+                [formGroup]="typenameForm">
+          <option value="">All</option>
+          <option *ngFor="let vneName0 of listIdVneToName"
+                  [selected]="vneName0.nameExport==vneName"
+                  [value]="vneName0.nameExport">
+            {{vneName0.nameExport}}
+          </option>
+        </select>
+        <h4 *ngIf="tablepage" class="nbele fil">{{tablepage.totalElements}}&nbsp;videos ({{tablepage.totalPages}}p.)</h4>
+      </li>
+      <li>
+        <div class="btn-group btn-sm">
+          <button (click)="checkboxchange2(true)"
+                  [ngClass]="checkboxFlag?'btn btn-primary btn-sm':'btn btn-default btn-sm'"
+                  type="button">Title
+          </button>
+          <button (click)="checkboxchange2(false)"
+                  [ngClass]="!checkboxFlag?'btn btn-primary btn-sm':'btn btn-default btn-sm'"
+                  type="button">Name
+          </button>
+        </div>
+        <div class="btn-group btn-sm">
+          <button (click)="checkboxfilterchange2(true)"
+                  [ngClass]="checkboxfilterFlag?'btn btn-primary btn-sm':'btn btn-default btn-sm'"
+                  type="button">Filename
+          </button>
+          <button (click)="checkboxfilterchange2(false)"
+                  [ngClass]="!checkboxfilterFlag?'btn btn-primary btn-sm':'btn btn-default btn-sm'"
+                  type="button">Title
+          </button>
+        </div>
+      </li>
+      <!--      <div class="optiontbl">-->
+      <!--      </div>-->
+    </ul>
 
-  <div class="optiontbl">
-    <select class="form-control selectvnename"
-            id="selectvne"
-            (change)="setvalueformVneName($event)"
-            [formGroup]="typenameForm">
-      <option value="">All</option>
-      <option *ngFor="let vneName0 of listIdVneToName"
-              [selected]="vneName0.nameExport==vneName"
-              [value]="vneName0.nameExport">
-        {{vneName0.nameExport}}
-      </option>
-    </select>
+
+    <hr class="sepa">
+    <H4>Page</H4>
+    <div class="elementoptiontbl">
+      <h4>nb&nbsp;</h4>
+      <span>
+      <span class="glyphicon glyphicon-minus minus" (click)="decr('valuepage')"></span>
+      <input class="inputsize" type="text" [(ngModel)]="page" (change)="dataChange('valuepage')"
+             type="number" min="1" max="99999" required/>
+      <span class="glyphicon glyphicon-plus plus" (click)="incr('valuepage')"></span></span>
+    </div>
     <br>
-    <label class="switch">
-      <input type="checkbox" (change)="checkboxchange($event)"
-             id="switchtitlename" [(ngModel)]="checkboxFlag">
-      <span class="slider round"></span>
-    </label>&nbsp;
-    <label class="switch">
-      <input type="checkbox" (change)="checkboxfilterchange($event)"
-             id="switchfilter" [(ngModel)]="checkboxfilterFlag">
-      <span class="sliderfilter round"></span>
-    </label>&nbsp;
+    <div class="elementoptiontbl">
+      <h4>size&nbsp;</h4>
+      <span><span class="glyphicon glyphicon-minus minus" (click)="decr('valuesize')"></span>
+      <input class="inputsize" type="text" [(ngModel)]="size" (change)="dataChange('valuesize')"
+             type="number" min="1" max="99999" required/>
+      <span class="glyphicon glyphicon-plus plus" (click)="incr('valuesize')"></span></span>
+    </div>
   </div>
-  <hr class="sepa">
-  <H4>Order by :</H4>
-
-  <hr class="sepa">
-
-  <H4>Page</H4>
-  <div class="elementoptiontbl">
-    <h4>nb&nbsp;</h4>
-    <span class="glyphicon glyphicon-minus minus" (click)="decr('valuepage')"></span>
-    <input class="inputsize" type="text" [(ngModel)]="page" (change)="dataChange('valuepage')"
-           type="number" min="1" max="99999" required/>
-    <span class="glyphicon glyphicon-plus plus" (click)="incr('valuepage')"></span>
-  </div>
-  <br>
-  <div class="elementoptiontbl">
-    <h4>size&nbsp;</h4>
-    <span class="glyphicon glyphicon-minus minus" (click)="decr('valuesize')"></span>
-    <input class="inputsize" type="text" [(ngModel)]="size" (change)="dataChange('valuesize')"
-           type="number" min="1" max="99999" required/>
-    <span class="glyphicon glyphicon-plus plus" (click)="incr('valuesize')"></span>
+  <div class="myfilter">
+    <h4 class="tooltipg">Subscription <span class="toaddsub " (click)="addSub()">+</span>
+      <span class="refreshsub glyphicon glyphicon-repeat" (click)="refreshSub()"></span>
+      <div *ngIf="subscribe" [ngClass]="toggleaddsub?'tooltipgshow tooltiptextg':'tooltipghide tooltiptextg'">
+        <h5 class="myformsub">Add Sub</h5>
+        <form (ngSubmit)="askAddSub()" class="myformsub ">
+          <ul class="formaddsub">
+            <li class="myformsub">
+              <select class="form-control selectvnename"
+                      id="subscribe.id"
+                      (change)="setlistuserstosub($event)"
+                      [formGroup]="typenameForm">
+                <option *ngFor="let log of listuserstosub"
+                        [selected]="log==subscribe.idToSub"
+                        [value]="log">
+                  {{log}}
+                </option>
+              </select></li>
+            <li *ngIf="askName" class="myformsub"><label class="lbladdsub">Name </label><input class="inputaddsub"
+                                                                                               placeholder="nm1234567"
+                                                                                               [(ngModel)]='subscribe.name'
+                                                                                               name="name" type="text">
+            </li>
+            <li class="myformsub"><label class="lbladdsub">Value min</label><input class="inputaddsub"
+                                                                                   min="0" max="99"
+                                                                                   [(ngModel)]='subscribe.valueMin'
+                                                                                   name="valueMin" type="number">
+            </li>
+            <li class="myformsub"><label class="lbladdsub">Value max</label><input class="inputaddsub"
+                                                                                   min="0" max="99"
+                                                                                   [(ngModel)]='subscribe.valueMax'
+                                                                                   name="valueMax" type="number">
+            </li>
+            <li class="myformsub"><label class="lbladdsub">Nb of res min</label><input class="inputaddsub"
+                                                                                       min="0" max="99"
+                                                                                       [(ngModel)]="subscribe.nbOfresultMin"
+                                                                                       name="nbOfresultMin"
+                                                                                       type="number">
+            </li>
+            <li class="myformsub"><label class="lbladdsub">Nb of res max</label><input class="inputaddsub"
+                                                                                       min="0"
+                                                                                       [(ngModel)]="subscribe.nbOfresultMax"
+                                                                                       name="nbOfresultMax"
+                                                                                       type="number">
+            </li>
+            <li class="myformsub">
+              <button class=" btn btn-primary-sm " type="submit">Save</button>
+            </li>
+          </ul>
+        </form>
+      </div>
+    </h4>
+    <hr class="sepa">
+    <ng-container *ngIf="lpsws.length != 0">
+      <ng-container *ngFor="let psws of lpsws; let isLast=last">
+        <h4>
+          <span *ngIf="psws.preferencesSubscribe.idToSub!='name'">{{psws.preferencesSubscribe.idToSub}}</span>
+          <span *ngIf="psws.preferencesSubscribe.idToSub=='name'">{{psws.preferencesSubscribe.name}}</span>
+          : date d-{{psws.dateask}}
+          <span class="toaddsub " (click)="previousDate(psws)">-</span>
+          <span *ngIf="psws.dateask!=0" class="toaddsub " (click)="nextDate(psws)">+</span>
+          <span *ngIf="psws.dateask==0" (click)="submitvalidation(psws)"
+                class="postoright upicon refreshsub glyphicon glyphicon-ok"></span>
+        </h4>
+        <div *ngIf="psws.lsimplescores!=null && psws.lsimplescores.length!=0">
+          <h5>
+            <span id="idSub-{{psws.preferencesSubscribe.id}}"
+                  [ngClass]="posChevronDown(psws.preferencesSubscribe.id)?'chev glyphicon glyphicon-chevron-down':'chev glyphicon glyphicon-chevron-right'"
+                  (click)="toggleContentSub(psws.preferencesSubscribe.id)"></span>
+            {{getDateSub(psws)}}
+            <span class="badge-success">{{psws.lsimplescores.length}}</span>
+          </h5>
+          <span id="contentSub-{{psws.preferencesSubscribe.id}}"
+                *ngIf="posChevronDown(psws.preferencesSubscribe.id)">
+            <ng-container *ngFor="let sub of psws.lsimplescores">
+              <h5><u class="titlemovie" (dblclick)="filteron(sub.idVideoFilm)">{{sub.title}}</u> <span
+                class="score">{{sub.score / 10}}</span></h5>
+            </ng-container>
+          </span>
+        </div>
+        <hr class="sepashort" *ngIf="!isLast">
+      </ng-container>
+    </ng-container>
   </div>
 </aside>
 
 <div class="containertbl">
-<!--     (swiperight)="myswiperight()"-->
-<!--     (swipeleft)="myswipeleft()"-->
-<!--     (dbltap)="onTouch($event)"-->
-  <table *ngIf="tablepage" class="table table-striped tblvidcenter" >
+  <!--     (swiperight)="myswiperight()"-->
+  <!--     (swipeleft)="myswipeleft()"-->
+  <!--     (dbltap)="onTouch($event)"-->
+  <table *ngIf="tablepage" class="table table-striped tblvidcenter">
     <thead *ngIf="tablepage.content">
     <tr>
-      <!--    list with details    glyphicon glyphicon-indent-left-->
-      <td class="optiontbl"><h4 class="toclick" id="byname" (click)="sortByName()">Titre <span
+      <td class="optiontbl"><h4 data-toggle="tooltip" title="Click to sort" class="toclick" id="byname"
+                                (click)="sortByName()">Titre <span
         [ngClass]="myOrder=='nadown'?'glyphicon glyphicon-triangle-bottom':myOrder=='naup'?'glyphicon glyphicon-triangle-top':''">
           </span>
       </h4>
@@ -73,7 +171,7 @@
       </td>
       <td class="columnSizeInfo" id="byinfo">
         <div class="eleoptiontbl">
-          <ul class="lineheight columposL">
+          <ul class="lineheight columposL" data-toggle="tooltip" title="Click to sort">
             <li class="toclick" id="byduration" (click)="sortByDuration()">Duree <span
               [ngClass]="myOrder=='dudown'?'glyphicon glyphicon-triangle-bottom':myOrder=='duup'?'glyphicon glyphicon-triangle-top':''"></span>
             </li>
@@ -101,7 +199,8 @@
           <div class="cellToLeft">
                 <span class="infotitle imgposter" *ngIf="ele.typeMmi!=null && ele.typeMmi.videoFilm!=null">
                   <div *ngIf="(ele.typeMmi.videoFilm.videoPosters.length>0)" class="eletitle">
-                    <img [src]="getImg(ele.typeMmi.videoFilm.videoPosters)" alt="Poster">
+                    <img [src]="getImg(ele.typeMmi.videoFilm.videoPosters)"
+                         height="150" width="101" alt="Poster">
                   </div>
                 </span>
             <span class="infotitle" *ngIf="ele.state==0" (mouseup)="showSelectedText($event)">&nbsp;
@@ -109,12 +208,14 @@
             <span class="infotitle2" *ngIf="ele.typeMmi!=null && ele.typeMmi.videoFilm!=null">
                   <div class="eletitle">
                     <app-tooltip class="appinline"
+                                 (filterTTcall)="oneIdTTisCall($event)"
                                  [listIdVneToName]="listIdVneToName"
                                  [titlevideo]="ele.typeMmi.videoFilm.videoTitles"
                                  [elementsimple]="ele.videoSupportPaths"
                                  [idVideo]="ele.typeMmi.videoFilm.idVideo"></app-tooltip>
                     <app-score class="appinline tblscore lineheight"
                                (videoFilmModify)="onVideoFilmModify($event)"
+                               (windowopen)="onewindowopen($event)"
                                [listUserWithId]="listUserWithId"
                                [idmmi]="ele.idMyMediaInfo"
                                [videoUserScores]="ele.typeMmi.videoFilm.videoUserScores"
@@ -154,14 +255,59 @@
                         <app-tooltip [element]="ele.typeMmi.videoFilm.videoMoreInformation.informap"></app-tooltip>
                       </ng-container>
                       </ng-container>
-                      <ng-container
-                        *ngIf="ele.typeMmi.videoFilm.remake">Remake : {{ele.typeMmi.videoFilm.remake}}</ng-container>
-                        <ng-container *ngIf="ele.typeMmi.videoFilm.videoComment">
-                        <ng-container *ngFor="let com of ele.typeMmi.videoFilm.videoComment.comment; let isLast=last">
-                      {{com}}{{isLast ? '' : ', '}}</ng-container>
-                      </ng-container>
+                      <!--                      <ng-container
+                                              *ngIf="ele.typeMmi.videoFilm.remake">Remake : {{ele.typeMmi.videoFilm.remake}}</ng-container>-->
+                      &nbsp;
+
+
+                      <div class="containerdialogbox" *ngIf="ele.typeMmi!=null&&ele.typeMmi.videoFilm!=null">
+                        <span data-toggle="tooltip" title="Film info"
+                              class="glyphicon glyphicon-copyright-mark tooltipm"
+                              [ngClass]="ele.typeMmi.videoFilm.videoComment!=null?'infocommentSet sgreen':'infocommentReset'"
+                              (dblclick)="togglecommentbox(ele.idMyMediaInfo)">
+
+                          <span *ngIf="ele.typeMmi.videoFilm.videoComment!=null" class="tooltiptextm">
+                              {{ele.typeMmi.videoFilm.videoComment.comment}}
+                          </span>
+
+                          <div class="dialogboxcommentuser"
+                               [ngClass]="dboxpos&&dboxid==ele.idMyMediaInfo?'showdbox':'hidedbow'">
+                            <label class="lbdbs">Add comment :</label>
+                            <button class="btn-sm bdbs"
+                                    (click)="saveComment(ele.typeMmi.videoFilm.idVideo)">Save</button>
+                            <textarea class="tadbs" [(ngModel)]="mycomment"
+                                      (ngModelChange)="tachange()"
+                                      name="onecomment"></textarea>
+                            <label class="counttext" [ngClass]="overf?'overftrue':'overffalse'">{{tachg()}}</label>
+                          </div>
+
+                        </span>
+
+                        <span data-toggle="tooltip" title="Is remake of"
+                              class="glyphicon glyphicon-registration-mark tooltipm iconremake"
+                              (dblclick)="toggleremakebox(ele.idMyMediaInfo)"
+                              [ngClass]="ele.typeMmi.videoFilm.remake!=null?'iconremakeSet sgreen':'iconremakeReset'">
+
+                          <span class="tooltiptextm"
+                                *ngIf="ele.typeMmi.videoFilm.remake!=null">
+                            <ng-container
+                              *ngIf="ele.typeMmi.videoFilm.remake.active&&ele.typeMmi.videoFilm.remake.titles.length!=0">
+                            <ul class="liremake" *ngFor="let titre of ele.typeMmi.videoFilm.remake.titles">
+                              <li>{{titre}}</li>
+                            </ul>
+                              </ng-container>
+                          </span>
+
+                          <div class="dialogboxremake"
+                               [ngClass]="dboxremake&&dboxid==ele.idMyMediaInfo?'showdbox':'hidedbow'">
+                            <label class="lbdbs">Add idTT :</label>
+                            <input class="inpremake" [(ngModel)]="nbremake" name="oneremake">
+                            <button class="btn-sm bdbs"
+                                    (click)="saveIdTT(ele.typeMmi.videoFilm.idVideo)">Save</button>
+                          </div>
+                        </span>
+                      </div>
                     </div>
-                    <!-- link to : languages, country more info, trailler, remake-->
                   </div>
                 </span>
 
@@ -203,7 +349,7 @@
                 </ng-container>
               </ng-container>
             </div>
-            <div *ngIf="ele.search==1">
+            <div *ngIf="ele.search==1" class="formsearchvideo">
               <form #f="ngForm" (ngSubmit)="onSubmitSearch(f.value)">
                 <input ngModel="{{ele.idMyMediaInfo}}" name="ele" type="hidden">
                 <input ngModel name="keys" type="text" class="wordstosearch">
@@ -218,6 +364,7 @@
           </div>
         <td class="columnInfoele">
           <app-typemedia [ele]="ele"
+                         (windowopen)="onewindowopen($event)"
                          [listTypeNameWithId]="listTypeNameWithId">
           </app-typemedia>
         </td>
