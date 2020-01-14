@@ -4,7 +4,7 @@
 /dist
 /tmp
 /out-tsc
-dataProject.ts
+/src/environements/dataProject.ts
 
 # dependencies
 /node_modules
