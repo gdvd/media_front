@@ -1,3 +1,3 @@
 export const urlwebsite: any = {
-  urllocal : 'localhost' // 'localhost' // 'gdvd.ddns.net' (without www)
+  urllocal : 'localhost' // Your URL
 }
