@@ -1,0 +1,357 @@
+input.filter{
+  padding: 10px auto;
+  margin: 0;
+  line-height: 35px;
+  width: 22em;
+}
+
+span.btnclean{
+  position: absolute;
+  opacity: 0.65;
+  top: 58px;
+  right: 22px;
+  cursor: pointer;
+}
+aside.asvidleft{
+  /*float: none;*/
+  /*display: block;*/
+  /*padding: 0;*/
+  margin-top: 2em;
+  margin-left: 2em;
+  width: 26em;
+  min-height: 50em;
+  max-height: fit-content;
+/*}
+div.myfilter{*/
+  /*display: block;*/
+  border: 1px solid #d7e3ee;
+  border-radius: 0.7em;
+  background: #f0f0f0;
+  padding: 1em;
+}
+div.filtername{
+  position: relative;
+  padding: 10px;
+  /*height: 2em;*/
+}
+/*    Begin Switch     */
+.switch-field {
+  padding-left: 10px;
+  display: flex;
+  margin-bottom: 0;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.switch-field input {
+  position: absolute ;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  width: 1px;
+  border: 0;
+  overflow: hidden;
+}
+
+.switch-field label {
+  background-color: #e4e4e4;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 14px;
+  line-height: 1;
+  text-align: center;
+  padding: 8px 16px;
+  margin-right: -1px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+  transition: all 0.1s ease-in-out;
+}
+
+.switch-field label:hover {
+  cursor: pointer;
+}
+
+.switch-field input:checked + label {
+  background-color: #66dc4e;
+  box-shadow: none;
+}
+
+.switch-field label:first-of-type {
+  border-radius: 4px 0 0 4px;
+}
+
+.switch-field label:last-of-type {
+  border-radius: 0 4px 4px 0;
+}
+
+/* This is just for CodePen. */
+
+.form {
+  max-width: 600px;
+  font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
+  font-weight: normal;
+  line-height: 1.625;
+  margin: 8px auto;
+  padding: 16px;
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+/*    End Switch     */
+.toolsbox{
+  background-color: #828282;
+  margin: 1em;
+  padding: 0.5em;
+  border-radius: 1em;
+}
+.btntool{
+  background-color: #d7d7d7;
+  padding: 0.5em;
+  border-radius: 1em;
+  cursor: pointer;
+  margin-top: 1em;
+}
+.floatleft{
+  float: left;
+}
+.floatright{
+float: right;
+}
+.infoactor{
+  padding-bottom: 0;
+  padding-top: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+.containerListActors{
+  background-color: #d8d8d8;
+  border-radius: 1em;
+}
+.containerActor{
+  background-color: #a0a0a0;
+  border-radius: 1em;
+  padding: 5px;
+
+}
+.cellinfo{
+  padding-top: 0;
+}
+ul.listactor{
+  height: fit-content;
+  padding-left: 0;
+  float: left;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+div.uls{
+  padding-left: 0;
+  float: left;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+li.onefilmo{
+  position: relative;
+  margin-top: 2em;
+  margin-left: 1.2em;
+  padding: 1.2em;
+  list-style-type: none;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+li.onefilmo::before {
+  /*z-index: 1000;*/
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: -55px;
+  margin-left: 15px;
+  margin-right: 15px;
+  border-width: 20px;
+  border-style: solid;
+  border-color: transparent #E0E0E0 transparent transparent;
+}
+li.result{
+   position: relative;
+   margin-top: 2em;
+   margin-left: 1.2em;
+   padding: 1.2em;
+   list-style-type: none;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+ }
+li.result::before {
+  z-index: 1;
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: -60px;
+  margin-left: 0;
+  margin-right: 15px;
+  border-width: 30px;
+  border-style: solid;
+  border-color: transparent #bbbbbb transparent transparent;
+}
+.btnrightpers{
+  z-index: 2;
+}
+.filmo{
+  background-color: #e0e0e0;
+  border: 1px solid #ababab;
+  border-radius: 1em;
+  width: 34em;
+  height: 50em;
+  display: block;
+}
+.result{
+  background-color: #bbbbbb;
+  border: 1px solid #a4a4a4;
+  border-radius: 1em;
+  width: 35em;
+  min-height: 50em;
+  max-height: fit-content;
+}
+.selectactor{
+  cursor: pointer;
+  font-size:35px;
+  color: rgba(65, 65, 130, 0.9);
+  text-shadow:2px 2px 4px #000000;
+}
+.selectactor:hover{
+  text-shadow:0px 0px 0px #000000;
+}
+.tbl{
+  background-color: #ebebeb;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  display: block;
+}
+.nameresultfirst{
+  color: #000043;
+}
+.nameresult{
+  color: #000043;
+}
+span.nameresultfirst:hover{
+  text-decoration: underline;
+  cursor: default;
+}span.nameresult:hover{
+  text-decoration: underline;
+  cursor: alias;
+}
+.headfilmo{
+  margin-bottom: 4em;
+}
+.tablefilm{
+  height: 88%;
+  padding: 0;
+  overflow-x: hidden;
+}
+.tablefilmcourt{
+  height: 52%;
+  padding: 0;
+  overflow-x: hidden;
+}
+ul#endlist{
+  padding-inline-start:10px
+}
+.myfilterhide{
+  font-size:20px;
+  margin-top: 30px;
+  margin-left: 30px;
+}
+.tblresult{
+  background-color: #efefef;
+  vertical-align: middle;
+}
+.coldetail{
+  width: 12em;
+}
+h5.marginbt{
+  margin-bottom: 25px;
+}
+div.filterbox{
+  padding: 1em;
+  margin-bottom: 30px;
+  width: 100%;
+  background-color: #f2f2f2;
+  border: 1px solid #dbdbdb;
+}
+.btngrp{
+  width: fit-content;
+  padding: 0 auto;
+}
+/******************/
+/******************/
+.eleflex{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: space-around;
+
+}
+div.eleflex label input button{
+  flex: 0 0 3em;
+}
+.filtertitle{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: space-around;
+}
+div.filtertitle label input{
+  flex: 1 0 3em;
+}
+/******************/
+.valyear{
+  width: 5em;
+}
+.inputtitle{
+  width: 10em;
+}
+.btnflex{
+  width: fit-content;
+  /*display: flex;*/
+  /*align-items: stretch;*/
+}
+.dl{
+  cursor: pointer;
+}
+.filterena{
+  color: #d11918;
+}
+.filterdis{
+  color: #383239;
+}
+.btn-group{
+  padding: 5px 0;
+}
+.curspoin{
+  cursor: pointer;
+}
+.curcopy{
+  cursor: copy;
+}
+.shownot{
+  color: #d11918;
+}
+/*
+*/
+.loader {
+  border: 4px solid rgba(243, 243, 243, 0); /* Light grey */
+  border-top: 4px solid rgba(0, 11, 110, 0.92); /* Blue */
+  border-radius: 80%;
+  width: 28px;
+  height: 28px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

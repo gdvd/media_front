@@ -1,0 +1,21 @@
+<div class="textnowrap">
+<span *ngIf="languagesAu.length!=0" id="auarea" class="glyphicon glyphicon-volume-up base ">
+  <span *ngFor="let au of languagesAu">
+    <em (dblclick)="editLanguagesau(au)">.{{au.myMediaLanguage.language}}</em>
+  <div [className]="lang ? 'tooltipgact tooltipg tooltiptextg' : 'tooltipgdes tooltipg tooltiptextg'">
+    <input class="datainput" type="text" [(ngModel)]="dataLang">
+    <button class="buttonTooltip" (click)="cancelLang()">Cancel</button>
+    <button class="buttonTooltip" (click)="saveLang(au)">Save</button>
+  </div></span>
+</span>
+&nbsp;
+<span *ngIf="languagestx.length!=0" class="glyphicon glyphicon-subtitles base ">
+  <span *ngFor="let tx of languagestx">
+    <em (dblclick)="editLanguagestx(tx)">.{{tx.myMediaLanguage.language}}</em>
+  <div [className]="text ? 'tooltipgact tooltipg tooltiptextg' : 'tooltipgdes tooltipg tooltiptextg'">
+    <input class="datainput" type="text" [(ngModel)]="datatext">
+    <button class="buttonTooltip" (click)="cancelText()">Cancel</button>
+    <button class="buttonTooltip" (click)="saveText(tx)">Save</button>
+  </div></span>
+</span>
+</div>

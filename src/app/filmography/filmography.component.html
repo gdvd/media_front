@@ -1,0 +1,306 @@
+<section>
+  <aside *ngIf="showfiltername" class="asvidleft floatleft">
+    <div class="myfilter">
+      <H4>Find person(s), for cross-search :
+        <span (click)="toggleShowfiltername(0)"
+              data-toggle="tooltip" title="Hide tool"
+              class="floatright glyphicon glyphicon-zoom-out"></span>
+      </H4>
+      <div class="filtername">
+        <h5>Persone
+          <ng-container *ngIf="!nameOne">
+            <button (click)="searchName(textFilterOne)">Search</button>
+          </ng-container>
+          <ng-container *ngIf="nameOne"> :<b> {{nmOne}}</b></ng-container>
+          &nbsp;<input type="checkbox"
+                       [(ngModel)]="radioexactmodel"
+                       checked>
+          <label>&nbsp;Exact</label>
+
+        </h5>
+        <input id="filterOne" class="filter" [(ngModel)]="textFilterOne"
+               (keydown.enter)="searchName(textFilterOne)"
+               placeholder="Name" type="text"/>
+        <span *ngIf="!waitingwork"
+              data-toggle="tooltip" title="Clean"
+              class="glyphicon glyphicon-remove btnclean"
+              (click)="cleanFilter()" (dblclick)="cleanAll()"></span>
+      </div>
+      <div *ngIf="loa!=null && loa.length!=0" class="containerListActors">
+        <table class="table table-striped containerActor">
+          <tr class="cellinfo" *ngFor="let oa of loa">
+            <td>
+              <img [src]="oa.urlImg" class="">
+            </td>
+            <td class="">
+              <a href="https://www.imdb.com/name/{{oa.idNm}}"
+                 target="_blank">{{oa.name}}</a>
+              <h6 class="infoactor">{{oa.info}}</h6>
+            </td>
+            <td>
+              <div *ngIf="waitingwork&&idsearch==oa.idNm" class="loader"></div>
+              <span *ngIf="!waitingwork"
+                    data-toggle="tooltip" title="Download filmo"
+                    class="selectactor glyphicon glyphicon-forward"
+                    (click)="selectActor(oa.idNm)"></span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </aside>
+  <aside *ngIf="!showfiltername" class="myfilterhide">
+    <div>
+      <span (click)="toggleShowfiltername(1)"
+            data-toggle="tooltip" title="Show tool"
+            class="glyphicon glyphicon-zoom-in"></span>
+    </div>
+  </aside>
+  <article class="floatleft">
+    <div class="uls">
+      <ul id="beginlist" class="listactor">
+        <ng-container *ngFor="let oneActor of filmos">
+          <li class="onefilmo filmo">
+            <div class="headfilmo">
+              <div class="floatleft">
+                <img [src]="oneActor.urlImg" class="">
+                <a class="shownamefilmwithlink"
+                   href="https://www.imdb.com/name/{{oneActor.idNm}}"
+                   target="_blank">
+
+                  {{oneActor.name}}</a> ( <span *ngIf="oneActor.oneFilter.isfilter">{{oneActor.oneFilter.sizefilmowithfilter}} / </span>{{oneActor.filmo.length}} )
+              </div>
+              <div class="floatright">
+                <span class="glyphicon glyphicon-filter btnrightpers"
+                      data-toggle="tooltip" title="Filter"
+                      [ngClass]="oneActor.oneFilter.isfilter?'filterena curspoin':'filterdis curspoin'"
+                      (click)="filterForActor(oneActor.idNm)"></span>
+                &nbsp;
+                <span class="glyphicon glyphicon-remove btnrightpers curspoin"
+                      data-toggle="tooltip" title="Remove"
+                      (click)="removeActor(oneActor.idNm)"></span>
+              </div>
+            </div>
+            <br>
+            <div *ngIf="oneActor.oneFilter.showfilter" class="filterbox">
+              <button type="button"
+                      [ngClass]="oneActor.oneFilter.isfilter?'btn btn-primary floatleft btn-sm':'btn btn-default floatleft btn-sm'"
+                      (click)="toggleIsFilter(oneActor.idNm)">Active</button>
+
+              <div class="btngrp">
+                <div class="btn-group btn-sm btnflex">
+                  <button type="button"
+                          [ngClass]="oneActor.oneFilter.oneRole.roleactor?'btn btn-primary':'btn btn-default'"
+                          (click)="changeStatusRole(oneActor.idNm, 'roleactor')">Actor</button>
+                  <button type="button"
+                          [ngClass]="oneActor.oneFilter.oneRole.rolewriter?'btn btn-primary':'btn btn-default'"
+                          (click)="changeStatusRole(oneActor.idNm, 'rolewriter')">Writer</button>
+                  <button type="button"
+                          [ngClass]="oneActor.oneFilter.oneRole.roledirector?'btn btn-primary':'btn btn-default'"
+                          (click)="changeStatusRole(oneActor.idNm, 'roledirector')">Dir</button>
+                  <button type="button"
+                          [ngClass]="oneActor.oneFilter.oneRole.roleproducer?'btn btn-primary':'btn btn-default'"
+                          (click)="changeStatusRole(oneActor.idNm, 'roleproducer')">Prod</button>
+                  <button type="button"
+                          [ngClass]="oneActor.oneFilter.oneRole.rolesoundtrack?'btn btn-primary':'btn btn-default'"
+                          (click)="changeStatusRole(oneActor.idNm, 'rolesoundtrack')">Sound</button>
+                  <button type="button"
+                          [ngClass]="oneActor.oneFilter.oneRole.rolethanks?'btn btn-primary':'btn btn-default'"
+                          (click)="changeStatusRole(oneActor.idNm, 'rolethanks')">Thanks</button>
+                  <button type="button"
+                          [ngClass]="oneActor.oneFilter.oneRole.roleself?'btn btn-primary':'btn btn-default'"
+                          (click)="changeStatusRole(oneActor.idNm, 'roleself')">Self</button>
+                </div>
+                <div class="eleflex">
+                  <label>Year min</label>
+                  <input class="valyear" type="number" min="1800" max="2100"
+                         (ngModelChange)="updatefilmoactor(oneActor.idNm, -1)"
+                         [(ngModel)]="oneActor.oneFilter.yearmin">
+                  <label>Year max</label>
+                  <input class="valyear" type="number" min="1800" max="2100"
+                         (ngModelChange)="updatefilmoactor(oneActor.idNm, 1)"
+                         [(ngModel)]="oneActor.oneFilter.yearmax">
+                  <button type="button"
+                          [ngClass]="oneActor.oneFilter.yearmaynull?'btn btn-primary floatright btn-sm':'btn btn-default floatright btn-sm'"
+                          (click)="setyearmaynull(oneActor.idNm)">YearNull</button>
+                </div>
+                <div class="eleflex">
+                  <label>Score min</label>
+                  <input class="valyear" type="number" min="0" max="99"
+                         (ngModelChange)="updatefilmoactor(oneActor.idNm, -1)"
+                         [(ngModel)]="oneActor.oneFilter.scoremin">
+                  <label>Score max</label>
+                  <input class="valyear" type="number" min="0" max="99"
+                         (ngModelChange)="updatefilmoactor(oneActor.idNm, 1)"
+                         [(ngModel)]="oneActor.oneFilter.scoremax">
+                  <button type="button"
+                          [ngClass]="oneActor.oneFilter.scoremaynull?'btn btn-primary floatright btn-sm':'btn btn-default floatright btn-sm'"
+                          (click)="setscoremaynull(oneActor.idNm)">ScoreNull</button>
+                </div>
+                <div class="filtertitle">
+                  <label>Title</label>
+                  <input [(ngModel)]="oneActor.oneFilter.title"
+                         (ngModelChange)="updatefilmoactor(oneActor.idNm, 0)"
+                         type="text" class="inputtitle">
+                  <div class="btn-group btn-sm">
+                    <button type="button"
+                          [ngClass]="oneActor.oneFilter.titltechoice==1?'btn btn-primary btn-sm':'btn btn-default btn-sm'"
+                          (click)="changeOptionForTitle(oneActor.idNm, 'Begin')">Begin</button>
+                    <button type="button"
+                          [ngClass]="oneActor.oneFilter.titltechoice==2?'btn btn-primary btn-sm':'btn btn-default btn-sm'"
+                          (click)="changeOptionForTitle(oneActor.idNm, 'End')">End</button>
+                    <button type="button"
+                          [ngClass]="oneActor.oneFilter.titltechoice==3?'btn btn-primary btn-sm':'btn btn-default btn-sm'"
+                          (click)="changeOptionForTitle(oneActor.idNm, 'Content')">Content</button>
+                    <button type="button"
+                          [ngClass]="oneActor.oneFilter.titltechoice==4?'btn btn-primary btn-sm':'btn btn-default btn-sm'"
+                          (click)="changeOptionForTitle(oneActor.idNm, 'Exact')">Exact</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div [ngClass]="oneActor.oneFilter.showfilter?'tablefilmcourt':'tablefilm'">
+              <table class="tbl table-condensed thead-dark table-hover">
+                <thead>
+                <th class="curspoin"
+                    data-toggle="tooltip" title="Click to sort"
+                    (click)="sortBy(oneActor.idNm, 'pos')">#
+                  <span *ngIf="oneActor.sort.col==='pos'">
+                    <span *ngIf="oneActor.sort.asc" class="glyphicon glyphicon-triangle-top"></span>
+                    <span *ngIf="!oneActor.sort.asc" class="glyphicon glyphicon-triangle-bottom"></span>
+                  </span>
+                </th>
+                <th class="curspoin"
+                    data-toggle="tooltip" title="Click to sort"
+                    (click)="sortBy(oneActor.idNm, 'title')">Title
+                  <span *ngIf="oneActor.sort.col==='title'">
+                    <span *ngIf="oneActor.sort.asc" class="glyphicon glyphicon-triangle-top"></span>
+                    <span *ngIf="!oneActor.sort.asc" class="glyphicon glyphicon-triangle-bottom"></span>
+                  </span></th>
+                <th data-toggle="tooltip" title="Role (number by appearance for the actor)" >Role</th>
+                <th class="curspoin"
+                    data-toggle="tooltip" title="Click to sort"
+                    (click)="sortBy(oneActor.idNm, 'year')">Year
+                  <span *ngIf="oneActor.sort.col==='year'">
+                    <span *ngIf="oneActor.sort.asc" class="glyphicon glyphicon-triangle-top"></span>
+                    <span *ngIf="!oneActor.sort.asc" class="glyphicon glyphicon-triangle-bottom"></span>
+                  </span></th>
+                <th class="curspoin"
+                    data-toggle="tooltip" title="Click to sort"
+                    (click)="sortBy(oneActor.idNm, 'score')">Score
+                  <span *ngIf="oneActor.sort.col==='score'">
+                    <span *ngIf="oneActor.sort.asc" class="glyphicon glyphicon-triangle-top"></span>
+                    <span *ngIf="!oneActor.sort.asc" class="glyphicon glyphicon-triangle-bottom"></span>
+                  </span></th>
+                <th class="curcopy"
+                    data-toggle="tooltip" title="DbClick to download all the movies (but be careful, and it takes time)"
+                    (dblclick)="calldl(oneActor.idNm)">DL</th>
+                </thead>
+                <ng-container *ngFor="let fl of oneActor.filmo">
+                  <ng-container *ngIf="fl.showit">
+                  <tbody>
+                  <tr>
+                    <td>
+                      {{fl.pos}}
+                    </td>
+                    <td>
+                      <a href="https://www.imdb.com/title/{{fl.idTt}}"
+                         class="shownamefilmwithlink" target="_blank">{{fl.title}}</a>
+                      &nbsp;{{fl.infoTitle}}
+                    </td>
+                    <td>
+                      <h6 *ngIf="fl.actor&&fl.actorPos==0">Act</h6>
+                      <h6 *ngIf="fl.actor&&fl.actorPos!=0">Act({{fl.actorPos}})</h6>
+                      <h6 *ngIf="fl.writer">Wri</h6>
+                      <h6 *ngIf="fl.director">Dir</h6>
+                      <h6 *ngIf="fl.producer">Pro</h6>
+                      <h6 *ngIf="fl.soundtrack">Sou</h6>
+                      <h6 *ngIf="fl.self">Self</h6>
+                      <h6 *ngIf="fl.thanks">Thx</h6>
+                    </td>
+                    <td>
+                      &nbsp;{{fl.year}}
+                    </td>
+                    <td><h6 *ngIf="fl.score!=0">
+                      &nbsp;{{fl.score / 10}}/10</h6>
+                    </td>
+                    <td>
+                    <span *ngIf="((!fl.loaded)&&fl.appeared)"
+                          data-toggle="tooltip" title="Download"
+                          class="glyphicon glyphicon-cloud-download dl"
+                          (click)="loadonefilm(fl.idTt)"></span>
+                    </td>
+                  </tr>
+                  </tbody>
+                  </ng-container>
+                </ng-container>
+              </table>
+            </div>
+          </li>
+        </ng-container>
+      </ul>
+      <ul *ngIf="showresult" id="endlist">
+        <li id="resultlist" class="result">
+          <h5 class="marginbt">Result of :
+          <span *ngFor="let ofy of filmos; let isFirst = first; let isLast=last">
+            <span *ngIf="ofy.oneFilter.andnot" class="shownot"> NOT </span>
+            <span (click)="andnotname(ofy.idNm)" [ngClass]="isFirst?'nameresultfirst':'nameresult'">
+                  {{ofy.name}}</span>{{isLast ? '' : ', & '}}
+            </span>
+          </h5>
+          <table class="table table-condensed thead-dark tblresult">
+              <thead>
+                <th class="curspoin" (click)="resultSortBy('title')">Title
+                  <span *ngIf="filmoResult.sort.col==='title'">
+                    <span *ngIf="filmoResult.sort.asc" class="glyphicon glyphicon-triangle-top"></span>
+                    <span *ngIf="!filmoResult.sort.asc" class="glyphicon glyphicon-triangle-bottom"></span>
+                  </span>
+                </th>
+                <th class="curspoin" (click)="resultSortBy('score')">Score
+                  <span *ngIf="filmoResult.sort.col==='score'">
+                    <span *ngIf="filmoResult.sort.asc" class="glyphicon glyphicon-triangle-top"></span>
+                    <span *ngIf="!filmoResult.sort.asc" class="glyphicon glyphicon-triangle-bottom"></span>
+                  </span></th>
+                <th class="curspoin" (click)="resultSortBy('year')">Year
+                  <span *ngIf="filmoResult.sort.col==='year'">
+                    <span *ngIf="filmoResult.sort.asc" class="glyphicon glyphicon-triangle-top"></span>
+                    <span *ngIf="!filmoResult.sort.asc" class="glyphicon glyphicon-triangle-bottom"></span>
+                  </span></th>
+                <th
+                  data-toggle="tooltip" title="if file exist :[Dimention], FileSize (languages)"
+                  data-toggle="tooltip" title="if file exist :[Dimention], FileSize (languages)"
+                  class="coldetail">Details</th>
+              </thead>
+            <tbody *ngFor="let fr of filmoResult.filmo">
+            <tr>
+              <td>
+                <a href="https://www.imdb.com/title/{{fr.idTt}}"
+                   class="shownamefilmwithlink" target="_blank">{{fr.title}}</a>
+              </td>
+              <td><h6 *ngIf="fr.score!=0">
+                &nbsp;{{fr.score / 10}}/10</h6>
+                <span *ngIf="((!fr.loaded)&&fr.appeared)"
+                      class="glyphicon glyphicon-cloud-download dl"
+                      (click)="loadonefilm(fr.idTt)"></span>
+              </td>
+              <td>
+                {{fr.year}}
+              </td>
+              <td>
+                <ng-container *ngIf="fr.lmmi!=null&&fr.lmmi.length>0">
+                  <ng-container *ngFor="let mmi of fr.lmmi">
+                    <h6 data-toggle="tooltip" title="{{getVne(mmi.videoSupportPaths)}}">[{{mmi.width}}*{{mmi.height}}], {{inGMK2(mmi.fileSize)}}
+                      (<ng-container
+                        *ngFor="let au of mmi.myMediaAudios;let isLast=last">{{au.myMediaLanguage.language}}{{isLast ? '' : '/'}}</ng-container>)
+                    </h6>
+                  </ng-container>
+                </ng-container>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </li>
+      </ul>
+    </div>
+  </article>
+</section>

@@ -1,0 +1,296 @@
+<div class="container">
+  <div *ngIf="alluser">
+    <div class="panel panel-success">
+      <div class="panel-heading">Liste des users
+        <!-- Begin Modal User2-->
+        <span (click)="openModal('modaluser2')"
+              style="cursor: pointer"
+              class="glyphicon glyphicon-plus"></span>
+
+        <div class="modal modal-window" id="modaluser2"
+             data-toggle="modal" data-backdrop="static"
+             data-keyboard="false">
+          <div class="modal-content">
+            <div class="modal-header mh">
+              <h2 class="mh1">Create a new user</h2><h2><span class="mh2" (click)="closeModal('modaluser2')">×</span></h2>
+            </div>
+            <div class="modal-body">
+              <form class="modal-form" #f="ngForm" (ngSubmit)="onSubmitUser(f.value)">
+                <label>User</label>
+                <input class="form-control sizeMedium marginMedium"
+                       [(ngModel)]="oneuser" name="oneuser" required>
+                <br/><label>Password</label>
+                <input class="form-control sizeMedium marginMedium"
+                       [(ngModel)]="onepass1" name="onepass1" type="password" required>
+                <br/><label>Re-Type Password</label>
+                <input class="form-control sizeMedium marginMedium"
+                       [(ngModel)]="onepass2" name="onepass2" type="password" required>
+                <br/>
+                <label>Role</label>
+                <div class="modal-container">
+                <ul class="modal-container" id="theroleslist">
+                    <li class="modal-element" id="role-{{r.role}}"
+                        (click)="changeState(r.role)"
+                        *ngFor="let r of allroles">{{r.role}}</li>
+                </ul></div>
+                <!--<select (change)="selectRole()" class="form-control" *ngFor="let r of allroles">
+                  <option value="r.role">{{r.role}}</option>
+                </select>-->
+                <br/>
+                <button class="btn btn-primary"
+                        ng-disabled="doAuthenticate"
+                        ng-click="yes()">Yes</button>
+              </form>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+          </div>
+        </div>
+        <!-- End of Modal User2-->
+        <!--Begin of editUser-->
+        <div class="modal modal-window" id="modaledituser"
+             data-toggle="modal" data-backdrop="static"
+             data-keyboard="false">
+          <div class="modal-content">
+            <div class="modal-header mh">
+              <h2 class="mh1">Edit user</h2><h2><span class="mh2" (click)="closeModal('modaledituser')">×</span></h2>
+            </div>
+            <div class="modal-body">
+              <form class="modal-form" #f="ngForm" (ngSubmit)="onSubmitEditUser(f.value)">
+                <label>User</label>
+                <input class="form-control sizeMedium marginMedium"
+                       [(ngModel)]="oneuser" name="oneuser" required>
+                <br/><label>Old Password</label>
+                <input class="form-control sizeMedium marginMedium"
+                       [(ngModel)]="onepass0" name="onepass0" type="password" required>
+                <br/><label>Password</label>
+                <input class="form-control sizeMedium marginMedium"
+                       [(ngModel)]="onepass1" name="onepass1" type="password" required>
+                <br/><label>Re-Type Password</label>
+                <input class="form-control sizeMedium marginMedium"
+                       [(ngModel)]="onepass2" name="onepass2" type="password" required>
+                <br/>
+                <label>Role</label>
+                <div class="modal-container">
+                  <ul class="modal-container" id="theoldroleslist">
+                    <li class="modal-element" id="oldrole{{r.role}}"
+                        [ngClass]="rolesusr.includes(r.role) ? 'selected':''"
+                        (click)="changeStateOld(r.role)"
+                        *ngFor="let r of allroles">{{r.role}}</li>
+                  </ul></div>
+                <!--<select (change)="selectRole()" class="form-control" *ngFor="let r of allroles">
+                  <option value="r.role">{{r.role}}</option>
+                </select>-->
+                <br/>
+                <button class="btn btn-primary"
+                        ng-disabled="doAuthenticate"
+                        ng-click="yes()">Yes</button>
+              </form>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+          </div>
+        </div>
+        <!--End of editUser-->
+      </div>
+      <div class="panel-body">
+        <table class="table">
+          <thead>
+          <tr>
+            <th>Login</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let au of alluser;">
+            <td (click)="editUser(au)" style="cursor: pointer">{{au.login}}</td>
+            <td (dblclick)="changeStatusUser(au)" style="cursor: copy">{{au.active}}</td>
+            <td>{{au.dateModif}}</td>
+            <td>{{getAllRoles(au.roles)}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- Begin : Table of Roles -->
+  <div *ngIf="allroles">
+    <div class="panel panel-success">
+      <div class="panel-heading ">Liste des roles
+
+        <span (click)="addRole()"
+              style="cursor: pointer"
+              [ngClass]="newroleask? 'glyphicon glyphicon-minus':'glyphicon glyphicon-plus'"
+              class="rolebar"> </span>
+          <div class="">
+            <form *ngIf="newroleask" class="modal-form " #f="ngForm"
+             (ngSubmit)="onSubmitNewRole(f.value)">
+          <label class="">Enter name of new Role</label>
+          <input class="form-control sizeMedium marginMedium "
+                 [(ngModel)]="newrole" name="newrole" required>
+          <button class="btn btn-primary ">Save</button>
+        </form>
+      </div>
+
+
+
+      </div>
+      <div class="panel-body">
+
+        <table class="table">
+          <thead>
+          <tr>
+            <th>Role</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let ar of allroles">
+            <td>{{ar.role}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- End : Table of Roles -->
+
+  <!-- Begin Modal User-->
+<!--  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">New User</h4>
+        </div>
+        <div class="modal-body">
+          <div>
+            <form #f="ngForm" (ngSubmit)="onSubmitOneUser(f.value)">
+              <input class="form-control sizeMedium marginMedium"
+                     ngModel name="oneuser" required>
+              <input class="form-control sizeMedium marginMedium"
+                     ngModel name="password" type="password" required>
+              <select class="form-control" *ngFor="let r of allroles">
+                <option value="r.role">{{r.role}}</option>
+              </select>
+              <button type="submit" data-toggle="modal" data-dismiss="modal"
+                      class="btn btn-primary">Save
+              </button>
+            </form>
+            &lt;!&ndash; data-toggle="modal" data-dismiss="modal" &ndash;&gt;
+            <form #f="ngForm" (ngSubmit)="onSubmitKeyword(f.value)">
+              <input class="form-control sizeMedium marginMedium" ngModel name="oneuser" required>
+              <button type="submit" class="btn btn-warning marginMedium"
+                      data-toggle="modal" data-dismiss="modal">Submit
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>-->
+  <!-- End Modal User-->
+  <!-- Begin Modal Role-->
+  <!--<div class="modal fade" id="myModalRole" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+            class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalRoleLabel">Panel inside of Modal window</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">Panel title</div>
+                <div class="panel-body">
+                  Panel content
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Panel title</h3>
+                </div>
+                <div class="panel-body">
+                  Panel content
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Panel title</h3>
+                </div>
+                <div class="panel-body">
+                  Panel content
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" data-toggle="modal" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>-->
+  <!--
+    <div class="modal-header">
+      <h3 class="modal-title">Confirm ?</h3>
+    </div>
+    <div class="modal-body">
+      Are you sure you want to continue ?
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" ng-disabled="doAuthenticate" ng-click="yes()">Yes</button>
+      <button class="btn btn-primary" ng-click="cancel()">Cancel</button>
+      <div ng-show="doAuthenticate">
+        <hr>
+        <form name="authForm" ng-submit="authenticate(authForm.$valid)" novalidate>
+          <div class="form-group">
+            <input class="col-sm-2" type="text" ng-model="authUser" placeholder="Username" required autofocus>
+            <input class="col-sm-2" type="password" ng-model="authPass" placeholder="Password" required>
+            <button class="btn btn-primary" type="submit" ng-disabled="authForm.$invalid">Authenticate!</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-header">
+      <h3 class="modal-title">Confirm ?</h3>
+    </div>
+    <div class="modal-body">
+      Are you sure you want to continue ?
+    </div>
+    <div class="modal-footer">
+      <div ng-show="doAuthenticate">
+        <form name="authForm" ng-submit="authenticate(authForm.$valid)" novalidate>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-4">
+                <input class="form-control" type="text" ng-model="authUser" placeholder="Username" required autofocus>
+              </div>
+              <div class="col-sm-4">
+                <input class="col-sm-3 form-control" type="password" ng-model="authPass" placeholder="Password" required>
+              </div>
+              <div class="col-sm-4">
+                <button class="btn btn-primary" type="submit" ng-disabled="authForm.$invalid">Authenticate!</button>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+      <hr>
+      <button class="btn btn-primary" ng-disabled="doAuthenticate" ng-click="yes()">Yes</button>
+      <button class="btn btn-primary" ng-click="cancel()">Cancel</button>
+    </div>-->
+</div>
