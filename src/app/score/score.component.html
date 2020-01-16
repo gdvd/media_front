@@ -1,0 +1,29 @@
+<div class="anchor">
+  <span (click)="toAddScoreuserAndComment()" class="glyphicon glyphicon-plus state">&nbsp;</span>
+  <h5 (dblclick)="toAddScoreuserAndComment()" class="scoreonten tooltipg">{{thescore.scoreOnHundred/10}}
+  <span class="tooltiptextg">{{thescore.nbOfVote}}&nbsp;nb of votes</span>
+  </h5>
+  <img (dblclick)="toAddScoreuserAndComment()" class="score toclick" src="assets/img/tableTen.png"
+     alt="Score Imdb" >
+  <div class="dialogboxscoreuser" [id]="'db-'+idmmi"
+     [ngClass]="dboxpos?'showdbox':'hidedbow'">
+    <label class="lbdbs">Add score (0-99) :</label>
+    <input class="idbs" [(ngModel)]="myscore" name="onescore" type="number" min="0" max="99"
+           required>
+    <button class="btn-sm bdbs" (click)="saveScore()">Save</button>
+    <textarea class="tadbs" [(ngModel)]="mycomment" (ngModelChange)="tachange()"
+              name="onecomment"></textarea>
+    <label class="counttext" [ngClass]="overf?'overftrue':'overffalse'">{{tachg()}}</label>
+  </div>
+  <div *ngIf="videoUserScores" class="otherscores">
+    <span *ngFor="let score of videoUserScores" class="otherscore">
+      <h5 class="scoreonten tooltipg">{{score.noteOnHundred/10}}</h5>
+      <img (dblclick)="editScoreuserAndComment(score)" class="score2" src="assets/img/tableTen.png"
+           alt="Score user" >
+      <h6 class="nameLogin">{{getNameLogin(score)}}
+        <span *ngIf="score.commentScoreUser != null" class="tooltipcommentuser">
+          {{score.commentScoreUser.comment}}</span>
+      </h6>
+    </span>
+  </div>
+</div>

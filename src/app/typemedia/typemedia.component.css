@@ -1,0 +1,295 @@
+.containertype{
+  position: relative;
+  /*z-index: 1;*/
+  /*alignment: right;*/
+}
+.iconsvg{
+  position: absolute;
+  opacity: 0.7;
+  top:-17px;
+  left: -44px;
+  width: 206px;
+  height: 190px;
+
+}
+.typeform{
+  position: absolute;
+  opacity: 1;
+  z-index: 10;
+  top:3px;
+  left: -513px;
+  width: 500px;
+  height: 220px;
+  background-color: #d1d1d1;
+  padding: 20px;
+  border-radius: 10px;
+}
+.typeformcourt{
+  position: absolute;
+  opacity: 1;
+  z-index: 10;
+  top:3px;
+  left: -313px;
+  width: 300px;
+  height: 260px;
+  background-color: #d1d1d1;
+  padding: 20px;
+  border-radius: 10px;
+}
+.typeform::after {
+  content: "";
+  position: absolute;
+  top: 30px;
+  right: -20px;
+  margin-left: -5px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent
+  transparent transparent #d1d1d1 ;
+}
+.typeformcourt::after {
+  content: "";
+  position: absolute;
+  top: 30px;
+  right: -20px;
+  margin-left: -5px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent
+  transparent transparent #d1d1d1 ;
+}
+form {
+  display: flex;
+  /*flex: 0 0 3em;*/
+}
+li.inflex label input button{
+  flex: 0 0 20em;
+}
+li.inflex {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+  align-content: space-around;
+  padding-bottom: 5px;
+  /*display: inline-flex;
+  flex-direction: row;
+  justify-content: space-between;*/
+}
+.clickable{
+  cursor: pointer;
+}
+.outflex{
+  height: 100%;  /*display: flex;
+  flex-direction: column;*/
+
+  /*display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: space-around;*/
+}
+.containertype p{
+  position: relative;
+  z-index: 10;
+}
+.offsetdim{
+  margin-top: 2px;
+}
+.offsetli{
+  padding-top: 4px;
+}
+.containericon{
+  position: relative;
+  top: 0px;
+  left: 0px;
+  padding: 2px 2px 2px 2px;
+  height: 155px;
+}
+.styleedition{
+  color: #242424;
+}
+.iconaction:hover{
+  color: #a2040c;
+  cursor: not-allowed;
+}
+.elecomp{
+  margin-top: 20px;
+  width: 102px;
+}
+.eleli{
+  position: relative;
+  top: -12px;
+  /*z-index: 10;*/
+}
+.eledim{
+  position: absolute;
+  top:3px;
+  color: #AAA;
+}
+.eleinf{
+  position: relative;
+  width: 122px;
+  /*top:1px;*/
+}
+
+.typevideo{
+  position: abslbdbsolute;
+  top: -7px;
+  font-size: 2em;
+  alignment: center;
+  margin: 0;
+  /*z-index: 10;*/
+}
+input,
+textarea {
+  padding: .3em;
+  border: 1px solid #555;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: inherit;
+  background: #d1d1d1;
+}
+p{
+  width: 130px;
+
+}
+ul {
+  font-size: 0.9em;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.fright{
+  cursor: pointer;
+}
+.containerdialogbox{
+
+}
+.dialogboxcommentuser{
+  z-index: 20;
+  position: relative;
+  width:22em;
+  height:10em;
+  top: 7px;
+  left: -355px;
+  border-radius: 6px;
+  padding: 15px;
+  background-color: #6b6b6b;
+}
+.dialogboxcommentuser::before {
+  content: "";
+  position: absolute;
+  top: 33px;
+  right: -10px;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #555;
+}
+.showdbox{
+  visibility:visible;
+  opacity: 0.95;
+}
+.hidedbow{
+  visibility: hidden;
+  opacity: 0;
+}
+input.idbs{
+  width: 25%;
+  margin: 0 auto;
+  alignment: center;
+}
+button.bdbs{
+  float: right;
+  width: 20%;
+  margin-right: 0;
+}
+textarea.tadbs{
+  position: relative;
+  margin: 1em 0 0 0;
+  width: 100%;
+  height: 60px;
+  resize: none;
+}
+.overftrue{
+  color: rgba(68, 4, 12, 0.9);
+}
+.overffalse{
+  color: #333333;
+}
+.counttext{
+  position: relative;
+  top: -85px;
+  left: 1px;
+}
+.otherscores{
+
+}
+.otherscore{
+  position: relative;
+  top: -170px;
+  right: -60px;
+}
+.containerpos{
+  position: absolute;
+}
+.infocommentReset{
+  color: #a5a5a5;
+}
+.infocommentSet{
+  /*color: rgba(27, 238, 82, 0.8);*/
+  color: rgba(20, 158, 56, 0.66);
+}
+/*********************
+** tooltip begin
+********************/
+.tooltipm {
+  position: relative;
+  display: inline-block;
+}
+.tooltipm .tooltiptextm {
+  visibility: hidden;
+  min-width: 600px;
+  max-width: 800px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 100;
+  top: -73px;
+  right: 15px;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.8s;
+  margin-top: 30px;
+}
+
+.tooltipm .tooltiptextm::after {
+  content: "";
+  position: absolute;
+  top: 40px;
+  right: -25px;
+  margin-left: 15px;
+  margin-right: 15px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #555555;
+}
+
+.tooltipm:hover .tooltiptextm {
+  visibility: visible;
+  opacity: 0.9;
+}
+/*********************
+** tooltip end
+********************/
+.sgreen{
+  color: rgba(20, 158, 56, 0.66);
+}
+.sgreen:hover{
+  color: rgba(20, 213, 57, 0.66);
+}

@@ -1,0 +1,181 @@
+<div class="tabulation" *ngIf="me">
+  <ul class="onglet contentabsout">
+    <li [ngClass]="tabulation=='tab1'?'active tab':'tab'" (click)="myTab(1)">Scan folder</li>
+    <li [ngClass]="tabulation=='tab2'?'active tab':'tab'" (click)="myTab(2)">Preferences</li>
+    <li [ngClass]="tabulation=='tab3'?'active tab':'tab'" (click)="myTab(3)">Country of titles</li>
+    <li [ngClass]="tabulation=='tab4'?'active tab':'tab'" (click)="myTab(4)">ScheduledTask</li>
+  </ul>
+  <div class="contentabsout">
+    <div class="contentabs" *ngIf="tabulation=='tab1'">
+      <form #f="ngForm" (ngSubmit)="submitScanFolder(f.value)" class="tbl">
+        <div class="tbl-line"><h4 class="infobulle"
+                                  aria-label="Ex: /Volumes/donnees/... ou ~/Desktop/Video/ ou /Users/[login]/...">Folder
+          to scan</h4>
+          <input type="text" name="myFolder" [(ngModel)]="folder" class="tbl-dir">
+        </div>
+        <button type="submit" class="btn btn-default">OK</button>
+      </form>
+      <div *ngIf="resscan">
+        <h4>Liste des extentions non lues : {{resscan.extentionsNotRead.length}}</h4>
+        <ul class="list-group" *ngFor="let e of resscan.extentionsNotRead">
+          <li class="list-group-item list-group-item-success">{{e}}</li>
+        </ul>
+        <h4>Listes des videos : {{listFilesToExport.length}}</h4>
+        <h4>Name export :</h4><input type="text" name="myNameExport" [(ngModel)]="nameExport" class="tbl-dir">
+        <button (click)="submitDatasTodb()">Store data</button>
+        <ul class="list-group " *ngFor="let f of listFilesToExport"> <!--list-group-item-success-->
+          <li class="list-group-item" [ngClass]="{
+          'list-group-item-success': f.state==1,
+          'list-group-item-danger': f.state==2,
+          'list-group-item-dark': f.state==3 }">{{f.filePath}}</li>
+        </ul>
+        <!--Begin of modal-->
+        <div class="modal modal-window" id="modalexport"
+             data-toggle="modal" data-backdrop="static"
+             data-keyboard="false">
+          <div class="modal-content">
+            <div class="modal-header mh">
+              <h2 class="mh1">This nameExport exist</h2>
+              <h2><span class="mh2" (click)="closeModal('modalexport')">×</span></h2>
+            </div>
+            <div class="modal-body">
+              <label>Name :</label>
+              <input class="form-control sizeMedium marginMedium"
+                     [(ngModel)]="nameExportModif" name="nameExportModif" required>
+              <button class="btn btn-primary" (click)="closeModal('modalexport')">Cancel</button>
+              <button class="btn btn-primary" (click)="rename()">Rename</button>
+              <button class="btn btn-primary" (click)="update()">Update</button>
+            </div>
+            <div class="modal-footer">
+            </div>
+          </div>
+        </div>
+        <!--End of modal-->
+      </div>
+    </div>
+    <!--<div *ngIf="compute">
+    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  </div>-->
+    <div class="contentabs" *ngIf="tabulation=='tab2'">
+      <form *ngIf="pref" #f="ngForm" (ngSubmit)="submitValues(f.value)" class="tbl boxincol">
+        <div class="tbl-line boxinline"><label class="tbl-ele ">Path des id(md5)</label>
+          <input type="text" name="pathIdVideo" [(ngModel)]="pref.prefmap.pathIdVideo" class="tbl-ele"></div>
+        <br>
+        <div class="tbl-line boxinline"><label class="tbl-ele ">Path des affiches</label>
+          <input type="text" name="urlAffichiche" [(ngModel)]="pref.prefmap.pathAffichiche" class="tbl-ele"></div>
+        <br>
+        <div class="tbl-line boxinline"><label class="tbl-ele ">Min size of video</label>
+          <input type="text" name="minSizeOfVideoFile" [(ngModel)]="pref.prefmap.minSizeOfVideoFile" class="tbl-ele">
+        </div>
+        <br>
+        <div class="tbl-line boxinline"><label class="tbl-ele ">Video to scan</label>
+          <input type="text" name="pathFileVideoToScan" [(ngModel)]="pref.prefmap.pathFileVideoToScan" class="tbl-ele ">
+        </div>
+        <br>
+        <div class="tbl-line boxinline"><label class="tbl-ele ">Liste des extentions</label>
+
+          <span (click)="openAddExt()"
+                style="cursor: pointer"
+                [ngClass]="newextask? 'baseh glyphicon glyphicon-minus':'baseh glyphicon glyphicon-plus'"
+                class=""> </span>
+          <div [ngClass]="newextask?'tooltiphshow tooltiph':'tooltiphhide tooltiph'" class="tooltiph">
+            <form *ngIf="newextask" class="modal-form formaddext" #f="ngForm"
+                  (ngSubmit)="onSubmitNewExt(f.value)">
+              <label class="">Enter name of extension</label>
+              <input class="form-control inputsizetooltiph "
+                     [(ngModel)]="newExt" name="newExt" required>
+              <button class="btn btn-primary btnsaveext">Save</button>
+            </form>
+          </div>
+          <div class="tbl-ele extensions" *ngFor="let e of pref.extset"> {{e}} </div>
+        </div>
+        <!--        <button type="submit" class="btn btn-default btnext">OK</button>-->
+      </form>
+    </div>
+    <div class="contentabs" *ngIf="tabulation=='tab3'">
+      <table class="table table-striped">
+        <th class="thtable">Liste des pays a identifier pour en recupperer le titre
+          <span (click)="actionaddCountry()"
+                style="cursor: pointer"
+                [ngClass]="addcountry? 'glyphicon glyphicon-minus':'glyphicon glyphicon-plus'"
+                class="buttonaddcountry"></span>
+          <br>
+          <div class="tbl-line">
+            <form *ngIf="addcountry" class="modal-form thtable-ele" #f="ngForm"
+                  (ngSubmit)="onSubmitNewCountry(f.value)">
+
+              <label class="thtable-ele">Enter name of country</label>
+              <input class="form-control sizeMedium marginMedium thtable-ele"
+                     [(ngModel)]="newCountry" name="newCountry" required>
+              <button class="btn btn-primary thtable-ele">Save</button>
+            </form>
+          </div>
+        </th>
+        <tr *ngFor="let c of preftitle.extset">
+          <td>{{c}}</td>
+          <td>
+            <button (click)="deleteCountry(c)">Delete</button>
+          </td>
+        </tr>
+      </table>
+      <div class="boxupdatetitles">
+        Update All tiltes with present files
+        <button class="btnupdatealltitles" (click)="updateAllTitles()">
+          Update
+        </button>
+      </div>
+    </div>
+    <!--    <div class="contentabs" *ngIf="tabulation=='tab4'">
+          <div><label>Abonnement(s)</label>
+          <div><span (click)="addSubscribe()" [ngClass]="inputAddSubscribe?'glyphicon glyphicon-minus':'glyphicon glyphicon-plus'">
+          </span><input  *ngIf="inputAddSubscribe" type="text"></div>
+          </div>
+        </div>-->
+    <div class="contentabs" *ngIf="tabulation=='tab4'">
+      <div>
+        <h2>Automatic backup</h2>
+
+        <hr>
+        <h4>1) Film idMD5 & idTt - >Next : {{prefbackupMo.prefmap.last}}</h4>
+        <h5 class="basetoolpipg">Frequency :
+          <span [className]="editFrequency ? 'tooltipgshow tooltipg ' : 'tooltipghide tooltipg '">
+            <input class="datainput" type="number" [(ngModel)]="prefbackupMo.prefmap.frequency" min="1" max="9999">
+            <button class="buttonTooltip" (click)="cancelChFrequency()">Cancel</button>
+            <button class="buttonTooltip" (click)="saveChFrequencyIdmd5Idtt()">Save</button>
+          </span>
+          <span (dblclick)="editValueFrequencyIdmd5Idtt()"
+                class="valueFreqency"><u>{{prefbackupMo.prefmap.frequency}}</u>
+          </span> hour(s)
+        </h5>
+        <hr>
+        <h4>2) User's score with idTt - >Next : {{prefbackupSc.prefmap.last}}</h4>
+        <div class="export">
+          <h5 class="basetoolpipg">Frequency :
+            <span [className]="editFrequencyScore ? 'tooltipgshow tooltipg ' : 'tooltipghide tooltipg '">
+            <input class="datainput" type="number" [(ngModel)]="prefbackupSc.prefmap.frequency" min="1" max="9999">
+            <button class="buttonTooltip" (click)="cancelChFrequencyScore()">Cancel</button>
+            <button class="buttonTooltip" (click)="saveChFrequencyScore()">Save</button>
+          </span>
+            <span (dblclick)="editValueFrequencyScore()" class="valueFreqency"><u>{{prefbackupSc.prefmap.frequency}}</u>
+          </span> hour(s)
+          </h5>
+<!--          <button class="exportbutton" (click)="getlisttoexport()">GetList to export</button>-->
+          <!--<div (dblclick)="importscore"></div>-->
+          <select class="form-control exportselect"
+                  id="selectexport"
+                  (change)="setExportForm($event)"
+                  [formGroup]="exportForm">
+            <option value="">?</option>
+            <option *ngFor="let nameExport of listtoexport"
+                    [selected]="onenameExport==nameExport"
+                    [value]="nameExport">
+              {{nameExport}}
+            </option>
+          </select>
+          <button (click)="exportSelection()">Export</button>
+          <span *ngIf="msgret>=0"> -> {{msgret}} score have been registered in database</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,203 @@
+
+@media only screen and (max-width: 1024px){
+  span.state{
+    position: relative;
+    top: 20px;
+    display: block;
+    /*margin: 0 20px;*/
+  }
+}
+
+@media only screen and (min-width: 1025px){
+  span.state{
+    display: none;
+  }
+}
+
+.anchor{
+  position: absolute;
+  width: available;
+  height: 40px;
+  /*width: 90px;*/
+}
+.scoreonten{
+  margin: 0;
+  z-index: 10;
+}
+img.score{
+  position: relative;
+  width:40px;
+  height:30px;
+  bottom: -6px;
+  right: 7px;
+}
+.toclick{
+  cursor: copy;
+}
+img.score2{
+  position: relative;
+  width:40px;
+  height:30px;
+  bottom: -6px;
+  right: 6px;
+}
+h5.scoreonten{
+  position: relative;
+  top: 3px;
+  right: -20px;
+}
+h6.nameLogin{
+  font-size: 0.8em;
+  z-index: 3;
+  position: absolute;
+  top: 4px;
+  left: 20px;
+  color: rgba(1, 4, 142, 0.96);
+  height: 20px;
+  width: 40px;
+}
+.dialogboxscoreuser{
+  z-index: 20;
+  position: relative;
+  width:22em;
+  height:10em;
+  top: 10px;
+  right: 0;
+  border-radius: 6px;
+  padding: 15px;
+  background-color: #6b6b6b;
+}
+.dialogboxscoreuser::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 10%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #555 transparent;
+}
+.showdbox{
+  visibility:visible;
+  opacity: 0.95;
+}
+.hidedbow{
+  visibility: hidden;
+  opacity: 0;
+}
+label.lbdbs{
+  float: left;
+  width: 45%;
+  color: #0f0f0f;
+}
+input.idbs{
+  width: 25%;
+  margin: 0 auto;
+  alignment: center;
+}
+button.bdbs{
+  float: right;
+  width: 20%;
+  margin-right: 0;
+}
+textarea.tadbs{
+  position: relative;
+  margin: 1em 0 0 0;
+  width: 100%;
+  height: 60px;
+  resize: none;
+}
+.overftrue{
+  color: rgba(68, 4, 12, 0.9);
+}
+.overffalse{
+  color: #333333;
+}
+.counttext{
+  /*color: #333333;*/
+  position: relative;
+  top: -80px;
+  left: 1px;
+}
+.otherscores{
+
+}
+.otherscore{
+  position: relative;
+  top: -170px;
+  right: -60px;
+}
+.tooltipcommentuser{
+  visibility: hidden;
+  opacity: 0;
+  z-index: 5;
+  position: relative;
+  min-width: 170px;
+  max-width: 600px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 15px;
+  /*left: -30%;*/
+  left: -45px;
+  top: 10px;
+  display: inline-block;
+}
+
+.tooltipcommentuser::before{
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 35%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent
+  transparent #555 transparent;
+}
+.otherscore:hover .tooltipcommentuser {
+  visibility: visible;
+  opacity: 0.9;
+}
+.tooltipg {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltipg .tooltiptextg {
+  visibility: hidden;
+  min-width: 170px;
+  max-width: 300px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 15px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltipg .tooltiptextg::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 35%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltipg:hover .tooltiptextg {
+  visibility: visible;
+  opacity: 0.9;
+}
+.containerpos{
+  position: absolute;
+}

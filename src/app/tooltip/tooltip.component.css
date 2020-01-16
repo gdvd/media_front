@@ -1,0 +1,151 @@
+h5{
+  margin: 0;
+}
+ul li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.iconsvg {
+  width: 20%;
+  height: 20%;
+}
+
+.tooltipg {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted #555555;
+}
+.imgToBasket{
+  cursor: pointer;
+  position: relative;
+  padding: 10px 10px 0 0;
+  vertical-align: middle;
+  filter: invert(27%)
+  sepia(51%)
+  saturate(2878%)
+  hue-rotate(80deg)
+  brightness(104%)
+  contrast(97%);
+}
+.tooltipg .tooltiptextg {
+  visibility: hidden;
+  min-width: 220px;
+  max-width: 500px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 15px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: -30px;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltipg .tooltiptextg::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltipg:hover .tooltiptextg {
+  visibility: visible;
+  opacity: 0.9;
+}
+.tooltipg2 {
+  position: relative;
+  display: inline-block;
+  /*border: 1px dotted #550003;*/
+}
+.toclick{
+  cursor: copy;
+}
+.tooltipg2 .tooltiptextg2 {
+  visibility: hidden;
+  min-width: 600px;
+  max-width: 800px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 25px;
+  left: 5px;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.8s;
+  margin-top: 30px;
+}
+
+.tooltipg2 .tooltiptextg2::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left:7%;
+  margin-left: 15px;
+  margin-right: 15px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltipg2:hover .tooltiptextg2 {
+  visibility: visible;
+  opacity: 0.9;
+}
+
+
+
+.tooltipg3 {
+  position: relative;
+  display: inline-block;
+  /*border-bottom: 1px dotted #555555;*/
+}
+
+.tooltipg3 .tooltiptextg3 {
+  visibility: hidden;
+  min-width: 600px;
+  max-width: 700px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 15px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 10%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.8s;
+}
+
+.tooltipg3 .tooltiptextg3::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 10%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltipg3:hover .tooltiptextg3 {
+  visibility: visible;
+  opacity: 0.9;
+}
+.titlemovie{
+  cursor: copy;
+}

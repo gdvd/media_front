@@ -1,0 +1,127 @@
+<div class="container">
+  <div *ngIf="listexports && listUsers">
+    <div class="bloc1">
+      <div class="panel panel-success">
+        <div class="panel-heading">Liste des Paths en DB LOCAL</div>
+        <div class="panel-body">
+          <ul class="list-group" *ngFor="let e of listexports">
+            <li *ngIf="e.visibility||e.complete||e.active"
+              class="list-group-item list-group-item-success">{{e.nameExport}}
+              <span class="badge badge-inverse"
+                    (click)="editExport(e)">{{(e.videoSupportPaths).length}}</span>
+              <span *ngFor="let l of e.luserToactive">
+                <span [ngClass]="l.toActive?'badge badge-info badge-pill':'badge badge-desactived badge-pill'"
+                    (dblclick)="toggleActivationLogin(l, e.idVideoNameExport)">
+                    {{l.login}}
+                </span>
+              </span>
+              <span class="badge badge-primary badge-pill"
+                    [ngClass]="e.active?'act':'nact'"
+                    (dblclick)="changeState(e)">Active</span>
+              <span class="badge badge-primary badge-pill"
+                    (dblclick)="deleteExport(e)">Delete</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="bloc2">
+      <div class="panel panel-warning">
+        <div class="panel-heading">Liste des Paths
+          <span *ngIf="!allPathsReceive">DB DISTANT</span>
+          <button class="btn btn-group-sm" (click)="saveAllPaths()" *ngIf="allPathsReceive">Save All</button>
+          <label class="lblupdate">Update </label>
+          <input type="checkbox"
+                 (change)="toupdatechange()"
+                 name="toupdate" [(ngModel)]="toupdate">
+
+          <span class="glyphicon glyphicon-remove toRight"
+                (click)="removeAllPathsReceive()"
+                *ngIf="allPathsReceive">{{url}}</span>
+          <div>
+            <form *ngIf="!allPathsReceive" (ngSubmit)="onSubmitURL()">
+              <div><br><label>URL</label>
+                <input type="text" class="form-control" [(ngModel)]="myurl"
+                       name="myurl" required>
+              </div>
+              <br>
+              <button type="submit" class="btn btn-warning">Submit</button>
+            </form>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+            <div *ngIf="allPathsReceive">
+              <ul class="list-group" *ngFor="let p of allPathsReceive">
+                <li class="list-group-item list-group-item-warning">
+                  <span class="glyphicon glyphicon-download padright"
+                        (dblclick)="askDl(p)"></span>{{p.nameExport}}
+                  <span class="badge badge-primary badge-pill">
+                    {{(p.videoSupportPaths).length}}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bloc3">
+  <div *ngIf="editOneExport">
+    <ul class="list-group" *ngFor="let o of editOneExport">
+      <li class="list-group-item list-group-item-warning">
+        <span class="glyphicon glyphicon-chevron-right"
+              id="{{o.id.idMyMediainfo}}"
+              (click)="editSupport(o.id.idMyMediainfo)">
+        </span>{{o.id.pathGeneral}}{{o.id.title}}
+        <div class="infommi" id="mmi{{o.id.idMyMediainfo}}">
+
+        </div> </li>
+    </ul>
+  </div>
+  </div>
+</div>
+<!--Begin of modal-->
+<div class="modal modal-window" id="modalexport"
+     data-toggle="modal" data-backdrop="static"
+     data-keyboard="false">
+  <div class="modal-content">
+    <div class="modal-header mh">
+      <h2 class="mh1">This nameExport exist</h2>
+      <h2><span class="mh2" (click)="closeModal('modalexport')">×</span></h2>
+    </div>
+    <div class="modal-body">
+      <label>Name :</label>
+      <input class="form-control sizeMedium marginMedium"
+             [(ngModel)]="nameExportRemote" name="nameExportRemote" required>
+      <button class="btn btn-primary" (click)="closeModal('modalexport')">Cancel</button>
+      <button class="btn btn-primary" (click)="rename()">Rename</button>
+      <button class="btn btn-primary" (click)="update(nameExportRemote)">Update</button>
+    </div>
+    <div class="modal-footer">
+    </div>
+  </div>
+</div>
+<!--End of modal-->
+<!--Begin of modal-->
+<div class="modal modal-window" id="modalremoteexport"
+     data-toggle="modal" data-backdrop="static"
+     data-keyboard="false">
+  <div class="modal-content">
+    <div class="modal-header mh">
+      <h2 class="mh1">This nameExport exist</h2>
+      <h2><span class="mh2" (click)="closeModal('modalremoteexport')">×</span></h2>
+    </div>
+    <div class="modal-body">
+      <label>Name :</label>
+      <input class="form-control sizeMedium marginMedium"
+             [(ngModel)]="nameExportRemoteRemote" name="nameExportRemoteRemote" required>
+      <button class="btn btn-primary" (click)="closeModal('modalremoteexport')">Cancel</button>
+      <button class="btn btn-primary" (click)="verifyNameExportRemote(nameExportRemoteRemote)">Rename</button>
+      <button class="btn btn-primary" (click)="updateremote(nameExportRemoteRemote)">Update</button>
+    </div>
+    <div class="modal-footer">
+    </div>
+  </div>
+</div>
+<!--End of modal-->

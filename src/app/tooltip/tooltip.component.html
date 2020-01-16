@@ -1,0 +1,27 @@
+<ng-container *ngIf="res">
+  <ng-container *ngFor="let r of res; let isLast=last">
+    <h5 class="tooltipg">
+      {{r.key}}
+      <span class="tooltiptextg">{{r.value}}</span>
+    </h5>
+    {{isLast ? '' : ', '}}</ng-container>
+</ng-container>
+
+<div *ngIf="elementsimple">
+  <span (dblclick)="openWindow(idVideo)" class="tooltipg2 toclick" >
+  Titre : <span class="tooltiptextg2">
+    <ng-container *ngFor="let vsp of elementsimple">
+      <li>{{vsp.title}} -> {{getName(vsp.id.idVideoNameExport)}}
+        <img src="../assets/img/Basket-4.svg" height="40" width="50" alt="addToBasket"
+             (click)="actionAddToBasket(vsp.id.idMyMediainfo)"
+             class="imgToBasket"></li>
+  </ng-container>
+
+  </span></span>
+  <span class="tooltipg3"><u class="titlemovie" (dblclick)="openWithTitleTT(idVideo)">
+    <b>{{getTitleVideo(titlevideo)}}</b></u>
+    <span class="tooltiptextg3"><ng-container *ngFor="let ti of titlevideo">
+      <li>{{ti.title}} (<i>{{ti.videoCountry.country}}</i>)</li>
+    </ng-container></span>
+  </span>
+</div>

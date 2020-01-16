@@ -1,0 +1,117 @@
+<div class="containertype">
+  <div class="typeformcourt" *ngIf="ele.editTypeName==1">
+    <form #f="ngForm"
+          (ngSubmit)="submitChangeTypeMmi(ele.typeMmi, ele.idMyMediaInfo)">
+      <ul class="outflex">
+        <li class="inflex">
+          <label class="inflex1" class="">Name of serie.fr</label>
+          <input class="inflex1" type="text" name="nameseriefr"
+                 [(ngModel)]="ele.typeMmi.nameSerie">
+          <!--          <br>-->
+        </li>
+        <li class="inflex">
+          <label>Name of serie.vo</label>
+          <input type="text" name="nameserievo"
+                 [(ngModel)]="ele.typeMmi.nameSerieVO">
+          <!--          <br>-->
+        </li>
+        <li class="inflex">
+          <label class="">Saison</label>
+          <input class="" type="number" name="seasonnb"
+                 [(ngModel)]="ele.typeMmi.season">
+          <!--          <br>-->
+        </li>
+        <li class="inflex">
+          <label class="">Episode</label>
+          <input class="" type="number" name="episodenb" [(ngModel)]="ele.typeMmi.episode">
+          <!--          <br>-->
+        </li>
+        <li class="inflex"><select class="custom-select"
+                                   (change)="setvalueformtype($event)"
+                                   [formGroup]="typenameForm">
+          <option *ngFor="let choicetn of listTypeNameWithId"
+                  [value]="choicetn.idTypeName"
+                  [selected]="choicetn.idTypeName==choice">{{choicetn.typeName}}
+          </option>
+        </select>
+        </li>
+        <li class="inflex">
+          <button class="btn btn-warning" type="reset" value="Reset"
+                  (click)="cancelTypeName(ele)">Cancel
+          </button>
+          <button class="btn btn-primary" type="submit">Submit</button>
+        </li>
+      </ul>
+    </form>
+  </div>
+  <div class="typeform styleedition" *ngIf="ele.editTypeName==2">
+    <span class="glyphicon glyphicon-barcode"></span>
+    <label>&nbsp;Support Id : {{ele.idMyMediaInfo}}&nbsp;&nbsp;
+      <span (dblclick)="toggleactiveidMmi(ele.idMyMediaInfo)"
+            [ngClass]="ele.videoSupportPaths[0].active?'glyphicon glyphicon-floppy-remove iconaction':'glyphicon glyphicon-floppy-open iconaction'">
+<!--            class="glyphicon glyphicon-floppy-remove"-->
+      </span></label><br>
+    <div *ngIf="ele.typeMmi!=null">
+      <span (click)="eraseLinkMmiTmmi(ele)" class="glyphicon glyphicon-link iconaction"></span><br>
+      <span (click)="eraseTmmi(ele)" class="glyphicon glyphicon-trash iconaction"></span>
+      <label>&nbsp;Type Media Id : {{ele.typeMmi.idTypeMmi}}</label><br>
+    </div>
+    <div *ngIf="ele.typeMmi!=null && ele.typeMmi.videoFilm!=null">
+      <span (click)="eraseLinkTmmiVideofilm(ele)" class="glyphicon glyphicon-link iconaction"></span><br>
+      <span class="glyphicon glyphicon-film"></span>
+      <label>&nbsp;VideoFilm id : {{ele.typeMmi.videoFilm.idVideo}}</label>
+    </div>
+  </div>
+  <img *ngIf="ele.typeMmi!=null && ele.typeMmi.typeName!=null"
+       src="assets/img/icon-test4.svg" alt="Film"
+       class="iconsvg" width="101" height="150">
+  <div class="containericon containerpos">
+    <p *ngIf="ele.typeMmi!=null && ele.typeMmi.typeName!=null"
+       class="typevideo">{{ele.typeMmi.typeName.typeName}}</p>
+    <p *ngIf="!(ele.typeMmi!=null && ele.typeMmi.typeName!=null)"><br></p>
+    <ul class="eleli offsetdim">
+      <li class="eledim"><span data-toggle="tooltip" title="option-click -> info in console"
+                               class="glyphicon glyphicon-info-sign clickable"
+                               (click)="$event.metaKey ? editele(ele) : null"
+                               (click)="$event.altKey ? getinfommi(ele) : null"
+                               (dblclick)="$event.shiftKey ? editeleplus(ele) : null"
+      ></span>
+        &nbsp;{{ele.width}} x {{ele.height}}&nbsp;
+        <span data-toggle="tooltip" title="Media info"
+              class="glyphicon glyphicon-copyright-mark fright tooltipm"
+              [ngClass]="ele.myMediaComments.length!=0?'sgreen':'infocommentReset'"
+              (dblclick)="togglecommentbox()">
+        <span *ngIf="ele.myMediaComments.length!=0" class="tooltiptextm">
+          <ng-container *ngFor="let com of ele.myMediaComments">
+            {{com.mediaComment}}<br>
+          </ng-container>
+      </span>
+      </span>
+
+      </li>
+    </ul>
+    <p *ngIf="!(ele.typeMmi!=null && ele.typeMmi.typeName!=null)"><br></p>
+    <ul class="eleli">
+      <li class="elecomp offsetli eleinf">
+        <app-chlang
+          (windowopen)="onewindowopen($event)"
+          [idMd5]="ele.idMyMediaInfo"
+          [languagesAu]="ele.myMediaAudios"
+          [languagestx]="ele.myMediaTexts"></app-chlang>
+      </li>
+      <li class="eleinf">{{inHMS(ele.duration)}}</li>
+      <li class="eleinf"><u>{{getNameSerie(ele)}}</u></li>
+      <li class="eleinf"><b>{{getNbSerie(ele)}}</b></li>
+      <li class="eleinf">{{inGMK2(ele.fileSize)}} - {{inGMK2(ele.bitrate)}}/s</li>
+    </ul>
+  </div>
+  <div class="dialogboxcommentuser" [id]="'db-'+ele.idMyMediaInfo"
+       [ngClass]="dboxpos?'showdbox':'hidedbow'">
+    <label class="lbdbs">Add comment :</label>
+    <button class="btn-sm bdbs" (click)="saveComment(ele.idMyMediaInfo)">Save</button>
+    <textarea class="tadbs" [(ngModel)]="mycomment"
+              (ngModelChange)="tachange()"
+              name="onecomment"></textarea>
+    <label class="counttext" [ngClass]="overf?'overftrue':'overffalse'">{{tachg()}}</label>
+  </div>
+</div>
