@@ -1,3 +1,3 @@
 export const urlwebsite: any = {
-  urllocal : 'localhost' // Your URL test3
+  urllocal : 'localhost' // Your URL
 }
