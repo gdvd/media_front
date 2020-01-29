@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
   messages: any[] = [];
   subscription: Subscription;
 
-  private keywordGeneral: string;
+  // private keywordGeneral: string;
   isConnected: boolean = false;
   private user: Usr;
   private currentRoute: string;
@@ -156,6 +156,11 @@ export class AppComponent implements OnInit {
       console.log('Disconnected');
       this.isConnected = false;
     }
+  }
+
+  onVideoid() {
+    this.currentRoute = 'videoid';
+    this.router.navigateByUrl('/videoid');
   }
 
   onFilmography() {
@@ -425,11 +430,8 @@ export class AppComponent implements OnInit {
     this.nameBasketUsed = localBasketName;
     this.getfilenameofidsbasket(localBasketName);
     for (let i = 0; i < this.myLocalBaskets.length; i++) {
-      if (this.myLocalBaskets[i].localBasketName === localBasketName) {
-        this.myLocalBaskets[i].selection = true;
-      } else {
-        this.myLocalBaskets[i].selection = false;
-      }
+      this.myLocalBaskets[i].selection =
+        this.myLocalBaskets[i].localBasketName === localBasketName;
     }
 
   }
@@ -470,11 +472,7 @@ export class AppComponent implements OnInit {
 
   namebasketchange() {
     for (let b of this.myLocalBaskets) {
-      if (b.localBasketName === this.nameBasketUsed) {
-        b.selection = true;
-      } else {
-        b.selection = false;
-      }
+      b.selection = b.localBasketName === this.nameBasketUsed;
     }
   }
 

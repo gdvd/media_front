@@ -4,7 +4,7 @@
           (ngSubmit)="submitChangeTypeMmi(ele.typeMmi, ele.idMyMediaInfo)">
       <ul class="outflex">
         <li class="inflex">
-          <label class="inflex1" class="">Name of serie.fr</label>
+          <label class="inflex1">Name of serie.fr</label>
           <input class="inflex1" type="text" name="nameseriefr"
                  [(ngModel)]="ele.typeMmi.nameSerie">
           <!--          <br>-->
@@ -17,8 +17,10 @@
         </li>
         <li class="inflex">
           <label class="">Saison</label>
-          <input class="" type="number" name="seasonnb"
-                 [(ngModel)]="ele.typeMmi.season">
+          <label>
+            <input class="" type="number" name="seasonnb"
+                   [(ngModel)]="ele.typeMmi.season">
+          </label>
           <!--          <br>-->
         </li>
         <li class="inflex">
@@ -63,7 +65,7 @@
     </div>
   </div>
   <img *ngIf="ele.typeMmi!=null && ele.typeMmi.typeName!=null"
-       src="assets/img/icon-test4.svg" alt="Film"
+       src="/assets/img/icon-test4.svg" alt="Film"
        class="iconsvg" width="101" height="150">
   <div class="containericon containerpos">
     <p *ngIf="ele.typeMmi!=null && ele.typeMmi.typeName!=null"

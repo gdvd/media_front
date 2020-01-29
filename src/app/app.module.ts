@@ -19,6 +19,7 @@ import { ChlangComponent } from './chlang/chlang.component';
 import { ScoreComponent } from './score/score.component';
 import { TypemediaComponent } from './typemedia/typemedia.component';
 import { FilmographyComponent } from './filmography/filmography.component';
+import { VideoidComponent } from './videoid/videoid.component';
 
 
 
@@ -37,7 +38,8 @@ import { FilmographyComponent } from './filmography/filmography.component';
     ChlangComponent,
     ScoreComponent,
     TypemediaComponent,
-    FilmographyComponent
+    FilmographyComponent,
+    VideoidComponent
   ],
   imports: [
     BrowserModule, FormsModule, HttpClientModule,

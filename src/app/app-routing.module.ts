@@ -8,12 +8,14 @@ import {AdminComponent} from './admin/admin.component';
 import {ManagmentfilesComponent} from './managmentfiles/managmentfiles.component';
 import {ExportComponent} from './export/export.component';
 import {FilmographyComponent} from './filmography/filmography.component';
+import {VideoidComponent} from './videoid/videoid.component';
 
 const routes: Routes = [
   {path: 'managmentfiles', component:ManagmentfilesComponent},
   {path: 'export', component:ExportComponent},
   {path: 'video', component: VideoComponent},
   {path: 'filmography', component: FilmographyComponent},
+  {path: 'videoid', component: VideoidComponent},
   {path: 'admin', component:AdminComponent},
   {path: 'login', component:LoginComponent},
   {path: 'config', component: ConfigComponent}

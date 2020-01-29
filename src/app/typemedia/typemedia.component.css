@@ -101,8 +101,8 @@ li.inflex {
 }
 .containericon{
   position: relative;
-  top: 0px;
-  left: 0px;
+  top: 0;
+  left: 0;
   padding: 2px 2px 2px 2px;
   height: 155px;
 }
@@ -134,7 +134,7 @@ li.inflex {
 }
 
 .typevideo{
-  position: abslbdbsolute;
+  position: absolute;
   top: -7px;
   font-size: 2em;
   alignment: center;
