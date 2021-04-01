@@ -2,13 +2,16 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {urlwebsite} from '../environments/dataProject';
+import {CatalogueService} from './catalogue.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-  host: string = 'http://'+urlwebsite.urllocal+':8085';
+  // public portBO = '8086';
+
+  host: string = 'http://'+urlwebsite.urllocal+':'+ urlwebsite.portBO;
   jwt: string;
   userName: string;
   roles: Array<string>;
@@ -17,7 +20,10 @@ export class AuthenticationService {
   }
 
   login(data) {
-    return this.http.post(this.host + '/login', data, {observe: 'response'});
+    console.log(this.host + '/login');
+    console.log(data);
+    return this.http.post(this.host + '/login', data,
+      {observe: 'response'});
   }
 
   saveToken(jwt: string) {
@@ -62,6 +68,6 @@ export class AuthenticationService {
   initParams() {
     this.jwt = undefined;
     this.userName = undefined;
-    this.roles = undefined;
+    this.roles = [];
   }
 }

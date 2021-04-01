@@ -1,0 +1,327 @@
+<div class="videoinfo peliculetxt vinf" *ngIf="lmmi.length!=0">
+    <span [id]="'vf%'+vf1.idVideo"
+          (click)="changevaluetoshow($event, null)"
+          class="glyphicon glyphicon-info-sign infovf cursorfinger tooltipsmini"
+    >
+      <div class="tooltipstextmini">{{getInfoSupports()}}</div>
+      <div [id]="'vf%'+vf1.idVideo+'%windedit'"
+           class="windeditVF">
+        <ul class="liwithoutbullet onglet">
+
+                <li data-toggle="tooltip" title="Year"
+                    [ngClass]="tabulationVf=='tabVF1'?'active tab':'tab'"
+                    (click)="myTabVF(1)">Year
+                </li>
+                <li data-toggle="tooltip" title="Score"
+                    [ngClass]="tabulationVf=='tabVF2'?'active tab':'tab'"
+                    (click)="myTabVF(2)">Score
+                </li>
+                <li data-toggle="tooltip" title="URLimg"
+                    [ngClass]="tabulationVf=='tabVF3'?'active tab':'tab'"
+                    (click)="myTabVF(3)">URLimg
+                </li>
+                <li data-toggle="tooltip" title="Type"
+                    [ngClass]="tabulationVf=='tabVF4'?'active tab':'tab'"
+                    (click)="myTabVF(4)">Comment
+                </li>
+                <li data-toggle="tooltip" title="Add Title"
+                    [ngClass]="tabulationVf=='tabVF5'?'active tab':'tab'"
+                    (click)="myTabVF(5)">Add Title
+                </li>
+                <li data-toggle="tooltip" title="Add Keyword"
+                    [ngClass]="tabulationVf=='tabVF6'?'active tab':'tab'"
+                    (click)="myTabVF(6)">Add Keyword
+                </li>
+
+        </ul>
+        <ul class="liwithoutbullet" id="livftoshow">
+
+                <li class="contentabsVF" *ngIf="tabulationVf=='tabVF1'">
+                  <div class="editvalue">
+                    <label>Year : </label>
+                    <input class="inputYear" type="number" ngModel name="vfYear"
+                           (keydown.enter)="saveYearInDb()" [(ngModel)]="vfYear">
+                    <button (click)="saveYearInDb()">Save in DB</button>
+                  </div>
+                </li>
+                <li class="contentabsVF" *ngIf="tabulationVf=='tabVF2'">
+                  <div class="editvalue">
+                    <label>Score : </label>
+                    <input class="inputScorer" type="number" ngModel name="vfScore"
+                           (keydown.enter)="saveScoreInDb()" [(ngModel)]="vfScore">
+                    <button (click)="saveScoreInDb()">Save in DB</button>
+                  </div>
+                </li>
+                <li class="contentabsVF" *ngIf="tabulationVf=='tabVF3'">
+                  <div class="editvalue">
+                      <table style="width:100%">
+                        <tbody>
+                            <td class="commentvfcolleft">
+                              <tr class="firstline">URL</tr>
+                              <tr class="firstline">&nbsp;</tr>
+                              <tr class="secondline">
+                                <button (click)="saveImgInDb()">Save</button></tr>
+                            </td>
+                          <td>
+                            <tr rowspan="2">
+                              <textarea class="textareacomment2" ngModel name="vfImg"
+                                        (keydown.enter)="saveImgInDb()" [(ngModel)]="vfImg">
+                              </textarea>
+                            </tr>
+                          </td>
+                        </tbody>
+                      </table>
+                  </div>
+                </li>
+                <li class="contentabsVF" *ngIf="tabulationVf=='tabVF4'">
+                  <div class="editvalue">
+                      <table style="width:100%">
+                        <tbody>
+                            <td class="commentvfcolleft">
+                              <tr class="firstline">Comment</tr>
+                              <tr class="firstline">&nbsp;</tr>
+                              <tr class="secondline">
+                                <button (click)="submitNewComment()">Save</button></tr>
+                            </td>
+                          <td>
+                            <tr rowspan="2">
+                              <textarea class="textareacomment2"
+                                        (keydown.enter)="submitNewComment()"
+                              [(ngModel)]="newComment">
+                              </textarea>
+                            </tr>
+                          </td>
+                        </tbody>
+                      </table>
+                  </div>
+                </li>
+                <li class="contentabsVF" *ngIf="tabulationVf=='tabVF5'">
+                  <div class="editvalue">
+                    <label>New title : </label>
+                    <input class="inputTitle" type="text" ngModel name="newTitle"
+                           (keydown.enter)="saveNewTitleInDb()" [(ngModel)]="newTitle">
+                    <button (click)="saveNewTitleInDb()">Save in DB</button>
+                  </div>
+                </li>
+                <li class="contentabsVF" *ngIf="tabulationVf=='tabVF6'">
+                  <div class="editvalue">
+                    <label>Add keyword : </label>
+                    <input class="inputKeyword" type="text" ngModel name="newKeyword"
+                           (keydown.enter)="saveNewKeywordInDb()" [(ngModel)]="newKeyword">
+                    <button (click)="saveNewKeywordInDb()">Save in DB</button>
+                  </div>
+                </li>
+
+        </ul>
+      </div>
+    </span>&nbsp;
+  <em class="nbele">{{lmmi.length}} <span class="glyphicon glyphicon-film"></span></em>&nbsp;
+  <div class="commentvf">
+    <span [ngClass]="vf1.videoComment?'colorgreen':'colordark'"
+      class="glyphicon glyphicon-copyright-mark copyr "></span>
+    <div class="commentvftext" *ngIf="vf1.videoComment">
+      {{vf1.videoComment.comment}}
+    </div>
+  </div>
+  <em class="colorblue typevideo">{{getType()}}</em>
+  <span *ngIf="lmmi.length>limitToShow"
+        class="cursorfinger positioneye"
+        data-toggle="tooltip" title="Show All/Partial"
+        [ngClass]="showAll?'glyphicon glyphicon-eye-open coloropen ':'glyphicon glyphicon-eye-close colorclose '"
+        (click)="toggleShow()"></span>
+  <p class="showduration">{{getDurationMinMax()}}</p>
+<!--  <br>-->
+  <div *ngIf="this.titleSerie.length!=0" class="titleserie">
+    <p (dblclick)="videoid.showWithNameSerie(this.titleSerie[0])"
+      [ngClass]="this.titleSerie.length==1&&titleSerieIsEmpty==0?'textp curscopy':'textp showItalic curspoint'">
+      {{this.titleSerie[0]}}</p>
+    <div *ngIf="this.titleSerie.length>1" class="titleserietext ">
+      <ul class="titleseries">
+        <li *ngFor="let ts of this.titleSerie">{{ts}}<span
+          data-toggle="tooltip" title="Apply to ALL"
+          class="glyphicon glyphicon-send iconSaveForAll"
+          (click)="saveTitleForCurrentVF(ts)"></span></li>
+        <li *ngIf="titleSerieIsEmpty==1" class="showItalic">[And 1 titleSerieVO is empty]</li>
+        <li *ngIf="titleSerieIsEmpty>1" class="showItalic">[And {{titleSerieIsEmpty}} titleSerieVO are empty]</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<ng-container>
+
+  <ng-container>
+  <!--***************************** List MMI **********************-->
+    <table class="element tbltmmi">
+
+      <!--<img class="imgposter" alt="Poster" height="150" width="101"
+           style="opacity: 1;"
+           [src]="videoid.getUrlImgPoster(vf1)">-->
+
+      <ng-container *ngFor="let mmi of lmmi; let i=index; let isFirst=first">
+      <tr class="row" *ngIf="i<limitToShow||showAll"
+          [id]="mmi.idMyMediaInfo+'%'+vf1.idVideo">
+        <td class="colinfo">
+
+          <!-- It must be the last span with id in this child's node, or modify 'testClick()' -->
+          <span [id]="'tmmi%'+mmi.idMyMediaInfo+vf1.idVideo"
+                class="glyphicon glyphicon-info-sign cursorfinger tooltips"
+                (click)="changevaluetoshow($event, mmi)">
+                <div class="tooltipstext">
+                    <p>Duration : {{this.inHM(mmi.duration)}}&nbsp;
+                    FileSize : {{this.inGMK(mmi.fileSize)}}&nbsp;
+                    ImageSize : {{mmi.width + 'x' + mmi.height}}</p>
+                    <hr class="hrgray">
+                    <ul *ngFor="let vsp of mmi.videoSupportPaths">
+                      <li><p class="inlbk">{{vsp.title}} => {{vsp.vneName}}</p>
+                      <img src="../assets/img/Basket-4.svg" height="40" width="50" alt="addToBasket"
+                           (click)="actionAddToBasket2(vsp.id.idMyMediainfo)"
+                           class="inlbk imgToBasket">
+                      </li>
+                    </ul>
+                </div>
+            <div [id]="'tmmi%'+mmi.idMyMediaInfo+vf1.idVideo+'%windedit'"
+                 class="windedit">
+
+              <ul class="liwithoutbullet onglet">
+                <li data-toggle="tooltip" title="Audio"
+                    [ngClass]="tabulation=='tab1'?'active tab':'tab'"
+                    (click)="myTab(1, mmi)"><span class="glyphicon glyphicon-volume-up lightli"
+                                                  (click)="changeType(1, mmi)"
+                ></span></li>
+                <li data-toggle="tooltip" title="Sous-titre"
+                    [ngClass]="tabulation=='tab2'?'active tab':'tab'"
+                    (click)="myTab(2, mmi)"><span class="glyphicon glyphicon-subtitles darkli"
+                                                  (click)="changeType( 2, mmi)"
+                ></span></li>
+                <li data-toggle="tooltip" title="Comment"
+                    [ngClass]="tabulation=='tab3'?'active tab':'tab'"
+                    (click)="myTab(3, mmi)"><span class="glyphicon glyphicon-copyright-mark darkli"
+                                                  (click)="changeType( 3, mmi)"
+                ></span></li>
+                <li data-toggle="tooltip" title="Season & Episode"
+                    [ngClass]="tabulation=='tab4'?'active tab':'tab'"
+                    (click)="myTab(4, mmi)"><span class="glyphicon glyphicon-th-list darkli"
+                                                  (click)="changeType( 4, mmi)"
+                ></span></li>
+              </ul>
+              <ul class="liwithoutbullet" id="litoshow">
+                <li class="contentabs" *ngIf="tabulation=='tab1'">
+                  <!--Audio-->
+                  <ng-container *ngFor="let a of mmi.myMediaAudios">
+                    <p (click)="changeAudio(a)" class="eleEdition">{{a.myMediaLanguage.language}}</p>
+                  </ng-container>
+                  <div class="editvalue" *ngIf="showModifyAudio">
+                    <input class=" editvalueinput" type="text" ngModel name="title_name"
+                           (keydown.enter)="submitNewAudio()"
+                           [(ngModel)]="editAudio">
+                    <button class="editvaluebuttonok">
+                      <span (click)="submitNewAudio()"
+                            class="glyphicon glyphicon-ok editvalueicon"></span>
+                    </button>
+                    <button class="editvaluebuttonremove">
+                      <span (click)="cancelNewAudio()"
+                            class="glyphicon glyphicon-remove editvalueicon"></span>
+                    </button>
+                  </div>
+                </li>
+                <li class="contentabs" *ngIf="tabulation=='tab2'">
+                  <!--Subtitle-->
+                  <ng-container *ngFor="let t of mmi.myMediaTexts">
+                    <p (click)="changeSubtitle(t)" class="eleEdition">{{t.myMediaLanguage.language}}</p>
+                  </ng-container>
+                  <div class="editvalue" *ngIf="showModifySubtitle">
+                    <input class=" editvalueinput" type="text" ngModel name="title_name"
+                          (keydown.enter)="submitNewSubtitle()" [(ngModel)]="editSubtitle">
+                    <button class="editvaluebuttonok">
+                      <span (click)="submitNewSubtitle()"
+                            class="glyphicon glyphicon-ok editvalueicon"></span>
+                    </button>
+                    <button class="editvaluebuttonremove">
+                      <span (click)="cancelNewSubtitle()"
+                            class="glyphicon glyphicon-remove editvalueicon"></span>
+                    </button>
+                  </div>
+                </li>
+                <li class="contentabs" *ngIf="tabulation=='tab3'">
+                  <div class="divcomment">
+                    <textarea
+                      ngModel name="one_comment"
+                      [(ngModel)]="oneComment"
+                      (keydown.enter)="submitcomment(mmi)"
+                      (ngModelChange)="tachange()"
+                      type="text" class="textareacomment"
+                      placeholder="Enter your comment">
+                    </textarea>
+                      <p class="commentSize" [ngClass]="overf?'overftrue':'overffalse'">{{tachg()}}</p>
+                      <span (click)="cancelcomment()" class="glyphicon glyphicon-remove cancelcomment"></span>
+                      <span (click)="submitcomment(mmi)" class="glyphicon glyphicon-ok submitcomment"></span>
+                  </div>
+                </li>
+                <li class="contentabs" *ngIf="tabulation=='tab4'">
+                  <!--Season&Episode-->
+                  <div class="containerserie">
+                    <div>
+                      <label class="nameserievolabel">Name</label>
+                      <input type="text" class="nameserievoinput" [(ngModel)]="nameSerieVo">
+                    </div>
+                    <div>
+                      <label class="labelseries">S</label>
+                      <input class="inputserie" [(ngModel)]="season" type="number" min="0" max="100">
+                      <label class="labelseriee">E</label>
+                      <input class="inputserie" [(ngModel)]="episode" type="number" min="0" max="1000">
+                    </div>
+                  </div>
+                  <span (click)="cancelserienumber(mmi)" class="glyphicon glyphicon-remove btnseriecancel"></span>
+                  <span (click)="submitserienumber(mmi)" class="glyphicon glyphicon-ok btnserieok"></span>
+                </li>
+              </ul>
+
+            </div>
+          </span>
+        </td>
+        <td class="colwidth">{{getEllementToShow(mmi)}}
+        </td>
+        <td class="colserie">
+          <span>&nbsp;
+            <ng-container *ngIf="mmi.typeMmi.season!=0||mmi.typeMmi.episode!=0">
+              <p [className]="searchContinuite(i, true) ? 'inline  borderTopBlue' : 'inline '"
+                 *ngIf="mmi.typeMmi.season!=0">S{{mmi.typeMmi.season > 9 ? '' : '0'}}{{mmi.typeMmi.season}}</p>
+              <p [className]="searchContinuite(i, false) ? 'inline  borderTopRed' : 'inline '"
+                 *ngIf="mmi.typeMmi.episode!=0">E{{mmi.typeMmi.episode > 9 ? '' : '0'}}{{mmi.typeMmi.episode}}</p>
+            </ng-container>
+          </span>
+        </td>
+        <td class="colaudio">
+          <div class="tooltipd inline" [ngClass]="getInfoLanguage(mmi.myMediaAudios)"
+               *ngIf="mmi.myMediaAudios.length>0">
+            <p class="tooltiptextd inline">{{getLangAudio(mmi.myMediaAudios)}}</p>
+            <div></div>
+          </div>
+        </td>
+        <td class="colst">
+          <div class="tooltipd" [ngClass]="getInfoText(mmi.myMediaTexts)" *ngIf="mmi.myMediaTexts.length>0">
+            <p class="tooltiptextd ">{{getLangtext(mmi.myMediaTexts)}}</p>
+          </div>
+        </td>
+        <td class="colcom">
+          <span class="glyphicon glyphicon-copyright-mark tooltipc"
+                [ngClass]="mmi.myMediaComments.length==0?'commentdarkcolor':'colorlightgreen'">
+            <span *ngIf="mmi.myMediaComments.length!=0" class="tooltiptextc">
+                <ng-container *ngFor="let com of mmi.myMediaComments">
+                  {{com.mediaComment}}<br>
+                </ng-container>
+            </span>
+          </span>
+        </td>
+      </tr>
+      <tr (click)="toggleShow()" class="row lineextrasmall" *ngIf="i==limitToShow && !showAll">
+        <td><p data-toggle="tooltip" title="Show more" class="lineextrasmall tocontinue">...</p></td>
+        <td><p data-toggle="tooltip" title="Show more" class="lineextrasmall tocontinue">... ... ...</p></td>
+        <td><p class="lineextrasmall tocontinue"></p></td>
+        <td><p data-toggle="tooltip" title="Show more" class="lineextrasmall tocontinue">...</p></td>
+      </tr>
+      <!--</ng-container>-->
+      </ng-container>
+    </table>
+  </ng-container>
+</ng-container>

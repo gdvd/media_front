@@ -71,8 +71,8 @@ export class VideoComponent implements OnInit {
               private cookieService: CookieService,
               private fb: FormBuilder,
               private messageService: MessageService,
-              private mywindowService: MywindowService/*,
-              private myArray: MyArray<any>*/) {
+              private mywindowService: MywindowService
+  ) {
     this.subscription = this.messageService.getMessage().subscribe(message => {
       if (message) {
         this.messages.push(message);
@@ -137,6 +137,7 @@ export class VideoComponent implements OnInit {
     this.dboxid = '';
     this.mycomment = '';
     this.nbchar = 1024;
+    this.appComponent.getNewJwt();
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -322,49 +323,79 @@ export class VideoComponent implements OnInit {
           // console.log(data);
           //@ts-ignore
           this.tablepage = data;
-          if (this.tablepage.content.length == 1) {
-            this.myOrder = 'nothing';
-          }
-          this.ltitileWithIdtt = [];
-          for (let mmi of this.tablepage.content) {
-            // console.log(mmi);
-            if (mmi != null) {
-              if (mmi.videoSupportPaths.length > 1) {
-                mmi.state = 1;
-              } else {
-                mmi.state = 1;
-              }
-              if (mmi.typeMmi != null) {
-                if (mmi.typeMmi.videoFilm != null) {
-                  mmi.search = 3;
-                  mmi.state = 3;
-                } else {
-                  mmi.search = 0;
+          var lMmi: number[] = [];
+          this.tablepage.content.forEach(c => {
+            if (c.typeMmi != null) {
+              lMmi = lMmi.concat(c.typeMmi.idTypeMmi);
+            }
+          });
+          // console.log(lMmi);
+          this.catalogueService.postRessourceWithData(
+            '/videouser/getVideoFilmWithMmi', lMmi)
+            .subscribe(data => {
+              var newLinks: LinkVfTmmi[];
+              // @ts-ignore
+              newLinks = data;
+              // console.log(newLinks);
+              if (this.tablepage.content.length != 0) {
+                this.tablepage.content.forEach(c => {
+                  if (c.typeMmi != null) {
+                    newLinks.forEach(l => {
+                      if (c.typeMmi.idTypeMmi === l.link) {
+                        c.typeMmi.videoFilm = l.vf;
+                      }
+                    });
+                  }
+                });
+                if (this.tablepage.content.length == 1) {
+                  this.myOrder = 'nothing';
                 }
-              } else {
-                mmi.search = 0;
+                this.ltitileWithIdtt = [];
+                for (let mmi of this.tablepage.content) {
+                  // console.log(mmi);
+                  if (mmi != null) {
+                    if (mmi.videoSupportPaths.length > 1) {
+                      mmi.state = 1;
+                    } else {
+                      mmi.state = 1;
+                    }
+                    if (mmi.typeMmi != null) {
+                      if (mmi.typeMmi.videoFilm != null) {
+                        mmi.search = 3;
+                        mmi.state = 3;
+                      } else {
+                        mmi.search = 0;
+                      }
+                    } else {
+                      mmi.search = 0;
+                    }
+                  }
+                  mmi.editTypeName = 0;
+                  if (mmi.typeMmi != null
+                    && mmi.typeMmi.videoFilm != null
+                    && mmi.typeMmi.videoFilm.remake != null) {
+                    for (let id in mmi.typeMmi.videoFilm.remake.remakes) {
+                      mmi.typeMmi.videoFilm.remake.active = true;
+                      mmi.typeMmi.videoFilm.remake.titles = [];
+                      let rem: TitileWithIdttt = {
+                        idtt: mmi.typeMmi.videoFilm.remake.remakes[id],
+                        title: ''
+                      };
+                      this.ltitileWithIdtt = this.ltitileWithIdtt.concat(rem);
+                    }
+                  }
+                }
+                this.ltitileWithIdtt = this.mergeListTitleWithIdtt(this.ltitileWithIdtt);
+                this.searchTitltForListTitleWithIdtt(this.ltitileWithIdtt);
+                if (this.myOrder != 'nothing') {
+                  this.reorderpage();
+                }
+              }else{
+                this.myOrder = 'nothing';
               }
-            }
-            mmi.editTypeName = 0;
-            if (mmi.typeMmi != null
-              && mmi.typeMmi.videoFilm != null
-              && mmi.typeMmi.videoFilm.remake != null) {
-              for (let id in mmi.typeMmi.videoFilm.remake.remakes) {
-                mmi.typeMmi.videoFilm.remake.active = true;
-                mmi.typeMmi.videoFilm.remake.titles = [];
-                let rem: TitileWithIdttt = {
-                  idtt: mmi.typeMmi.videoFilm.remake.remakes[id],
-                  title: ''
-                };
-                this.ltitileWithIdtt = this.ltitileWithIdtt.concat(rem);
-              }
-            }
-          }
-          this.ltitileWithIdtt = this.mergeListTitleWithIdtt(this.ltitileWithIdtt);
-          this.searchTitltForListTitleWithIdtt(this.ltitileWithIdtt);
-          if (this.myOrder != 'nothing') {
-            this.reorderpage();
-          }
+            }, err => {
+              console.log(err);
+            });
         }, err => {
           console.log(err);
         });
@@ -375,33 +406,58 @@ export class VideoComponent implements OnInit {
         .subscribe(data => {
           //@ts-ignore
           this.tablepage = data;
-          if (this.tablepage.content.length == 1) {
-            this.myOrder = 'nothing';
-          }
-          for (let mmi of this.tablepage.content) {
-            // console.log(mmi);
-            if (mmi != null) {
-              if (mmi.videoSupportPaths.length > 1) {
-                mmi.state = 1;
-              } else {
-                mmi.state = 0;
-              }
-              if (mmi.typeMmi != null) {
-                if (mmi.typeMmi.videoFilm != null) {
-                  mmi.search = 3;
-                  mmi.state = 3;
-                } else {
-                  mmi.search = 0;
-                }
-              } else {
-                mmi.search = 0;
-              }
+
+          var lMmi: number[] = [];
+          this.tablepage.content.forEach(c => {
+            if (c.typeMmi != null) {
+              lMmi = lMmi.concat(c.typeMmi.idTypeMmi);
             }
-            mmi.editTypeName = 0;
-          }
-          if (this.myOrder != 'nothing') {
-            this.reorderpage();
-          }
+          });
+          this.catalogueService.postRessourceWithData(
+            '/videouser/getVideoFilmWithMmi', lMmi)
+            .subscribe(data => {
+              var newLinks: LinkVfTmmi[];
+              // @ts-ignore
+              newLinks = data;
+              this.tablepage.content.forEach(c => {
+                if (c.typeMmi != null) {
+                  newLinks.forEach(l => {
+                    if (c.typeMmi.idTypeMmi === l.link) {
+                      c.typeMmi.videoFilm = l.vf;
+                    }
+                  });
+                }
+              });
+              if (this.tablepage.content.length == 1) {
+                this.myOrder = 'nothing';
+              }
+              for (let mmi of this.tablepage.content) {
+                // console.log(mmi);
+                if (mmi != null) {
+                  if (mmi.videoSupportPaths.length > 1) {
+                    mmi.state = 1;
+                  } else {
+                    mmi.state = 0;
+                  }
+                  if (mmi.typeMmi != null) {
+                    if (mmi.typeMmi.videoFilm != null) {
+                      mmi.search = 3;
+                      mmi.state = 3;
+                    } else {
+                      mmi.search = 0;
+                    }
+                  } else {
+                    mmi.search = 0;
+                  }
+                }
+                mmi.editTypeName = 0;
+              }
+              if (this.myOrder != 'nothing') {
+                this.reorderpage();
+              }
+            }, err => {
+              console.log(err);
+            });
         }, err => {
           console.log(err);
         });
@@ -409,19 +465,19 @@ export class VideoComponent implements OnInit {
   }
 
 
-/*  checkboxchange() {
-    this.page = 1;
+  /*  checkboxchange() {
+      this.page = 1;
 
-    if (this.checkboxFlag == true) {
-      this.toggleSelectorVne(true);
-    } else {
-      this.toggleSelectorVne(false);
-    }
-    this.getPageMmi();
-  }*/
+      if (this.checkboxFlag == true) {
+        this.toggleSelectorVne(true);
+      } else {
+        this.toggleSelectorVne(false);
+      }
+      this.getPageMmi();
+    }*/
   checkboxchange2(value: boolean) {
     this.page = 1;
-    this.checkboxFlag=value;
+    this.checkboxFlag = value;
     if (value) {
       this.toggleSelectorVne(true);
     } else {
@@ -877,6 +933,7 @@ export class VideoComponent implements OnInit {
         //@ts-ignore
         this.listIdVneToName = data;
         this.sortListIdVneToName(this.listIdVneToName);
+        // console.log(this.listIdVneToName)
       }, err => {
         console.log(err);
       });
@@ -1135,6 +1192,10 @@ export class VideoComponent implements OnInit {
                   //@ts-ignore
                   let typemmi: typeMmi = data;
                   ele.typeMmi = typemmi;
+
+                  //TODO: UpdateVideoFilm
+                  ele.typeMmi.videoFilm=vf;
+
                   eletbl.splice(0, 1);
                   if (eletbl.length > 0) {
                     this.linkIdttWithIdmmi(vf, eletbl);
@@ -1271,13 +1332,13 @@ export class VideoComponent implements OnInit {
       '] activePointers: ' + args.getActivePointers().length);
   }
 
-/*  checkboxfilterchange($event: Event) {
-    this.page = 1;
-    this.getPageMmi();
-  }*/
+  /*  checkboxfilterchange($event: Event) {
+      this.page = 1;
+      this.getPageMmi();
+    }*/
 
   checkboxfilterchange2(value: boolean) {
-    this.checkboxfilterFlag=value;
+    this.checkboxfilterFlag = value;
     this.page = 1;
     this.getPageMmi();
   }
@@ -1623,7 +1684,7 @@ export class VideoComponent implements OnInit {
                     idVideo: mmi.typeMmi.videoFilm.idVideo,
                     remakes: rem.remakes.slice(),
                     titles: []
-                  }
+                  };
                   mmi.typeMmi.videoFilm.remake = rem2;
                 }
               }
@@ -1635,7 +1696,7 @@ export class VideoComponent implements OnInit {
               idtt: re,
               title: ''
             };
-            this.ltitileWithIdtt=this.ltitileWithIdtt.concat(twi);
+            this.ltitileWithIdtt = this.ltitileWithIdtt.concat(twi);
           }
           this.ltitileWithIdtt = this.mergeListTitleWithIdtt(this.ltitileWithIdtt);
           this.searchTitltForListTitleWithIdtt(this.ltitileWithIdtt);
@@ -1660,14 +1721,16 @@ export class VideoComponent implements OnInit {
     }
     return ltwi;
   }
+
   private searchTitltForListTitleWithIdtt(ltitileWithIdtt: TitileWithIdttt[]) {
-    if(ltitileWithIdtt.length>0){
+    if (ltitileWithIdtt.length > 0) {
       this.searchTitltForListTitleWithIdttRecurvive(ltitileWithIdtt, 0);
     }
   }
+
   private searchTitltForListTitleWithIdttRecurvive(ltitileWithIdtt: TitileWithIdttt[], pos: number) {
 
-    if(ltitileWithIdtt[pos].title==''){
+    if (ltitileWithIdtt[pos].title == '') {
       let test = false;
       for (let id of this.tablepage.content) {
         if (id.typeMmi != null
@@ -1689,31 +1752,31 @@ export class VideoComponent implements OnInit {
                 idti.title = ti.title;
               }
             }
-            if(ltitileWithIdtt.length > (pos + 1)){
-              pos=pos+1;
+            if (ltitileWithIdtt.length > (pos + 1)) {
+              pos = pos + 1;
               this.searchTitltForListTitleWithIdttRecurvive(ltitileWithIdtt, pos);
-            }else{
-              this.ltitileWithIdtt =  ltitileWithIdtt;
+            } else {
+              this.ltitileWithIdtt = ltitileWithIdtt;
               this.updatetitlesforremake();
             }
           }, err => {
             console.log(err);
           });
-      }else{
-        if(ltitileWithIdtt.length > (pos + 1)){
-          pos=pos+1;
+      } else {
+        if (ltitileWithIdtt.length > (pos + 1)) {
+          pos = pos + 1;
           this.searchTitltForListTitleWithIdttRecurvive(ltitileWithIdtt, pos);
-        }else{
-          this.ltitileWithIdtt =  ltitileWithIdtt;
+        } else {
+          this.ltitileWithIdtt = ltitileWithIdtt;
           this.updatetitlesforremake();
         }
       }
-    }else{
-      if(ltitileWithIdtt.length > (pos + 1)){
-        pos=pos+1;
+    } else {
+      if (ltitileWithIdtt.length > (pos + 1)) {
+        pos = pos + 1;
         this.searchTitltForListTitleWithIdttRecurvive(ltitileWithIdtt, pos);
-      }else{
-        this.ltitileWithIdtt =  ltitileWithIdtt;
+      } else {
+        this.ltitileWithIdtt = ltitileWithIdtt;
         this.updatetitlesforremake();
       }
     }
@@ -1766,4 +1829,5 @@ export class VideoComponent implements OnInit {
     }
     return '';
   }
+
 }

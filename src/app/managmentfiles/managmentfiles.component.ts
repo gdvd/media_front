@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {CatalogueService} from '../catalogue.service';
 import {AppComponent} from '../app.component';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-managmentfiles',
@@ -11,6 +11,9 @@ import {FormBuilder, FormGroup} from '@angular/forms';
   styleUrls: ['./managmentfiles.component.css']
 })
 export class ManagmentfilesComponent implements OnInit {
+  private listUser: UserLightAnsSel[] = [];
+  private basketOfOneUser: Basket[] = [];
+  private currentBasket: BasketNameUser;
 
   constructor(private httpClient: HttpClient, private router: Router,
               private catalogueService: CatalogueService,
@@ -53,26 +56,27 @@ export class ManagmentfilesComponent implements OnInit {
   private onenameExport: string;
   private exportSelected: string;
   private msgret: number;
+  private listBasketName: BasketNameUser[] = [];
+  private typeExport: string[] = ["AppleScript", "bashScript", "javaOnServer"];
+  private exp: string[] = ["AppleScript", "bashScript", "javaOnServer"];
 
   ngOnInit() {
     // console.log('Load page : ' + this.appComponent.isConnected);
     this.me = '1';
     this.loadPref();
     this.getPrefBackUp();
+    this.getAllUser();
     this.addcountry = false;
     this.exportForm = this.fb.group({
       exportForm: [0]
     });
-    this.msgret=-1;
-    /*
- this.vnenameForm = this.fb.group({
-      listIdVneToName: [0]
-    });   
-     */
+    this.msgret = -1;
   }
-
-  private submitValues(value) {
-    console.log(value);
+  form = new FormGroup({
+    type: new FormControl('', Validators.required)
+  });
+  submit(){
+    console.log(this.form.value);
   }
 
   private loadPref() {
@@ -107,7 +111,7 @@ export class ManagmentfilesComponent implements OnInit {
         this.prefbackupMo = data;
         // console.log(this.prefbackupMo);
         // @ts-ignore
-        this.frequencyMovie=this.prefbackupMo.prefmap.frequency;
+        this.frequencyMovie = this.prefbackupMo.prefmap.frequency;
         //getprefbackupMo
         this.catalogueService.getRessource('/admin/getprefbackupSc')
           .subscribe(data => {
@@ -115,7 +119,7 @@ export class ManagmentfilesComponent implements OnInit {
             this.prefbackupSc = data;
             // console.log(this.prefbackupSc);
             // @ts-ignore
-            this.frequencyScore=this.prefbackupSc.prefmap.frequency;
+            this.frequencyScore = this.prefbackupSc.prefmap.frequency;
           }, err => {
             console.log(err);
           });
@@ -129,7 +133,7 @@ export class ManagmentfilesComponent implements OnInit {
   private myTab(num) {
     this.tabulation = 'tab' + num;
     this.loadPref();
-    this.getlisttoexport()
+    this.getlisttoexport();
   }
 
   private submitScanFolder(value: any) {
@@ -546,7 +550,7 @@ export class ManagmentfilesComponent implements OnInit {
       .subscribe(data => {
         // console.log(data);
         //@ts-ignore
-        this.listtoexport=data;
+        this.listtoexport = data;
       }, err => {
         console.log(err);
       });
@@ -554,62 +558,223 @@ export class ManagmentfilesComponent implements OnInit {
 
   setExportForm(event: Event) {
     //@ts-ignore
-    this.exportSelected=event.target.value;
+    this.exportSelected = event.target.value;
     // console.log(this.exportSelected);
   }
 
   exportSelection() {
-    if(this.exportSelected!=null
-      && this.exportSelected.length!=0
-      && this.listtoexport.includes(this.exportSelected)){
+    if (this.exportSelected != null
+      && this.exportSelected.length != 0
+      && this.listtoexport.includes(this.exportSelected)) {
       // console.log('true');
       this.catalogueService.postRessourceWithData('/admin/executeexport/',
         this.exportSelected)
         .subscribe(data => {
           // console.log(data);
           //@ts-ignore
-          this.msgret=data;
+          this.msgret = data;
         }, err => {
           console.log(err);
         });
-    }else{
+    } else {
       console.log('false');
     }
   }
-}
 
-/*
+  getAllUser() {
+    this.catalogueService.getRessource('/videoid/getListForScores')
+      .subscribe(data => {
+        // @ts-ignore
+        this.listUser = data;
+        this.listUser.forEach(u => {
+          u.active = false;
+        });
+      }, err => {
+        console.log(err);
+      });
+  }
 
-interface Statescan {
-  message: string,
-  extentionsNotRead: [],
-  extentionsRead: [],
-  minSizeOfVideoFile: number,
-  pathVideo: string,
-  filesRead: []
-}
+  btnSel(lu: UserLightAnsSel) {
+    this.listUser.forEach(u => {
+      u.active = false;
+    });
+    lu.active = true;
+    // console.log(this.appComponent.baskets);
+    this.basketOfOneUser = [];
+    this.catalogueService.getRessource('/admin/getBasketsOfUserWithInfo/' + lu.login)
+      .subscribe(data => {
+        // console.log(data);
+        // @ts-ignore
+        this.listBasketName = data;
+      }, err => {
+        console.log(err);
+      });
+    /*this.appComponent.baskets.forEach(b=>{
+      if(b.id.idMyUser==lu.idMyUser){
+        this.basketOfOneUser = this.basketOfOneUser.concat(b);
+      }
+    });
+    let lst = this.appComponent.getAllBaskets('', lu.login);
+    console.log(lst);*/
 
-interface Preferences {
-  dateModifPref: string,
-  extset: string[],
-  idPreferences: string,
-  minSizeOfVideoFile: number,
-  pathIdVideo: string,
-  urlAffichiche: string,
-  itemToSearches: [],
-  prefmap: {}
-}
+  }
 
-interface MyNameExport {
-  active: boolean,
-  complete: boolean,
-  dateModifNameExport: string,
-  idVideoNameExport: number,
-  nameExport: string
-}
+  basketSel(lbn: BasketNameUser) {
+    this.listBasketName.forEach(b => {
+      if (b.basketName === lbn.basketName) {
+        b.active = true;
+      } else {
+        b.active = false;
+      }
+      // console.log(b);
+    });
+  }
 
-interface FilesReadToExport {
-  filePath: string,
-  state: number
+  onebasketisselected() {
+    let test = false;
+    this.listBasketName.forEach(b => {
+      if (b.active) {
+        test = true;
+        this.currentBasket = b;
+      }
+    });
+    return test;
+  }
+
+  inGMK(size: number) {
+    return this.appComponent.inGMK(size);
+  }
+
+  onCheckboxGroupChange(nameVne: string, active: boolean) {
+    this.seactiveOneImport(nameVne, active);
+    this.duplicateIdSearch();
+  }
+
+  onCheckboxElementChange(nameVne: string, title: string, path: string,
+                          idmmi: string, active: boolean) {
+    this.deactiveOneElement(nameVne, title, path, idmmi, active);
+    this.duplicateIdSearch();
+  }
+
+  getInfo() {
+    console.log(this.listBasketName);
+  }
+
+  getSizeTotal() {
+    let nb = 0;
+    this.listBasketName.forEach(b => {
+      if (b.active) {
+        nb = b.size;
+      }
+    });
+    return this.inGMK(nb);
+  }
+
+  private seactiveOneImport(nameVne: string, active: boolean) {
+    for (let i = 0; i < this.listBasketName.length; i++) {
+      if (this.listBasketName[i].active) {
+        for (let j = 0; j < this.listBasketName[i].limportuser.length; j++) {
+          if (this.listBasketName[i].limportuser[j].nameVne === nameVne) {
+            for (let k = 0; k < this.listBasketName[i].limportuser[j].lmmiuser.length; k++) {
+              if (active) {
+                this.listBasketName[i].limportuser[j].active = false;
+                if (this.listBasketName[i].limportuser[j].lmmiuser[k].active) {
+                  this.deactiveOneElement(nameVne,
+                    this.listBasketName[i].limportuser[j].lmmiuser[k].title,
+                    this.listBasketName[i].limportuser[j].lmmiuser[k].path,
+                    this.listBasketName[i].limportuser[j].lmmiuser[k].idmmi,
+                    true);
+                }
+              } else {
+                this.listBasketName[i].limportuser[j].active = true;
+                if (!this.listBasketName[i].limportuser[j].lmmiuser[k].active) {
+                  this.deactiveOneElement(nameVne,
+                    this.listBasketName[i].limportuser[j].lmmiuser[k].title,
+                    this.listBasketName[i].limportuser[j].lmmiuser[k].path,
+                    this.listBasketName[i].limportuser[j].lmmiuser[k].idmmi,
+                    false);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  private deactiveOneElement(
+    nameVne: string, title: string, path: string, idmmi: string, active: boolean) {
+    for (let i = 0; i < this.listBasketName.length; i++) {
+      if (this.listBasketName[i].active) {
+        for (let j = 0; j < this.listBasketName[i].limportuser.length; j++) {
+          if (this.listBasketName[i].limportuser[j].nameVne === nameVne) {
+            for (let k = 0; k < this.listBasketName[i].limportuser[j].lmmiuser.length; k++) {
+              //Search element to (des)activate and update size
+              if (this.listBasketName[i].limportuser[j].lmmiuser[k].idmmi === idmmi &&
+                this.listBasketName[i].limportuser[j].lmmiuser[k].title === title &&
+                this.listBasketName[i].limportuser[j].lmmiuser[k].path === path) {
+                if (active) {
+                  this.listBasketName[i].limportuser[j].lmmiuser[k].active = false;
+                  this.listBasketName[i].limportuser[j].size =
+                    this.listBasketName[i].limportuser[j].size -
+                    this.listBasketName[i].limportuser[j].lmmiuser[k].size;
+                  this.listBasketName[i].size =
+                    this.listBasketName[i].size -
+                    this.listBasketName[i].limportuser[j].lmmiuser[k].size;
+                  if (this.listBasketName[i].limportuser[j].size == 0) {
+                    this.listBasketName[i].limportuser[j].active = false;
+                  }
+                } else {
+                  this.listBasketName[i].limportuser[j].lmmiuser[k].active = true;
+                  this.listBasketName[i].limportuser[j].size =
+                    this.listBasketName[i].limportuser[j].size +
+                    this.listBasketName[i].limportuser[j].lmmiuser[k].size;
+                  this.listBasketName[i].size =
+                    this.listBasketName[i].size +
+                    this.listBasketName[i].limportuser[j].lmmiuser[k].size;
+                  this.listBasketName[i].limportuser[j].active = true;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  private duplicateIdSearch() {
+    let lidDbl: string[] = [];
+    let lid: string[] = [];
+    for (let i = 0; i < this.listBasketName.length; i++) {
+      for (let j = 0; j < this.listBasketName[i].limportuser.length; j++) {
+        if (this.listBasketName[i].limportuser[j].active) {
+          for (let k = 0; k < this.listBasketName[i].limportuser[j].lmmiuser.length; k++) {
+            if (this.listBasketName[i].limportuser[j].lmmiuser[k].active) {
+              let id = this.listBasketName[i].limportuser[j].lmmiuser[k].idmmi;
+              if(lid.includes(id)){
+                if(! lidDbl.includes(id)) lidDbl = lidDbl.concat(id)
+              }else{
+                lid = lid.concat(id)
+              }
+            }
+          }
+        }
+      }
+    }
+    this.applyColorForDuplicates(lidDbl);
+  }
+
+  private applyColorForDuplicates(lidDbl: string[]) {
+    var eles = document.querySelectorAll('[id*=\'element-\']');
+    eles.forEach(e => {
+      let i = e.id.split('-')[1];
+      if (lidDbl.length > 0 && lidDbl.includes(i)) {
+        // console.log('Several duplicates');
+        e.setAttribute('style', 'color: #d02e3b;');
+      } else {
+        e.setAttribute('style', 'color: currentColor;');
+      }
+    });
+  }
+
 }
-*/

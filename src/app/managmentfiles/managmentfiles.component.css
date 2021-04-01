@@ -416,3 +416,23 @@ li.modal-element{
 .exportselect{
   width: 370px;
 }
+.inlineblock{
+  display: inline-block;
+}
+.blockbasket{
+  margin-left: 20px;
+  vertical-align: top;
+}
+.tablealign{
+  vertical-align: middle;
+  margin-bottom: 0;
+}
+.subtable{
+  padding: 0;
+}
+.tblborder{
+  /*background-color: #d02e3b;*/
+}
+.choiceexport{
+  display: block;
+}

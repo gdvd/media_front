@@ -12,7 +12,7 @@ export class TooltipComponent implements OnInit {
   @Input()
   element:jobj[];
   @Input()
-  titlevideo:Idvsp[];
+  titlevideo1:Idvsp[];
   @Input()
   elementsimple:VideoSupportPaths[];
   @Input()
@@ -44,7 +44,7 @@ export class TooltipComponent implements OnInit {
   ngOnInit() {
     this.res = [];
 
-    if(this.elementsimple != null && this.titlevideo != null){
+    if(this.elementsimple != null && this.titlevideo1 != null){
       for(let vsp of this.elementsimple){
       }
     }else{

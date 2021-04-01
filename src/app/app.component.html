@@ -8,12 +8,12 @@
 <nav class="navbar navbar-inverse fullwidth">
   <div>
     <div class="navbar-header eleinline">
-      <a class="navbar-brand" href="#">{{titleApp}}</a>
+      <a class="navbar-brand" >{{titleApp}}</a>
     </div>
     <ul class="nav navbar-nav eleinline">
       <!--      <li class="active"><a href="/">Home</a></li>-->
       <li class="dropdown" *ngIf="isAuthenticated()">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Menu
           <span class="caret"></span></a>
         <ul class="dropdown-menu">
           <li class="list-group-item" [ngClass]="currentRoute=='videoid'?'active':''" *ngIf="isUser()&&(!isAdmin())"
@@ -38,7 +38,7 @@
               (click)="onExport()">Export
           </li>
           <li class="list-group-item" [ngClass]="currentRoute=='managmentfiles'?'active':''" *ngIf="isAdmin()"
-              (click)="onManagment()">Managment
+              (click)="onManagment()">Management
           </li>
           <li class="list-group-item" [ngClass]="currentRoute=='admin'?'active':''" *ngIf="isAdmin()"
               (click)="onAdmin()">Admin
@@ -58,7 +58,7 @@
         <hr class="sepa">
         <div class="basketdirs" *ngIf="myLocalBaskets!=null && myLocalBaskets.length>0">
           <div *ngFor="let basketnametoshow of myLocalBaskets">
-            <div [ngClass]="basketnametoshow.selection?'sgreen basketdirele':'basketdirele noactivebasket'"
+            <div [ngClass]="basketnametoshow.selection?'sgreen basketactive basketdirele':'basketdirele noactivebasket'"
                  (click)="selectbasketdir(basketnametoshow.localBasketName)">
               {{basketnametoshow.localBasketName}} ({{basketnametoshow.localIdsMmi.length}})
               <span class="glyphicon glyphicon-remove removebasket sgreen"

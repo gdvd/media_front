@@ -124,6 +124,7 @@ and (max-width: 1024px){
   }
   td.columnInfoele{
     vertical-align: top;
+    width: 150px;
   }
   .alignLeft {
     white-space: nowrap;
@@ -238,9 +239,6 @@ span.otherscore{
   brightness(104%)
   contrast(97%);
 }
-td.columnInfoele{
-  alignment: right;
-}
 .sizeMedium {
   white-space: nowrap;
   display: inline-block;
@@ -320,16 +318,11 @@ td.columnSizeInfo{
 
 .optiontbl{
   display: inline-flex;
-  width: 100%;
-  /*width: 280px;*/
-  /*height: 120px;*/
+  width: auto;
   height: auto;
 }
 
-.elementoptiontbl{
-  display: inline-flex;
-  margin-left:10px;
-}
+
 .wordstosearch{
   width: 12em;
   font-size: 14px;
@@ -353,11 +346,6 @@ input.filtertitle{
 ul.inputfilter{
   position: relative;
   padding-inline-start: 0;
-  /*display: flex;*/
-  /*flex-flow: row wrap;*/
-  /*justify-content: space-between;*/
-  /*align-items: center;*/
-  /*align-content: space-around;*/
 }
 .fil{
   display: inline-block;
@@ -375,9 +363,10 @@ ul.inputfilter{
 #byname{
   display: inline-flex;
 }
-span{
-  /*font: inherit;*/
-}
+
+/*
+//////////////////////////////////////////
+*/
 .minus, .plus{
   width:25px;
   height:25px;
@@ -395,6 +384,10 @@ span{
 }
 input.elementoptiontbl{
   width: 180px;
+}
+.elementoptiontbl{
+  display: inline-flex;
+  margin-left:10px;
 }
 input.inputsize{
   font-size: 1.2em;
@@ -415,6 +408,14 @@ input {
   display: inline-block;
   vertical-align: middle;
 }
+.elementoptiontbl{
+  display: inline-flex;
+  margin-left:10px;
+}
+/*
+//////////////////////////////////////////
+*/
+
 h4.score{
   margin-top: 0px;
 }
@@ -480,6 +481,7 @@ ul {
   display: block;
 }
 .eletitle{
+  visibility: visible;
   position: relative;
   display: inline-block;
   line-height: 1.45em;

@@ -1,7 +1,6 @@
 .containertype{
   position: relative;
-  /*z-index: 1;*/
-  /*alignment: right;*/
+  width: 150px;
 }
 .iconsvg{
   position: absolute;

@@ -24,7 +24,7 @@ export class ExportComponent implements OnInit {
   public listUsers: string[];
   public nameExportRemoteRemote: any;
   private listRemoteIdmd5: string[]= [];
-  private listremotemmi:mymediainfo[];
+  private listremotemmi:MyMediaInfo[];
   private toupdate: boolean;
 
   constructor(private httpClient: HttpClient,
@@ -93,7 +93,7 @@ export class ExportComponent implements OnInit {
   deleteExport(e: oneVne) {
     console.log(e);
     console.log(e.nameExport);
-    console.log(e.idVideoNameExport);
+    // console.log(e.idVideoNameExport);
     if(e!=null){
       this.catalogueService.getRessource('/export/deleteExport/' + e.idVideoNameExport)
         .subscribe(data => {
@@ -160,7 +160,7 @@ export class ExportComponent implements OnInit {
 
   }
 
-  private showMmi(oneMmi: mymediainfo) {
+  private showMmi(oneMmi: MyMediaInfo) {
     let ele = window.document.getElementById('mmi' + oneMmi.idMyMediaInfo);
     ele.setAttribute('style', 'display: block');
     let listOfOptionsGeneral: string[] = ['fileSize', 'bitRate', 'codecId', 'duration', 'format',
@@ -169,13 +169,13 @@ export class ExportComponent implements OnInit {
 
   }
 
-  private hideMmi(oneMmi: mymediainfo) {
+  private hideMmi(oneMmi: MyMediaInfo) {
     let ele = window.document.getElementById('mmi' + oneMmi.idMyMediaInfo);
     ele.setAttribute('style', 'display: none');
     ele.removeChild(ele.childNodes[0]);
   }
 
-  private generateTable(ele, oneMmi: mymediainfo, listOfOptions: string[]) {
+  private generateTable(ele, oneMmi: MyMediaInfo, listOfOptions: string[]) {
     console.log('debut du tbl');
     var tbl = document.createElement('table');
     var tblBody = document.createElement('tbody');
@@ -254,8 +254,7 @@ export class ExportComponent implements OnInit {
     for (let vsp of this.remoteOneVideoExportPath) {
       this.listRemoteIdmd5 = this.listRemoteIdmd5.concat(vsp.id.idMyMediainfo);
     }
-    // console.log(remoteIdMd5);
-    console.log(this.myurl);
+    // console.log(this.myurl);
     this.catalogueService.postRessourceRemote(this.myurl, '/managment/getAllMmi',
       this.listRemoteIdmd5)
       .subscribe(data => {
@@ -277,16 +276,34 @@ export class ExportComponent implements OnInit {
         this.closeModal('modalremoteexport');
         if(name.length>1){
           console.log(this.listremotemmi);
-          this.catalogueService.postRessource('/managment/createNameExport', name)
+
+          var lMmi: number[] = [];
+          this.listremotemmi.forEach(c => {
+            if (c.typeMmi != null) {
+              lMmi = lMmi.concat(c.typeMmi.idTypeMmi);
+            }
+          });
+          this.catalogueService.postRessourceRemote(this.myurl,
+            '/videouser/getVideoFilmWithMmi', lMmi)
+            .subscribe(data => {
+              var newLinks: LinkVfTmmi[];
+              // @ts-ignore
+              newLinks = data;
+              console.log(newLinks);
+              this.catalogueService.postRessource('/managment/createNameExport', name)
             .subscribe(data=>{
               // store vne and utne (data)
               //@ts-ignore
               let myvne:mynameexport = data;
-              //################################################ add boolean to updte=no
+              const linkMmiVf: LinkMmiVf = {
+                lmmi : this.listremotemmi,
+                llvftmmi: newLinks
+              }
+              console.log(linkMmiVf);
               let nb = this.toupdate ? 1 : 0;
               this.catalogueService.postRessource('/managment/storemmi/'
                 + myvne.idVideoNameExport + '/' + this.oneExportRemote.idVideoNameExport + '/' + nb
-                , this.listremotemmi)
+                , linkMmiVf)
                 .subscribe(data=>{
                   console.log(data);
                   this.showTable();
@@ -297,30 +314,12 @@ export class ExportComponent implements OnInit {
             }, err=>{
               console.log(err);
             });
-        }
-      } else {
-        //@ts-ignore
-        let myvne:mynameexport = data;
-        if(this.toupdate==true){
-          this.closeModal('modalremoteexport');
-          let nb = this.toupdate ? 1 : 0;
-          //################################################ add boolean to updte=yes
-          this.catalogueService.postRessource('/managment/storemmi/'
-            + myvne.idVideoNameExport + '/' + this.oneExportRemote.idVideoNameExport + '/' + nb
-            , this.listremotemmi)
-            .subscribe(data=>{
-              console.log(data);
-              this.showTable();
-            }, err=>{
+          }, err=>{
               console.log(err);
             });
-
-        }else{
-          console.log('This name export remote exist');
-          this.nameExportRemoteRemote = name;
-          let target = document.getElementById('modalremoteexport');
-          target.setAttribute('style', 'display:block;');
         }
+      } else {
+        console.log("This export already exist")
       }
     }, err => {
       console.log(err);
@@ -547,7 +546,7 @@ interface idobjectvsp {
   title: string
 }
 
-interface mymediainfo {
+/*interface mymediainfo {
   idMyMediaInfo: string,
   bitrate: number,
   codecId: string,
@@ -555,27 +554,27 @@ interface mymediainfo {
   fileSize: number,
   format: string,
   height: number,
-  width,
+  width: number,
   textCount: number,
   myMediaAudios: myMediaAudio[],
   myMediaComments: object,
   myMediaTexts: object,
   videoSupportpaths: videoSupportPath[]
-}
+}*/
 
-interface myMediaAudio {
+/*interface myMediaAudio {
   bitrate: number,
   duration: number,
   format: string,
   channels: string,
   forced: boolean,
   myMediaLanguage: MyMediaLanguage
-}
+}*/
 
-interface MyMediaLanguage {
+/*interface MyMediaLanguage {
   idLanguage: number
   language: string
-}
+}*/
 
 interface userVneState {
   idVideoNameExport: number,

@@ -87,6 +87,7 @@ export class ScoreComponent implements OnInit {
       this.mycomment=this.mycomment.substring(0, 1024);
     }
     let req: ReqScore = {
+      'usr': '',
       'idtt': this.thescore.idVideo,
         'score': this.myscore,
         'comment': this.mycomment

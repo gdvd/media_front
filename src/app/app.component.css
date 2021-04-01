@@ -103,6 +103,15 @@ div.basketdirele{
   margin-right: .5em;
   margin-bottom: .5em;
 }
+.basketactive{
+  background: #242429;
+  border: 2px solid #1c1c25;
+}
+.noactivebasket{
+  color: rgba(0, 0, 0, 0.49);
+  background: #56576e;
+  border: 1px solid #1c1c25;
+}
 div.contentTbl{
   height: 70%;
   display: block;
@@ -110,21 +119,8 @@ div.contentTbl{
   /*overflow-y: auto;*/
   /*overflow : -moz-scrollbars-vertical;*/
 }
-
-.noactivebasket{
-  color: rgba(0, 0, 0, 0.49);
-  background: #56576e;
-  border: 1px solid #1c1c25;
-}
-/*.activebasket{
-  !*color: #047b05;*!
-  color: rgba(20, 158, 56, 0.66);
-  !*background: #001f03;*!
-  border: 1px solid #009c01;
-}*/
 .table{
   color: #c8c8c8;
-
 }
 ul.dropdown-menu{
   padding: 0px;
@@ -136,6 +132,16 @@ ul.dropdown-menu{
 .toright{
   float: right;
   position: relative;
+}
+button.btnSeltype{
+  padding: 2px 10px;
+  margin: 8px ;
+}
+.btntoLeft{
+  float: left;
+}
+.btnToright{
+  float: right;
 }
 .fullwidth{
   width: 100%;
@@ -182,4 +188,76 @@ div.contentbasket::before {
   border-style: solid;
   border-color: transparent transparent #4b4b4b
    transparent;
+}
+.minus, .plus{
+  width:25px;
+  height:25px;
+  background:#f2f2f2;
+  border-radius:4px;
+  padding:3px 3px 3px 3px;
+  border:1px solid #ddd;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  margin-block-start: 0.5em;
+  margin-block-end: 0.5em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+input.inputsize{
+  font-size: 1.2em;
+  width: 80px;
+  height: 25px;
+  margin-block-start: 0.5em;
+  margin-block-end: 0.5em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+.elementoptiontbl{
+  display: inline-flex;
+  margin-left:10px;
+}
+.minus, .plus{
+  width:25px;
+  height:25px;
+  background:#f2f2f2;
+  border-radius:4px;
+  padding:3px 3px 3px 3px;
+  border:1px solid #ddd;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  margin-block-start: 0.5em;
+  margin-block-end: 0.5em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+input.inputsize{
+  font-size: 1.2em;
+  width: 80px;
+  height: 25px;
+  margin-block-start: 0.5em;
+  margin-block-end: 0.5em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+.elementoptiontbl{
+  display: inline-flex;
+  margin-left:10px;
+}
+input.elementoptiontbl{
+   width: 180px;
+ }
+.loader {
+  border: 4px solid rgba(243, 243, 243, 0); /* Light grey */
+  border-top: 4px solid rgba(0, 11, 110, 0.92); /* Blue */
+  border-radius: 80%;
+  width: 28px;
+  height: 28px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

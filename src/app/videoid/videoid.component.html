@@ -1,159 +1,1036 @@
-<div><section class="sectionone">
-  <aside class="asideleft elesectionone">
-    <div class="filters">
-      <div class="filter">
-        <h1>Filter</h1>
+<div>
+  <section class="sectionone">
+    <aside class="asideleft elesectionone">
+      <div class="filters">
+        <div class="filter global">
+          <div class="gauche"><h1>Filter</h1></div>
+          <div class="droite">
+            <div *ngIf="requestRun" class="loader"></div>
+            <div class="infopage" *ngIf="!requestRun&&tablepage!=null&&tablepage.content.length!=0"
+            >Page : {{tablepage.number + 1}}/{{tablepage.totalPages}} <br>
+              <div>{{tablepage.totalElements}} element<span *ngIf="tablepage.totalElements>1">s</span>
+              </div>
+            </div>
+            <span *ngIf="!requestRun" (click)="pageUp()"
+              class="glyphicon glyphicon-triangle-left btnPageUp"></span>
+            <span *ngIf="!requestRun" (click)="pageDown()"
+                  class="glyphicon glyphicon-triangle-right btnPageDown"></span>
+          </div>
+        </div>
+        <div>
+
+          <!-- TITLE -->
+          <div class="onefilter" [hidden]="!state_title">
+            <form (ngSubmit)="getPageVideo()">
+          <span class="glyphicon glyphicon-remove btnrem"
+                data-toggle="tooltip" title="erase filter"
+                (click)="callfilter('title')"></span>
+              <h4 class="textToCenter">Title Movie</h4>
+              <!-- [ngClass]="titleVideo!=null&& ... (some lines after) -> to fix the bug
+              when wen change 'keyword', the after the POST:'/videoid/newRequest'
+              titleVideo=NULL ! @#$%§ -->
+              <textarea
+                ngModel name="title_name"
+                (focusin)="focusin()" (focusout)="focusout()"
+                [(ngModel)]="titleVideo"
+                [ngClass]="titleVideo!=null&&titleVideo.length < 3 ? 'fontcolorlight' : 'fontcolorbold'"
+                (keyup)="titleChange(false)"
+                (keydown.enter)="titleChange(true)"
+                (paste)="onPaste($event.clipboardData.getData('text/plain'))"
+                type="text" class="inputfieldtitle"
+                placeholder="Filter on title">
+          </textarea>
+              <br>
+              <fieldset class="chooseboxes">
+                <legend class="choosebox" (click)="showHideCharReady()">Char.({{charsready[charsreadySel]}})&nbsp;
+                  <span
+                    [ngClass]="!showcharsready?'glyphicon glyphicon-triangle-right':'glyphicon glyphicon-triangle-bottom'"
+                  ></span></legend>
+                <ng-container *ngIf="showcharsready" class="btn-group btn-sm btnflex">
+                  <div *ngFor="let val of charsready; let i=index" class="choosebox selsbox">
+                    <button type="button"
+                            data-toggle="tooltip" [title]="i==1?'Replace ' +
+                   ', ;.…:`_!?=*+-/()[]<>$€& \nby           %':''"
+                            [ngClass]="charsreadySel==i?'btn btn-primary selbox':'btn btn-default selbox'"
+                            [disabled]="titleVideo!=null && (titleVideo.length<(i+2)) && i>0"
+                            (click)="changeValueOption('charsreadySel', i)">{{val}}
+                    </button>
+                  </div>
+                </ng-container>
+              </fieldset>
+              <fieldset class="chooseboxes">
+                <legend class="choosebox" (click)="showHidekeywordTitleIs()">Keyword
+                  ({{keywordTitleIs[keywordTitleIsSel]}})&nbsp;
+                  <span
+                    [ngClass]="!showkeywordTitleIs?'glyphicon glyphicon-triangle-right':'glyphicon glyphicon-triangle-bottom'"
+                  ></span></legend>
+                <ng-container *ngIf="showkeywordTitleIs" class="btn-group btn-sm btnflex choosebox">
+                  <div *ngFor="let valu of keywordTitleIs; let j=index" class="choosebox selsbox">
+                    <button type="reset"
+                            [ngClass]="keywordTitleIsSel==j?'btn btn-primary selbox':'btn btn-default selbox'"
+                            (click)="changeValueOption('keywordTitleIsSel', j)">{{valu}}
+                    </button>
+                  </div>
+                </ng-container>
+              </fieldset>
+              <span class="glyphicon glyphicon-remove btncleantitle colorgrey"
+                    data-toggle="tooltip" title="Clean box"
+                    (click)="cleanFilterTitle()"></span>
+              <span class="glyphicon glyphicon-info-sign btn_info_sign colorgrey"
+                    data-toggle="tooltip" title="_ replaces a single carracter
+% replace multiple characters"></span>
+              <span class="glyphicon glyphicon-ok btnoktitle colorgrey"
+                    data-toggle="tooltip" title="Search"
+                    (click)="getNewPageVideo()"></span>
+              <!--              <button class="btn btn-default valtitle"><b>OK</b></button>-->
+            </form>
+          </div>
+
+          <!-- NAME -->
+          <div class="onefilter" [hidden]="!state_name">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('name')"></span>
+            <h4 class="textToCenter">Name Artist</h4>
+            <textarea
+              ngModel name="title_name"
+              [ngClass]="nameArtist.length<4?'fontcolorlight':'fontcolorbold'"
+              [(ngModel)]="nameArtist"
+              (keyup)="nameChange()"
+              (focusin)="focusin()" (focusout)="focusout()"
+              type="text" class="inputfieldtitle"
+              placeholder="Filter on title">
+            </textarea>
+            <br>
+            <fieldset class="chooseboxes">
+              <legend class="choosebox" (click)="showHideNameReady()">Char.({{charsready[namereadySel]}})&nbsp;
+                <span
+                  [ngClass]="!showNameready?'glyphicon glyphicon-triangle-right':'glyphicon glyphicon-triangle-bottom'"
+                ></span></legend>
+              <ng-container *ngIf="showNameready" class="btn-group btn-sm btnflex">
+                <div *ngFor="let val of charsreadyName; let i=index" class="choosebox selsbox">
+                  <button type="button"
+                          [ngClass]="namereadySel==i?'btn btn-primary selbox':'btn btn-default selbox'"
+                          [disabled]="nameArtist!=null && (nameArtist.length<(i+2)) && i>0"
+                          (click)="changeValueOption('namereadySel', i)">{{val}}
+                  </button>
+                </div>
+              </ng-container>
+            </fieldset>
+            <fieldset class="chooseboxes">
+              <legend class="choosebox" (click)="showHidekeywordNameIs()">Keyword ({{keywordTitleIs[keywordNameIsSel]}})&nbsp;
+                <span
+                  [ngClass]="!showkeywordNameIs?'glyphicon glyphicon-triangle-right':'glyphicon glyphicon-triangle-bottom'"
+                ></span></legend>
+              <ng-container *ngIf="showkeywordNameIs" class="btn-group btn-sm btnflex choosebox">
+                <div *ngFor="let valu of keywordTitleIs; let j=index" class="choosebox selsbox">
+                  <button type="reset"
+                          [ngClass]="keywordNameIsSel==j?'btn btn-primary selbox':'btn btn-default selbox'"
+                          (click)="changeValueOption('keywordNameIsSel', j)">{{valu}}
+                  </button>
+                </div>
+              </ng-container>
+            </fieldset>
+            <fieldset class="chooseboxes">
+              <legend class="choosebox" (click)="showHideRoleIs()">Roles : ({{countTrue()}} sel.)&nbsp;
+                <span
+                  [ngClass]="!showRoleIs?'glyphicon glyphicon-triangle-right':'glyphicon glyphicon-triangle-bottom'"
+                ></span></legend>
+              <ng-container *ngIf="showRoleIs" class="btn-group btn-sm btnflex choosebox">
+                <div *ngFor="let key of objectKeys(roleList)" class="choosebox selsbox">
+                  <button type="reset"
+                          [ngClass]="roleList[key]?'btn btn-primary selbox':'btn btn-default selbox'"
+                          (click)="changeValueRole(key)">{{key}}
+                  </button>
+                </div>
+              </ng-container>
+            </fieldset>
+            <span class="glyphicon glyphicon-remove btncleantitle colorgrey"
+                  data-toggle="tooltip" title="Clean box"
+                  (click)="cleanFilterName()"></span>
+            <span class="glyphicon glyphicon-info-sign btn_info_sign colorgrey"
+                  data-toggle="tooltip" title="_ replaces a single carracter
+% replace multiple characters"></span>
+            <span class="glyphicon glyphicon-ok btnoktitle colorgrey"
+                  data-toggle="tooltip" title="Search"
+                  (click)="getPageVideo()"></span>
+          </div>
+
+
+          <!-- NAMESERIE -->
+          <div class="onefilter" [hidden]="!state_seriename">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('seriename')"></span>
+            <h4 class="textToCenter">SerieName</h4>
+            <textarea
+              ngModel name="seriename"
+              [(ngModel)]="seriename"
+              [ngClass]="seriename.length < 2 ? 'fontcolorlight' : 'fontcolorbold'"
+              (keyup)="serienameChange(false)"
+              (focusin)="focusin()" (focusout)="focusout()"
+              type="text" class="inputfieldtitle"
+              placeholder="Filter on seriename">
+          </textarea>
+            <fieldset class="chooseboxes">
+              <legend class="choosebox" (click)="showHidekeywordTitleSerieIs()">Keyword
+                ({{keywordTitleIs[keywordTitleSerieIsSel]}})&nbsp;
+                <span
+                  [ngClass]="!showkeywordTitleSerieIs?'glyphicon glyphicon-triangle-right':'glyphicon glyphicon-triangle-bottom'"
+                ></span></legend>
+              <ng-container *ngIf="showkeywordTitleSerieIs" class="btn-group btn-sm btnflex choosebox">
+                <div *ngFor="let valu of keywordTitleIs; let j=index" class="choosebox selsbox">
+                  <button type="reset"
+                          [ngClass]="keywordTitleSerieIsSel==j?'btn btn-primary selbox':'btn btn-default selbox'"
+                          (click)="changeValueOption('keywordTitleSerieIsSel', j)">{{valu}}
+                  </button>
+                </div>
+              </ng-container>
+            </fieldset>
+            <span class="glyphicon glyphicon-remove btncleantitle colorgrey"
+                  data-toggle="tooltip" title="Clean box"
+                  (click)="cleanFilterSeriename()"></span>
+            <span class="glyphicon glyphicon-info-sign btn_info_sign colorgrey"
+                  data-toggle="tooltip" title="_ replaces a single carracter
+% replace multiple characters"></span>
+            <span class="glyphicon glyphicon-ok btnoktitle colorgrey"
+                  data-toggle="tooltip" title="Search"
+                  (click)="serienameChange(true)"></span>
+          </div>
+
+
+          <!-- COUNTRY -->
+          <div class="onefilter" [hidden]="!state_country">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('country')"></span>
+            <h4 class="textToCenter">Country</h4>
+            <textarea
+              ngModel name="country"
+              [(ngModel)]="country"
+              [ngClass]="country.length < 2 ? 'fontcolorlight' : 'fontcolorbold'"
+              (keyup)="countryChange(false)"
+              (focusin)="focusin()" (focusout)="focusout()"
+              type="text" class="inputfieldtitle"
+              placeholder="Filter on country">
+          </textarea>
+            <fieldset class="chooseboxes">
+              <legend class="choosebox" (click)="showHidekeywordCountryIs()">Keyword
+                ({{keywordTitleIs[keywordCountryIsSel]}})&nbsp;
+                <span
+                  [ngClass]="!showkeywordCountryIs?'glyphicon glyphicon-triangle-right':'glyphicon glyphicon-triangle-bottom'"
+                ></span></legend>
+              <ng-container *ngIf="showkeywordCountryIs" class="btn-group btn-sm btnflex choosebox">
+                <div *ngFor="let value of keywordTitleIs; let k=index" class="choosebox selsbox">
+                  <button type="reset"
+                          [ngClass]="keywordCountryIsSel==k?'btn btn-primary selbox':'btn btn-default selbox'"
+                          (click)="changeValueOption('keywordCountryIsSel', k)">{{value}}
+                  </button>
+                </div>
+              </ng-container>
+            </fieldset>
+            <span class="glyphicon glyphicon-remove btncleantitle colorgrey"
+                  data-toggle="tooltip" title="Clean box"
+                  (click)="cleanFilterCountry()"></span>
+            <span class="glyphicon glyphicon-info-sign btn_info_sign colorgrey"
+                  data-toggle="tooltip" title="_ replaces a single carracter
+% replace multiple characters"></span>
+            <span class="glyphicon glyphicon-ok btnoktitle colorgrey"
+                  data-toggle="tooltip" title="Search"
+                  (click)="countryChange(true)"></span>
+          </div>
+        </div>
+
+
+        <!-- KEYWORD -->
+        <div class="onefilter" [hidden]="!state_keyword">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('keyword')"></span>
+          <h4 class="textToCenter">Keyword Film</h4>
+          <textarea
+            ngModel name="keywordfilm"
+            [(ngModel)]="keywordfilm"
+            [ngClass]="keywordfilm.length < 3 ? 'fontcolorlight' : 'fontcolorbold'"
+            (keyup)="keywordfilmChange()"
+            (focusin)="focusin()" (focusout)="focusout()"
+            type="text" class="inputfieldtitle"
+            placeholder="Filter on keywordfilm">
+          </textarea>
+          <fieldset class="chooseboxes">
+            <legend class="choosebox" (click)="showHidekeywordfilmIs()">Keyword ({{keywordTitleIs[keywordfilmIsSel]}})&nbsp;
+              <span
+                [ngClass]="!showkeywordfilmIs?'glyphicon glyphicon-triangle-right':'glyphicon glyphicon-triangle-bottom'"
+              ></span></legend>
+            <ng-container *ngIf="showkeywordfilmIs" class="btn-group btn-sm btnflex choosebox">
+              <div *ngFor="let value of keywordTitleIs; let j=index" class="choosebox selsbox">
+                <button type="reset"
+                        [ngClass]="keywordfilmIsSel==j?'btn btn-primary selbox':'btn btn-default selbox'"
+                        (click)="changeValueOption('keywordfilmIsSel', j)">{{value}}
+                </button>
+              </div>
+            </ng-container>
+          </fieldset>
+          <span class="glyphicon glyphicon-remove btncleantitle colorgrey"
+                data-toggle="tooltip" title="Clean box"
+                (click)="cleanFilterKeywordfilm()"></span>
+          <span class="glyphicon glyphicon-info-sign btn_info_sign colorgrey"
+                data-toggle="tooltip" title="_ replaces a single carracter
+% replace multiple characters"></span>
+          <span class="glyphicon glyphicon-ok btnoktitle colorgrey"
+                data-toggle="tooltip" title="Search"
+                (click)="keywordfilmChange()"></span>
+        </div>
+
+        <!-- KEYWORDS -->
+        <div id="window%keywords-parent"
+             class="onefilter"
+             [hidden]="!state_keywords">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('keywords')"></span>
+          <h4 class="textToCenter">Keywords Film</h4>
+          <textarea
+            ngModel name="keywordsfilm"
+            [(ngModel)]="keywordsfilm"
+            [ngClass]="keywordsfilm.length < 3 ? 'fontcolorlight' : 'fontcolorbold'"
+            (keyup)="keywordsfilmChange(false)"
+            (keydown.enter)="keywordsfilmChange(true)"
+            (focusin)="focusin()" (focusout)="focusout()"
+            type="text" class="inputfieldtitle"
+            placeholder="Filter on keywordfilm">
+          </textarea>
+          <span id="window%keywords-ele"
+                *ngIf="lkeywordsIsShow"
+                class="windowListKeywords">
+              <span class="glyphicon glyphicon-remove" (click)="closeWindowKeywords()"></span>
+                <div>{{lkeywords.length}} elements</div>
+              <hr>
+                  <table class="tablekeywords">
+                    <thead>
+                      <tr>
+                        <td class="colleft floatleft">Keyword</td>
+                        <td class="colright floatright"># films</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let k of lkeywords" class="onekeyword">
+                      <span class="onekeyword" (click)="keywordSelected(k)">
+                        <td class="colleft floatleft">{{k.keywordEn}}</td>
+                        <td class="colright floatright">{{k.vfsize}}</td>
+                      </span>
+                    </tr>
+                    </tbody>
+                  </table>
+            </span>
+          <span class="glyphicon glyphicon-remove btncleantitle colorgrey"
+                data-toggle="tooltip" title="Clean box"
+                (click)="cleanFilterKeywordsfilm()"></span>
+          <span class="glyphicon glyphicon-info-sign btn_info_sign colorgrey"
+                data-toggle="tooltip" title="_ replaces a single carracter
+% replace multiple characters"></span>
+          <span class="glyphicon glyphicon-ok btnoktitle colorgrey"
+                data-toggle="tooltip" title="Search"
+                (click)="keywordsfilmChange(true)"></span>
+          <fieldset class="chooseboxes">
+            <legend class="choosebox" (click)="showHidekeywordsfilmIs()">
+              Keyword ({{keywordTitleIs[charsreadyKeyworsSel]}})&nbsp;
+              <span
+                [ngClass]="!showkeywordsfilmIs?'glyphicon glyphicon-triangle-right':'glyphicon glyphicon-triangle-bottom'"
+              ></span>
+            </legend>
+            <ng-container *ngIf="showkeywordsfilmIs" class="btn-group btn-sm btnflex choosebox">
+              <div *ngFor="let value of keywordTitleIs; let j=index" class="choosebox selsbox">
+                <button type="reset"
+                        [ngClass]="charsreadyKeyworsSel==j?'btn btn-primary selbox':'btn btn-default selbox'"
+                        (click)="changeValueOptionTmp('keywordsfilmIsSel', j)">{{value}}
+                </button>
+              </div>
+            </ng-container>
+          </fieldset>
+          <div *ngIf="lkeywordsToShow.length>0">Keywords list
+            <ng-container *ngFor="let k of lkeywordsToShow">
+              <div class="eleKeywords">{{k.keywordEn}} ({{k.vfsize}})
+                <span class="glyphicon glyphicon-remove"
+                      (click)="deleteKeyword(k.idKeyword)">
+                </span></div>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Language -->
+        <div class="onefilter" [hidden]="!state_language">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('language')"></span>
+          <h4 class="textToCenter">Language</h4>
+          <textarea
+            ngModel name="keywordsfilm"
+            [(ngModel)]="language"
+            [ngClass]="language.length < 2 ? 'fontcolorlight' : 'fontcolorbold'"
+            (keyup)="languageChange(false)"
+            (keydown.enter)="languageChange(true)"
+            (focusin)="focusin()" (focusout)="focusout()"
+            type="text" class="inputfieldtitle"
+            placeholder="Filter on keywordfilm">
+          </textarea>
+          <span id="window%language-ele"
+                *ngIf="lLanguagesIsShow"
+                class="windowListKeywords">
+              <span class="glyphicon glyphicon-remove" (click)="closeWindowLanguages()"></span>
+                <div>{{lLanguages.length}} elements</div>
+              <hr>
+                  <table class="tablekeywords">
+                    <thead>
+                      <tr>
+                        <td class="colleft floatleft">Languages</td>
+                        <td class="colright floatright"># media</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let l of lLanguages" class="onekeyword">
+                      <span class="onekeyword" (click)="languageSelected(l)">
+                        <td class="colleft floatleft">{{l.language}}</td>
+                        <td class="colright floatright">{{l.nbMmi}}</td>
+                      </span>
+                    </tr>
+                    </tbody>
+                  </table>
+            </span>
+          <span class="glyphicon glyphicon-remove btncleantitle colorgrey"
+                data-toggle="tooltip" title="Clean box"
+                (click)="cleanFilterLanguagesfilm()"></span>
+          <span class="glyphicon glyphicon-info-sign btn_info_sign colorgrey"
+                data-toggle="tooltip" title="_ replaces a single carracter
+% replace multiple characters"></span>
+          <span class="glyphicon glyphicon-ok btnoktitle colorgrey"
+                data-toggle="tooltip" title="Search"
+                (click)="languageChange(true)"></span>
+          <fieldset class="chooseboxes">
+            <legend class="choosebox" (click)="showHidekeywordslanguageIs()">
+              Keyword ({{keywordTitleIs[charsreadyKeyworsSelLanguage]}})&nbsp;
+              <span
+                [ngClass]="!showkeywordslanguageIs?'glyphicon glyphicon-triangle-right':'glyphicon glyphicon-triangle-bottom'"
+              ></span>
+            </legend>
+            <ng-container *ngIf="showkeywordslanguageIs" class="btn-group btn-sm btnflex choosebox">
+              <div *ngFor="let value of keywordTitleIs; let j=index" class="choosebox selsbox">
+                <button type="reset"
+                        [ngClass]="charsreadyKeyworsSelLanguage==j?'btn btn-primary selbox':'btn btn-default selbox'"
+                        (click)="changeValueOptionTmp('keywordslanguageIsSel', j)">{{value}}
+                </button>
+              </div>
+            </ng-container>
+          </fieldset>
+          <div *ngIf="lLanguagesToShow.length>0">Languages list
+            <ng-container *ngFor="let l of lLanguagesToShow">
+              <div class="eleKeywords">{{l.language}} ({{l.nbMmi}})
+                <span class="glyphicon glyphicon-remove"
+                      (click)="deleteLanguage(l.idLanguage)">
+                </span></div>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- PAGESIZE -->
+        <div class="onefilter" [hidden]="!state_pagesize">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('pagesize')"></span>
+          <h4 class="textToCenter">Page</h4>
+          <div class="textTo">
+            <h4 class="toLeft">Size</h4>
+            <h4 class="toRight">Number</h4>
+          </div>
+          <div class="elementoptiontbl">
+            <input class="inputsize" type="text" [(ngModel)]="pageSize"
+                   (change)="dataChange('pageSize')"
+                   type="number" min="1" max="99999" required/>
+            <input class="inputsize" type="text" [(ngModel)]="pageNumber"
+                   (change)="dataChange('pageNumber')"
+                   type="number" min="1" max="99999" required/>
+          </div>
+        </div>
+
+        <!-- SCORE -->
+        <div class="onefilter" [hidden]="!state_score">
+          <span class="glyphicon glyphicon-remove btnrem"
+                data-toggle="tooltip" title="Remove"
+                (click)="callfilter('score')"></span>
+          <span (click)="showHideMenuScore()"
+                data-toggle="tooltip" title="Add user"
+                class="glyphicon glyphicon-plus-sign btnplusscore">
+            </span>
+          <div *ngIf="isMenuScoreShow"
+               class="menuUserScoreContainer">
+            <div class="menuUserScore">
+              <ul class="ulOfBtn">
+                <ng-container *ngFor="let u of RemainingListUserScore">
+                  <li *ngIf="!u.used" class="liWithoutBullet">
+                    <button class="btn btn-default btnToSel"
+                            (click)="userToScoreIsSel(u)">{{u.login}}
+                    </button>
+                  </li>
+                </ng-container>
+                <ng-container *ngIf="isRemainingListUserScoreEmpty()">
+                  <h4 class="msgToCenter">-</h4>
+                </ng-container>
+              </ul>
+            </div>
+          </div>
+          <div class="global"><h4 class="textToCenter">Score</h4>
+          </div>
+          <div class="textTo">
+            <h4 class="toLeft">min</h4>
+            <button (click)="dataChange('scoreMayNull')"
+                    [ngClass]="scoreMayNull?'btn btn-success btn-xs btnCenter':'btn btn-default btn-xs btnCenter'"
+                    class="btn btn-sm btnCenter">MayNull<span
+              [ngClass]="scoreMayNull?'glyphicon glyphicon-ok':'glyphicon glyphicon-remove'"></span></button>
+
+            <h4 class="toRight">max</h4>
+          </div>
+          <div class="elementoptiontbl">
+            <input class="inputsize" type="text" [(ngModel)]="scoreMin"
+                   (change)="dataChange('scoreMin')"
+                   type="number" min="0" max="99" required/>
+            <input class="inputsize" type="text" [(ngModel)]="scoreMax"
+                   (change)="dataChange('scoreMax')"
+                   type="number" min="0" max="99" required/>
+          </div>
+          <ng-container *ngFor="let u of RemainingListUserScore">
+            <div *ngIf="u.used">
+              <hr>
+              <div class="global"><h4 class="textToCenter">Score : {{u.login}}<span
+                class="glyphicon glyphicon-minus"
+                data-toggle="tooltip" title="Close"
+                (click)="closeUserScore(u)"></span></h4>
+              </div>
+              <div class="textTo">
+                <h4 class="toLeft">min</h4>
+                <button (click)="scoreUserChange('scoreMayNull-'+u.idMyUser)"
+                        [ngClass]="u.scoreMayNull?'btn btn-success btn-xs btnCenter':'btn btn-default btn-xs btnCenter'"
+                        class="btn btn-sm btnCenter">MayNull<span
+                  [ngClass]="u.scoreMayNull?'glyphicon glyphicon-ok':'glyphicon glyphicon-remove'"></span></button>
+                <h4 class="toRight">max</h4>
+              </div>
+              <div class="elementoptiontbl">
+                <input class="inputsize" type="text" [(ngModel)]="u.scoreMin"
+                       (change)="scoreUserChange('scoreMin-'+u.idMyUser)"
+                       type="number" min="0" max="99" required/>
+                <input class="inputsize" type="text" [(ngModel)]="u.scoreMax"
+                       (change)="scoreUserChange('scoreMax-'+u.idMyUser)"
+                       type="number" min="0" max="99" required/>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <!-- YEAR -->
+        <div class="onefilter" [hidden]="!state_year">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('year')"></span>
+          <h4 class="textToCenter">Year</h4>
+          <div class="textTo">
+            <h4 class="toLeft">min</h4>
+            <button (click)="dataChange('yearMayNull')"
+                    [ngClass]="yearMayNull?'btn btn-success btn-xs btnCenter':'btn btn-default btn-xs btnCenter'"
+                    class="btn btn-sm btnCenter">MayNull<span
+              [ngClass]="yearMayNull?'glyphicon glyphicon-ok':'glyphicon glyphicon-remove'"></span></button>
+            <h4 class="toRight">max</h4>
+          </div>
+          <div class="elementoptiontbl">
+            <input class="inputsize" type="text" [(ngModel)]="yearMin"
+                   (change)="dataChange('yearMin')"
+                   (focusin)="focusin()" (focusout)="focusout()"
+                   type="number" min="1850" max="2100" required/>
+            <input class="inputsize" type="text" [(ngModel)]="yearMax"
+                   (change)="dataChange('yearMax')"
+                   (focusin)="focusin()" (focusout)="focusout()"
+                   type="number" min="1850" max="2100" required/>
+          </div>
+        </div>
+
+        <!-- DURATION -->
+        <div class="onefilter" [hidden]="!state_duration">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('duration')"></span>
+          <h4 class="textToCenter">Duration</h4>
+          <div class="textTo">
+            <h4 class="toLeft">min</h4>
+            <h4 class="toRight">max</h4>
+          </div>
+          <div class="elementoptiontbl">
+            <input class="inputsize" type="text" [(ngModel)]="durationMin"
+                   (change)="dataChange('durationMin')"
+                   (focusin)="focusin()" (focusout)="focusout()"
+                   type="number" min="0" max="1000" required/>
+            <input class="inputsize" type="text" [(ngModel)]="durationMax"
+                   (change)="dataChange('durationMax')"
+                   (focusin)="focusin()" (focusout)="focusout()"
+                   type="number" min="0" max="1000" required/>
+          </div>
+        </div>
+
+        <!-- WIDTH -->
+        <div class="onefilter" [hidden]="!state_width">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('width')"></span>
+          <h4 class="textToCenter">Width</h4>
+          <div class="textTo">
+            <h4 class="toLeft">min</h4>
+            <h4 class="toRight">max</h4>
+          </div>
+          <div class="elementoptiontbl">
+            <input class="inputsize" type="text" [(ngModel)]="widthMin"
+                   (change)="dataChange('widthMin')"
+                   (focusin)="focusin()" (focusout)="focusout()"
+                   type="number" min="0" max="10000" required/>
+            <input class="inputsize" type="text" [(ngModel)]="widthMax"
+                   (change)="dataChange('widthMax')"
+                   (focusin)="focusin()" (focusout)="focusout()"
+                   type="number" min="0" max="10000" required/>
+          </div>
+        </div>
+
+        <!-- SEASON -->
+        <div class="onefilter" [hidden]="!state_season">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('season')"></span>
+          <h4 class="textToCenter">Season</h4>
+          <div class="textTo">
+            <h4 class="toLeft">min</h4>
+            <h4 class="toRight">max</h4>
+          </div>
+          <div class="elementoptiontbl">
+            <input class="inputsize" type="text" [(ngModel)]="seasonMin"
+                   (change)="dataChange('seasonMin')"
+                   (focusin)="focusin()" (focusout)="focusout()"
+                   type="number" min="0" max="100" required/>
+            <input class="inputsize" type="text" [(ngModel)]="seasonMax"
+                   (change)="dataChange('seasonMax')"
+                   (focusin)="focusin()" (focusout)="focusout()"
+                   type="number" min="0" max="100" required/>
+          </div>
+        </div>
+
+        <!-- EPISODE -->
+        <div class="onefilter" [hidden]="!state_episode">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('episode')"></span>
+          <h4 class="textToCenter">Episode</h4>
+          <div class="textTo">
+            <h4 class="toLeft">min</h4>
+            <h4 class="toRight">max</h4>
+          </div>
+          <div class="elementoptiontbl">
+            <input class="inputsize" type="text" [(ngModel)]="episodeMin"
+                   (change)="dataChange('episodeMin')"
+                   (focusin)="focusin()" (focusout)="focusout()"
+                   type="number" min="0" max="1000" required/>
+            <input class="inputsize" type="text" [(ngModel)]="episodeMax"
+                   (change)="dataChange('episodeMax')"
+                   (focusin)="focusin()" (focusout)="focusout()"
+                   type="number" min="0" max="1000" required/>
+          </div>
+        </div>
+
+        <!-- SORT -->
+        <div class="onefilter" [hidden]="!state_sort">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('sort')"></span>
+          <h4 class="textToCenter">Sort
+            <button (click)="toggleSort()"
+                    [ngClass]="sortOrder?'btn btn-success btn-xs btnOrderSort':'btn btn-default btn-xs btnOrderSort'"
+                    class="btn btn-sm btnOrderSort">{{sortOrder ? 'ASC' : 'DESC'}}<span
+              [ngClass]="!sortOrder?'glyphicon glyphicon-sort-by-attributes-alt':'glyphicon glyphicon-sort-by-attributes'"></span>
+            </button>
+          </h4>
+
+          <div id="listuser%toshow-parent" class="btn-group btn-sm buttonssort">
+          <ng-container *ngFor="let s of sortList; let i=index">
+            <button
+              [ngClass]="i==sortValue?'btn btn-success btn-xs btnCenter':'btn btn-default btn-xs btnCenter'"
+              ><em (click)="changeValueSort(i)">{{s}}{{i==1?' | ':''}}</em>
+              <span class="curMenu"
+              (click)="changeValueSort(-(i))"
+              *ngIf="i==1" [ngClass]="listUserIsShow?'glyphicon glyphicon-chevron-down':'glyphicon glyphicon-chevron-up'" >
+              <span class="curMenu" *ngIf="userToSort!=undefined">{{userToSort.user.substring(0, 3)}}</span>
+            </span>
+            </button>
+          </ng-container>
+          </div>
+          <div id="listuser%toshow-ele" *ngIf="listUserIsShow" class="containerListOpenUser">
+            <ul class="liWithoutBullet ulListuserSort">
+              <li (click)="userToSortSelected('DB', 0)" class="liUserSort">DB</li>
+            <ng-container *ngFor="let user of RemainingListUserScore">
+              <li (click)="userToSortSelected(user.login, user.idMyUser)" class="liUserSort">{{user.login}}</li>
+            </ng-container>
+              </ul>
+          </div>
+        </div>
+
+        <!-- TYPE -->
+        <div class="onefilter" [hidden]="!state_type">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('type')"></span>
+          <h4 class="textToCenter">Type</h4>
+          <ng-container *ngIf="typeName!=null&&typeName.length>0">
+            <fieldset class="chooseboxes">
+              <legend class="choosebox" (click)="showHideTypeIs()">Type&nbsp;({{getNumberSelectedType()}} sel.)
+                <span
+                  [ngClass]="!showTypeIs?'glyphicon glyphicon-triangle-right':'glyphicon glyphicon-triangle-bottom'"
+                ></span></legend>
+              <ng-container *ngIf="showTypeIs&&typeName!=null&&typeName.length>0">
+                <button (click)="selectAllType()" class="btn btn-default btn-sm btnSeltype btntoLeft">Select All
+                </button>
+                <button (click)="deSelectAllType()" class="btn btn-default btn-sm btnSeltype btnToright">none</button>
+                <div *ngFor="let tn of typeName; let i=index" class="choosebox selsbox">
+                  <button type="reset"
+                          [ngClass]="tn.state?'btn btn-primary selbox':'btn btn-default selbox'"
+                          (click)="changeValueTypename(tn)">{{tn.typeName}}
+                  </button>
+                </div>
+              </ng-container>
+            </fieldset>
+          </ng-container>
+        </div>
+
+        <!-- IMPORT -->
+        <div class="onefilter" [hidden]="!state_import">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('import')"></span>
+          <h4 class="textToCenter">Import</h4>
+          <ng-container *ngIf="listIdVneToName!=null&&listIdVneToName.length>0">
+            <fieldset class="chooseboxes">
+              <legend class="choosebox" (click)="showHideImportIs()">Type&nbsp;({{getNumberSelectedImport()}} sel.)
+                <span
+                  [ngClass]="!showImportIs?'glyphicon glyphicon-triangle-right':'glyphicon glyphicon-triangle-bottom'"
+                ></span></legend>
+              <ng-container *ngIf="showImportIs&&listIdVneToName!=null&&listIdVneToName.length>0">
+                <button (click)="selectAllImport()" class="btn btn-default btn-sm btnSeltype btntoLeft">Select All
+                </button>
+                <button (click)="deSelectAllImport()" class="btn btn-default btn-sm btnSeltype btnToright">none
+                </button>
+                <div *ngFor="let ivne of listIdVneToName; let i=index" class="choosebox selsbox">
+                  <button type="reset"
+                          [ngClass]="ivne.state?'btn btn-primary selbox':'btn btn-default selbox'"
+                          (click)="changeValueImport(ivne)">{{ivne.nameExport}}
+                  </button>
+                </div>
+              </ng-container>
+            </fieldset>
+          </ng-container>
+        </div>
+
+        <!-- KIND -->
+        <div class="onefilter" [hidden]="!state_kind">
+          <span class="glyphicon glyphicon-remove btnrem"
+                (click)="callfilter('kind')"></span>
+          <h4 class="textToCenter">Kind</h4>
+          <ng-container *ngIf="listVideoKind!=null&&listVideoKind.length>0">
+            <fieldset class="chooseboxes">
+              <legend class="choosebox" (click)="showHideKindIs()">Type&nbsp;({{getNumberSelectedKind()}} sel.)
+                <span
+                  [ngClass]="!showKindIs?'glyphicon glyphicon-triangle-right':'glyphicon glyphicon-triangle-bottom'"
+                ></span></legend>
+              <ng-container *ngIf="showKindIs&&listVideoKind!=null&&listVideoKind.length>0">
+                <button (click)="selectAllKind()" class="btn btn-default btn-sm btnSeltype btntoLeft">Select All
+                </button>
+                <button (click)="deSelectAllKind()" class="btn btn-default btn-sm btnSeltype btnToright">none</button>
+                <div *ngFor="let vk of listVideoKind; let i=index" class="choosebox selsbox">
+                  <button type="reset"
+                          *ngIf="vk.state<=2"
+                          [ngClass]="vk.state==1?'btn btn-primary selbox':'btn btn-default selbox'"
+                          (click)="changeValueKind(vk)">{{vk.kindEn}}
+                  </button>
+                </div>
+              </ng-container>
+            </fieldset>
+            <fieldset class="chooseboxes">
+              <legend class="choosebox" (click)="showHideKindIsNot()">And not&nbsp;({{getNumberSelectedKindNot()}} sel.)
+                <span
+                  [ngClass]="!showKindIsNot?'glyphicon glyphicon-triangle-right':'glyphicon glyphicon-triangle-bottom'"
+                ></span></legend>
+              <ng-container *ngIf="showKindIsNot&&listVideoKind!=null&&listVideoKind.length>0">
+                <button (click)="selectAllKindRemaining()" class="btn btn-default btn-sm btnSeltype btntoLeft">Select
+                  All
+                </button>
+                <button (click)="deSelectAllKindRemaining()" class="btn btn-default btn-sm btnSeltype btnToright">none
+                </button>
+                <div *ngFor="let vk of listVideoKind; let i=index" class="choosebox selsbox">
+                  <button type="reset"
+                          *ngIf="vk.state>=2"
+                          [ngClass]="vk.state==3?'btn btn-primary selbox':'btn btn-default selbox'"
+                          (click)="changeValueNotKind(vk)">{{vk.kindEn}}
+                  </button>
+                </div>
+              </ng-container>
+            </fieldset>
+          </ng-container>
+        </div>
+
+        <!-- ***************************
+          ************* ButtonS ********
+          ****************************** -->
+        <div class="elementsfilter">
+          <div id="btn_filter_country" class="elementfilter elementtoshow"
+               [hidden]="state_country"
+               (click)="callfilter('country')">
+            Country
+          </div>
+          <div id="btn_filter_duration" class="elementfilter elementtoshow"
+               [hidden]="state_duration"
+               (click)="callfilter('duration')">
+            Duration
+          </div>
+          <div id="btn_filter_episode" class="elementfilter elementtoshow"
+               [hidden]="state_episode"
+               (click)="callfilter('episode')">
+            Episode
+          </div>
+          <div id="btn_filter_import" class="elementfilter elementtoshow"
+               [hidden]="state_import"
+               (click)="callfilter('import')">
+            Import
+          </div>
+          <div id="btn_filter_kind" class="elementfilter elementtoshow"
+               [hidden]="state_kind"
+               (click)="callfilter('kind')">
+            Kind
+          </div>
+          <div id="btn_filter_keyword" class="elementfilter elementtoshow"
+               [hidden]="state_keyword"
+               (click)="callfilter('keyword')">
+            Keyword
+          </div>
+          <div id="btn_filter_keywords" class="elementfilter elementtoshow"
+               [hidden]="state_keywords"
+               (click)="callfilter('keywords')">
+            Keywords
+          </div>
+          <div id="btn_filter_language" class="elementfilter elementtoshow"
+               [hidden]="state_language"
+               (click)="callfilter('language')">
+            Lang.
+          </div>
+          <div id="btn_filter_name" class="elementfilter elementtoshow"
+               [hidden]="state_name"
+               (click)="callfilter('name')">
+            Name
+          </div>
+          <div id="btn_filter_pagesize" class="elementfilter elementtoshow0"
+               [hidden]="state_pagesize"
+               (click)="callfilter('pagesize')">
+            Pagesize
+          </div>
+          <div id="btn_filter_season" class="elementfilter elementtoshow"
+               [hidden]="state_season"
+               (click)="callfilter('season')">
+            Season
+          </div>
+          <div id="btn_filter_score" class="elementfilter elementtoshow"
+               [hidden]="state_score"
+               (click)="callfilter('score')">
+            Score
+          </div>
+          <div id="btn_filter_seriename" class="elementfilter elementtoshow"
+               [hidden]="state_seriename"
+               (click)="callfilter('seriename')">
+            Serie
+          </div>
+          <div id="btn_filter_sort" class="elementfilter elementtoshow0"
+               [hidden]="state_sort"
+               (click)="callfilter('sort')">
+            Sort
+          </div>
+          <div id="btn_filter_title" class="elementfilter elementtoshow2"
+               [hidden]="state_title"
+               (click)="callfilter('title')">
+            Title
+          </div>
+          <div id="btn_filter_type" class="elementfilter elementtoshow"
+               [hidden]="state_type"
+               (click)="callfilter('type')">
+            Type
+          </div>
+          <div id="btn_filter_width" class="elementfilter elementtoshow"
+               [hidden]="state_width"
+               (click)="callfilter('width')">
+            Width
+          </div>
+          <div id="btn_filter_year" class="elementfilter elementtoshow "
+               [hidden]="state_year"
+               (click)="callfilter('year')">
+            Year
+          </div>
+        </div>
       </div>
+    </aside>
+    <article class="elesectionone dimarticle">
+      <table *ngIf="tablepage" class="table table-striped tblvideo">
+        <!--<thead>
+        <tr>
+          <th class="colbegin eletbl colimgleft "></th>
+          <th class="colmidle eletbl"></th>
+          <th></th>
+          <th class="colend eletbl fullpeliculecell"></th>
+          <th></th>
+        </tr>
+        </thead>-->
+        <tbody>
+        <tr *ngFor="let ele  of tablepage.content">
 
-      <div class="elementsfilter">
-        <div class="elementfilter">
-          filterone</div>
-        <div class="elementfilter">
-          filtertwo</div>
-        <div class="elementfilter elementisactive">
-          filter3</div>
-        <div class="elementfilter elementisnotactive">
-          filterfour</div>
-        <div class="elementfilter">
-          filter 5</div>
-        <div class="elementfilter">
-          filter 6</div>
-        <div class="elementfilter">
-          filter 7</div>
-      </div>
-    </div>
-  </aside>
-  <article class="elesectionone dimarticle">
+          <th class="colimgleft">
+            <div class="postertoleft">
+              <div *ngIf="(ele.videoPosters.length>0&&ele.videoPosters[0].ulrImg!=null)"
+                   class="eletitle">
+                <img [src]="getUrlImgPoster(ele)"
+                     height="150" width="101" alt="Poster">
+              </div>
+            </div>
 
-    <table class="table table-striped tblvideo">
-      <thead>
-      <tr>
-        <th class="colbegin eletbl colimgleft">t1</th>
-        <th class="colmidle eletbl">t2</th>
-        <th></th>
-        <th class="colend eletbl fullpeliculecell">t3</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <th class="colimgleft">
-          <div class="postertoleft">
-            <img alt="Poster" height="150" width="101" src="https://m.media-amazon.com/images/M/MV5BNDkxODhlNmItYjhiMC00ZjNmLWE2YmMtOTQ3NmQxM2YzOGFiXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX101_CR0,0,101,150_.jpg">
-          </div>                    <th>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae mollitia praesentium quas delectus eos, ratione impedit sapiente, sunt consectetur vel nesciunt illum eius labore earum ducimus sed quisquam, reprehenderit ex.
-        Magni, eveniet asperioditndae facere nihil temporibus dolorum impedit illum possimus quas consequuntur veritatis sed ullam eum quibusdam, vel blanditiis? Numquam possimus earum officia fuga fugiat repudiandae distinctio placeat ducimus.
-        Facere, laboriosam optio. Molestiae aperiam nam mollitia soluta corporis nemo ipsa ex, dicta quas modi id labore quod provident fugit aut omnis quam, laborum laudantium illo consectetur aspernatur saepe perferendis?
-      </th>
-        <th class="fullpeliculecell peliculeCellLeft2"></th>
-        <th class="fullpeliculecell peliculeCell barbottom">
-          <!-- -->
-          <!--<div class="peliculesvg-container">
-            <img class="peliculesvg" src="src/assets/img/bar.svg" alt="">
-          </div>-->
-          <div class="postertoright">
-            <img class="imgpostertoright" alt="Poster" height="150" width="101" src="https://m.media-amazon.com/images/M/MV5BNDkxODhlNmItYjhiMC00ZjNmLWE2YmMtOTQ3NmQxM2YzOGFiXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX101_CR0,0,101,150_.jpg">
-          </div>
-          <div class="videoinfo peliculetxt vinf">
-                            <span data-toggle="tooltip" title="option-click -> info in console"
-                                  class="glyphicon glyphicon-info-sign"></span>
-            Lorem ipsum
-          </div>
+          <th class="colresume">
+          <!-- Show TitleScore -->
 
-          <div class="peliculetxt">
+          <em class="presentArtist curspointer borbot" (click)="openWindow(ele.idVideo)"
+              data-toggle="tooltip" title="Go to webPage">Titre</em><em class="presentArtist"> : </em>
+           <div class=" tooltipg ">
+              <b class="title">{{ele.videoTitles[0].title}}</b>
+              <span class="tooltiptextg" *ngIf="ele.videoTitles.length>1">
+                <ul class="libullet">
+                  <li class="titles" *ngFor="let t of ele.videoTitles; let isLast=last; let isFirst=first">
+                    {{isFirst ? '' : t.title}}
+                  </li>
+                </ul>
+            </span>
+            </div>
+            <div class="note-parrent">
+              <img class="note-child" src="../../assets/img/tableTen.png" height="32" width="42"/>
+              <em class="note-nb">
+                {{(ele.scoreOnHundred) / 10}}
+              </em>
+              <em class="note-login note-db"><b>DB</b></em>
+            </div>
+          <ng-container *ngIf="ele.videoUserScores">
+          <ng-container *ngFor="let us of ele.videoUserScores">
+            <div class="note-parrent tooltipg">
+              <img class="note-child" src="../../assets/img/tableTen.png" height="32" width="42"/>
+              <em class="note-nb">
+                {{(us.noteOnHundred / 10)}}
+              </em>
+              <em class="note-login note-user"><b>{{getLoginUserScore(us)}}</b></em>
+              <span class="tooltiptextg" *ngIf="us.commentScoreUser!=null && us.commentScoreUser.comment.length!=0">
+                {{us.commentScoreUser.comment}}
+              </span>
+            </div>
+          </ng-container>
+        </ng-container>
+          <div [id]="'userscore%'+ele.idVideo" class="idscoreuser">
+          <span
+            class="glyphicon glyphicon-edit addmodscouser"
+                data-toggle="tooltip" title="Add/Modify score"
+          (click)="addModifyScoreUser(ele)">
+          </span>
+            <div [id]="'userscore%'+ele.idVideo+'%windedit'" class="windeditus">
+                <div class="">
+                    <label>Score : </label>
+                  <select class="formgroup inblk" (change)="userSelectedChange($event, ele.idVideo)"
+                          [formGroup]="listUser">
+                    <option *ngFor="let user of RemainingListUserScore"
+                            [selected]="appComponent.user.name==user.login"
+                            [disabled]="!appComponent.isAdmin()">{{user.login}}</option>
+                  </select>
+                    <input type="number" min="0" max="99" class="inputscore inblk"
+                            ngModel name="scoreuser"
+                           [(ngModel)]="scoreuser">
+                    <button class="btnscore inblk" (click)="submitScoreUser(ele.idVideo)">Save</button>
+                </div>
+                <textarea name="" class="textareaScore"
+                  placeholder="Enter your comment"
+                          gModel name="commentScoreUser"
+                          [(ngModel)]="commentScoreUser"></textarea>
+            </div>
+          </div>
+          <em class="emyear">( <u>{{ele.year}}</u> - {{getAllCountry(ele)}} )</em>
 
-                            <span data-toggle="tooltip" title="option-click -> info in console"
-                                  class="glyphicon glyphicon-copyright-mark"></span>
-            <span data-toggle="tooltip" title="option-click -> info in console"
-                  class="glyphicon glyphicon glyphicon-volume-up"></span>
-            <span data-toggle="tooltip" title="option-click -> info in console"
-                  class="glyphicon glyphicon glyphicon glyphicon-subtitles"></span>
-            WQHD <br>
-            <span data-toggle="tooltip" title="option-click -> info in console"
-                  class="glyphicon glyphicon-copyright-mark"></span>
-            <span data-toggle="tooltip" title="option-click -> info in console"
-                  class="glyphicon glyphicon glyphicon-volume-up"></span>
-            <span data-toggle="tooltip" title="option-click -> info in console"
-                  class="glyphicon glyphicon glyphicon glyphicon-subtitles"></span>
-            WQHD <br>
-            <span data-toggle="tooltip" title="option-click -> info in console"
-                  class="glyphicon glyphicon-copyright-mark"></span>
-            <span data-toggle="tooltip" title="option-click -> info in console"
-                  class="glyphicon glyphicon glyphicon-volume-up"></span>
-            <span data-toggle="tooltip" title="option-click -> info in console"
-                  class="glyphicon glyphicon glyphicon glyphicon-subtitles"></span>
-            WQHD <br>
-            <span data-toggle="tooltip" title="option-click -> info in console"
-                  class="glyphicon glyphicon-copyright-mark"></span>
-            <span data-toggle="tooltip" title="option-click -> info in console"
-                  class="glyphicon glyphicon glyphicon-volume-up"></span>
-            <span data-toggle="tooltip" title="option-click -> info in console"
-                  class="glyphicon glyphicon glyphicon glyphicon-subtitles"></span>
-            WQHD <br>
+          <!-- Shown Director & Writer -->
+          <div class="artistDir" [id]="'directorWriter-'+ele.idVideo">
+            <em class="presentArtist curspointer borbot"
+                (click)="directorToggleSize(ele.idVideo)"
+                data-toggle="tooltip" title="Show All/Juste 1 line">Director</em>
+            <em class="presentArtist"> : </em>
+            <ng-container *ngFor="let a of getDirectorTbl(ele); let isLast=last">
+              <em class="curspoint" (click)="filterWithThisName(a)">{{a.name}}</em>
+              <em class="presentArtist">{{isLast ? '':', '}}</em>
+            </ng-container>
+            <em class="presentArtist" [id]="'writer-'+ele.idVideo"
+                (click)="writerToggleSize(ele.idVideo)"> | Writer :
+              <ng-container *ngFor="let a of getWriterTbl(ele); let isLast=last">
+                <em class="curspoint"
+                    (click)="filterWithThisName(a)">{{a.name}}</em>{{isLast ? '':', '}}
+              </ng-container>
+              </em>
           </div>
-          <!--<div class="peliculesvgend-container">
-              <img class="peliculesvgend" src="./bar.svg" alt="">
+          <!-- Shown Actors -->
+          <div class="artistAct" [id]="'actor-'+ele.idVideo">
+            <em class="presentArtist curspointer borbot"
+                data-toggle="tooltip" title="Show All/Juste 1 line"
+                (click)="actorToggleSize(ele.idVideo)"
+            >
+              Actor</em><em class="presentArtist"> : </em>
+            <ng-container *ngFor="let a of getActorTbl(ele); let isLast=last">
+              <em class="curspoint " (click)="filterWithThisName(a)">{{a.name}}</em>
+              <em class="fontlight">{{isLast ? '':', '}}</em>
+            </ng-container>
           </div>
-          https://m.media-amazon.com/images/M/MV5BYjM5YTQ0ZGYtMWExZi00MTFmLTg0YjUtZDcyMGNiYzE5MmNmL2ltYWdlXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX101_CR0,0,101,150_.jpg
-
-      -->
-        </th>
-        <th class="fullpeliculecell peliculeCellLeft2"></th>
-      </tr>
-      <tr>
-        <th class="colimgleft">
-          <div class="postertoleft">
-            <img alt="Poster" height="150" width="101" src="https://m.media-amazon.com/images/M/MV5BYjM5YTQ0ZGYtMWExZi00MTFmLTg0YjUtZDcyMGNiYzE5MmNmL2ltYWdlXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX101_CR0,0,101,150_.jpg">
-          </div>                    <th>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae mollitia praesentium quas delectus eos, ratione impedit sapiente, sunt consectetur vel nesciunt illum eius labore earum ducimus sed quisquam, reprehenderit ex.
-        Magni, eveniet asperioditndae facere nihil temporibus dolorum impedit illum possimus quas consequuntur veritatis sed ullam eum quibusdam, vel blanditiis? Numquam possimus earum officia fuga fugiat repudiandae distinctio placeat ducimus.
-        Facere, laboriosam optio. Molestiae aperiam nam mollitia soluta corporis nemo ipsa ex, dicta quas modi id labore quod provident fugit aut omnis quam, laborum laudantium illo consectetur aspernatur saepe perferendis?
-      </th>
-        <th class="fullpeliculecell peliculeCellLeft2"></th>
-        <th  class="fullpeliculecell peliculeCell barbottom">
-          <!-- -->
-          <!--<div class="peliculesvg-container">
-            <img class="peliculesvg" src="src/assets/img/bar.svg" alt="">
-          </div>-->
-          <div class="postertoright">
-            <img class="imgpostertoright" alt="Poster" height="150" width="101" src="https://m.media-amazon.com/images/M/MV5BYjM5YTQ0ZGYtMWExZi00MTFmLTg0YjUtZDcyMGNiYzE5MmNmL2ltYWdlXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX101_CR0,0,101,150_.jpg">
-          </div>
-          <div class="videoinfo peliculetxt vinf">
-                            <span data-toggle="tooltip" title="option-click -> info in console"
-                                  class="glyphicon glyphicon-info-sign"></span>
-            Lorem ipsum
+          <!-- Show Kind & Keywords -->
+          <div>
+            <em class="presentArtist">Genre : </em>
+            <ng-container *ngFor="let k of ele.videoKinds; let isLast=last">
+              {{k.kindEn}}{{isLast ? '':', '}}</ng-container>
+            <em class="presentArtist"> | Mots-clés : </em>
+            <ng-container *ngFor="let k of ele.videoKeywordSet; let isLast=last">
+              <em class="curscopy" (dblclick)="addFilterKeywords(k)">{{k.keywordEn}}</em>
+              <em class="fontlight">{{isLast ? '':', '}}</em>
+            </ng-container>
           </div>
 
-          <div class="peliculetxt">
-            <ul class="listsupp supp">
-              <li>
-                                    <span data-toggle="tooltip" title="option-click -> info in console"
-                                          class="glyphicon glyphicon-copyright-mark"></span>
-                <span data-toggle="tooltip" title="option-click -> info in console"
-                      class="glyphicon glyphicon glyphicon-volume-up"></span>
-                <span data-toggle="tooltip" title="option-click -> info in console"
-                      class="glyphicon glyphicon glyphicon glyphicon-subtitles"></span>
-                3820
-              </li>
-              <li>
-                                    <span data-toggle="tooltip" title="option-click -> info in console"
-                                          class="glyphicon glyphicon-copyright-mark"></span>
-                <span data-toggle="tooltip" title="option-click -> info in console"
-                      class="glyphicon glyphicon glyphicon-volume-up"></span>
-                <span data-toggle="tooltip" title="option-click -> info in console"
-                      class="glyphicon glyphicon glyphicon glyphicon-subtitles"></span>
-                1280
-              </li>
-            </ul>
+          <!-- Goof Trivia Budget & videoResumes -->
+          <div class="cursimple">
+            <em class="presentArtist">More : </em>
+            <ng-container *ngIf="ele.videoMoreInformation">
+              <ng-container *ngIf="ele.videoMoreInformation.informap!=null">
+                <app-tooltip [element]="ele.videoMoreInformation.informap"></app-tooltip>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="ele.videoResumes!=null&&ele.videoResumes.length>0">
+             <em *ngIf="ele.videoMoreInformation!=null&&ele.videoMoreInformation.informap.length!=0"> , </em>
+                <ng-container *ngFor="let vr of ele.videoResumes; let i=index, let isLast=last">
+                    <h5 class="tooltipg borbot resetMargin">
+                  Resume#{{i+1}}
+                      <span class="tooltiptextg">{{vr.textResume}}</span>
+                    </h5>
+                    {{isLast ? '' : ', '}}</ng-container>
+            </ng-container>
           </div>
-        </th>
-        <th class="fullpeliculecell peliculeCellLeft2"></th>
-      </tr>
-      </tbody>
-    </table>
-  </article>
-</section>
-<a href="/videoid" class="scroll-top on">
-  <span class="glyphicon glyphicon-arrow-up icon-up"></span>
-</a>
+
+          </th>
+          <th class="fullpeliculecell peliculeCellLeft2"></th>
+          <th class="fullpeliculecell peliculeCell forinfotmmi">
+
+            <div *ngIf="(ele.videoPosters.length>0&&ele.videoPosters[0].ulrImg!=null)"
+                 class="postertoright">
+              <img class="imgpostertoright" alt="Poster" height="150" width="101"
+                   style="opacity: 1;"
+                   [src]="getUrlImgPoster(ele)">
+            </div>
+
+            <ng-container *ngIf="listeMmi!=null&&listeMmi.length>0">
+              <app-typemmi (vfret)="returnvf($event)" [vf1]="ele" [lmmi1]="getListMmiPartial(ele.idmmi)"></app-typemmi>
+            </ng-container>
+
+            <div class="peliculetxt">
+
+            </div>
+          </th>
+          <th class="fullpeliculecell peliculeCellLeft2"></th>
+        </tr>
+        </tbody>
+      </table>
+    </article>
+  </section>
+  <button class="gototop" *ngIf="isShow" (click)="gotoTop()">👆</button>
 </div>

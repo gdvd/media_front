@@ -205,12 +205,15 @@
                 </span>
             <span class="infotitle" *ngIf="ele.state==0" (mouseup)="showSelectedText($event)">&nbsp;
               {{ele.videoSupportPaths[0].title}}</span><br>
-            <span class="infotitle2" *ngIf="ele.typeMmi!=null && ele.typeMmi.videoFilm!=null">
+
+            <span class="infotitle2" *ngIf="ele.typeMmi!=null">
+              <ng-container *ngIf="ele.typeMmi.videoFilm!=null">
+
                   <div class="eletitle">
                     <app-tooltip class="appinline"
                                  (filterTTcall)="oneIdTTisCall($event)"
                                  [listIdVneToName]="listIdVneToName"
-                                 [titlevideo]="ele.typeMmi.videoFilm.videoTitles"
+                                 [titlevideo1]="ele.typeMmi.videoFilm.videoTitles"
                                  [elementsimple]="ele.videoSupportPaths"
                                  [idVideo]="ele.typeMmi.videoFilm.idVideo"></app-tooltip>
                     <app-score class="appinline tblscore lineheight"
@@ -258,8 +261,6 @@
                       <!--                      <ng-container
                                               *ngIf="ele.typeMmi.videoFilm.remake">Remake : {{ele.typeMmi.videoFilm.remake}}</ng-container>-->
                       &nbsp;
-
-
                       <div class="containerdialogbox" *ngIf="ele.typeMmi!=null&&ele.typeMmi.videoFilm!=null">
                         <span data-toggle="tooltip" title="Film info"
                               class="glyphicon glyphicon-copyright-mark tooltipm"
@@ -309,6 +310,7 @@
                       </div>
                     </div>
                   </div>
+                </ng-container>
                 </span>
 
             <span *ngIf="ele.state==1"

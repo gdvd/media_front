@@ -4,6 +4,7 @@
     <li [ngClass]="tabulation=='tab2'?'active tab':'tab'" (click)="myTab(2)">Preferences</li>
     <li [ngClass]="tabulation=='tab3'?'active tab':'tab'" (click)="myTab(3)">Country of titles</li>
     <li [ngClass]="tabulation=='tab4'?'active tab':'tab'" (click)="myTab(4)">ScheduledTask</li>
+    <li [ngClass]="tabulation=='tab5'?'active tab':'tab'" (click)="myTab(5)">Export Basket</li>
   </ul>
   <div class="contentabsout">
     <div class="contentabs" *ngIf="tabulation=='tab1'">
@@ -53,9 +54,6 @@
         <!--End of modal-->
       </div>
     </div>
-    <!--<div *ngIf="compute">
-    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-  </div>-->
     <div class="contentabs" *ngIf="tabulation=='tab2'">
       <form *ngIf="pref" #f="ngForm" (ngSubmit)="submitValues(f.value)" class="tbl boxincol">
         <div class="tbl-line boxinline"><label class="tbl-ele ">Path des id(md5)</label>
@@ -89,7 +87,6 @@
           </div>
           <div class="tbl-ele extensions" *ngFor="let e of pref.extset"> {{e}} </div>
         </div>
-        <!--        <button type="submit" class="btn btn-default btnext">OK</button>-->
       </form>
     </div>
     <div class="contentabs" *ngIf="tabulation=='tab3'">
@@ -125,12 +122,6 @@
         </button>
       </div>
     </div>
-    <!--    <div class="contentabs" *ngIf="tabulation=='tab4'">
-          <div><label>Abonnement(s)</label>
-          <div><span (click)="addSubscribe()" [ngClass]="inputAddSubscribe?'glyphicon glyphicon-minus':'glyphicon glyphicon-plus'">
-          </span><input  *ngIf="inputAddSubscribe" type="text"></div>
-          </div>
-        </div>-->
     <div class="contentabs" *ngIf="tabulation=='tab4'">
       <div>
         <h2>Automatic backup</h2>
@@ -159,8 +150,6 @@
             <span (dblclick)="editValueFrequencyScore()" class="valueFreqency"><u>{{prefbackupSc.prefmap.frequency}}</u>
           </span> hour(s)
           </h5>
-<!--          <button class="exportbutton" (click)="getlisttoexport()">GetList to export</button>-->
-          <!--<div (dblclick)="importscore"></div>-->
           <select class="form-control exportselect"
                   id="selectexport"
                   (change)="setExportForm($event)"
@@ -177,5 +166,103 @@
         </div>
       </div>
     </div>
+    <div class="contentabs" *ngIf="tabulation=='tab5'">
+      <div ngif="listUser.length!=0">
+        <div class="btn-group-vertical">
+          <ng-container *ngFor="let lu of listUser">
+            <button [ngClass]="lu.active? 'btn btn-primary':'btn btn-default'"
+                    (click)="btnSel(lu)"
+            >{{lu.login}}</button>
+          </ng-container>
+            <button (click)="getInfo()">Info</button>
+        </div>
+        <ng-container *ngIf="listBasketName!=undefined&&listBasketName.length!=0">
+          <div class="inlineblock blockbasket">
+            =>
+          </div>
+          <div class="inlineblock blockbasket">
+            <div class="btn-group-vertical">
+              <ng-container *ngFor="let lbn of listBasketName">
+                <button [ngClass]="lbn.active? 'btn btn-primary':'btn btn-default'"
+                        (click)="basketSel(lbn)"
+                >{{lbn.basketName}} ({{inGMK(lbn.size)}})
+                </button>
+              </ng-container>
+            </div>
+          </div>
+
+          <ng-container *ngIf="onebasketisselected()">
+            <div class="inlineblock blockbasket">
+              =>
+            </div>
+            <div class="inlineblock blockbasket">
+              <table class="table table-striped tablealign table-bordered tblborder">
+                <thead>
+                <tr>
+                  <th>Import</th>
+                  <th>Size</th>
+                  <th>Active</th>
+                  <th>Fichier</th>
+                </tr>
+                </thead>
+                <tbody>
+                <ng-container *ngFor="let li of currentBasket.limportuser; let in=index;">
+                <tr>
+                  <td>{{li.nameVne}}</td>
+                  <td>{{inGMK(li.size)}}</td>
+                  <td><input class="form-check-input position-static"
+                             type="checkbox" aria-label="Follower input"
+                             [checked]="li.active"
+                             (change)="onCheckboxGroupChange(li.nameVne, li.active)"
+                  ></td>
+                  <td class="subtable">
+                    <table class="table table-striped tablealign">
+                      <ng-container *ngFor="let i of li.lmmiuser; let jn=index;">
+                      <tr [id]="'element-'+i.idmmi+'-'+((in+1)*1000+jn)">
+                        <td><input class="form-check-input position-static"
+                                   type="checkbox" aria-label="Follower input"
+                                   [checked]="i.active"
+                                   (change)="onCheckboxElementChange(li.nameVne, i.title, i.path, i.idmmi, i.active)"
+                                   ></td>
+                        <td>{{inGMK(i.size)}}</td>
+                        <td>{{i.title}}</td>
+                      </tr>
+                      </ng-container>
+                    </table>
+                  </td>
+                </tr>
+                </ng-container>
+                </tbody>
+              </table>
+            </div>
+            <div class="inlineblock blockbasket">
+              =>
+            </div>
+            <div class="inlineblock blockbasket">
+              <div class="btn-group-vertical">
+                <form [formGroup]="form" (ngSubmit)="submit()">
+                  <div class="form-group">
+                      <label>Type:</label>
+                    <div>
+                      <ng-container *ngFor="let t of typeExport">
+                        <label class="choiceexport">
+                          <input
+                            type="radio"
+                            value="{{t}}"
+                            formControlName="type">
+                          {{t}}
+                        </label>
+                      </ng-container>
+                    </div>
+                    <button class="btn btn-primary" type="submit" [disabled]="!form.valid">Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+
   </div>
 </div>

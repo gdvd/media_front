@@ -20,6 +20,7 @@ import { ScoreComponent } from './score/score.component';
 import { TypemediaComponent } from './typemedia/typemedia.component';
 import { FilmographyComponent } from './filmography/filmography.component';
 import { VideoidComponent } from './videoid/videoid.component';
+import { TypemmiComponent } from './typemmi/typemmi.component';
 
 
 
@@ -39,7 +40,8 @@ import { VideoidComponent } from './videoid/videoid.component';
     ScoreComponent,
     TypemediaComponent,
     FilmographyComponent,
-    VideoidComponent
+    VideoidComponent,
+    TypemmiComponent
   ],
   imports: [
     BrowserModule, FormsModule, HttpClientModule,
