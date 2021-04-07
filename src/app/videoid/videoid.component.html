@@ -907,7 +907,7 @@
           <ng-container *ngIf="ele.videoUserScores">
           <ng-container *ngFor="let us of ele.videoUserScores">
             <div class="note-parrent tooltipg">
-              <img class="note-child" src="../../assets/img/tableTen.png" height="32" width="42"/>
+              <img [ngClass]="us.commentScoreUser!=null?'note-child-color':'note-child'" src="../../assets/img/tableTen.png" height="32" width="42"/>
               <em class="note-nb">
                 {{(us.noteOnHundred / 10)}}
               </em>

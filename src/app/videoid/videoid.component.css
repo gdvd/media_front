@@ -1,35 +1,4 @@
 
-/*@media only screen and(max-width: 567px){
-  .fullpeliculecell {
-    display: none;
-  }
-  .forinfotmmi{
-    width: 235px;
-  }
-  .postertoright{
-    display: none;
-  }
-  .colimgleft{
-    display: none;
-  }
-  .sectionone{
-    display: block;
-  }
-  .elesectionone{
-    display: block;
-  }
-  .eletitle{
-    visibility: hidden;
-    display: none;
-    position: relative;
-    line-height: 1.45em;
-  }
-  .postertoleft{
-    visibility: hidden;
-    display: none;
-  }
-}*/
-
 @media only screen and (min-width: 120px) and (max-width: 1199px){
   .eletitle{
     visibility: visible;
@@ -618,17 +587,23 @@ img.note-child{
   position: absolute;
   top: -22px;
   left: -8px;
-  opacity: 1;
 }
+img.note-child-color{
+  position: absolute;
+  top: -22px;
+  left: -8px;
+  filter: brightness(0.7)
+  sepia(0.8) hue-rotate(70deg)
+  saturate(2);}
 .note-nb{
   position: absolute;
   top: -20px;
 }
 .note-login{
   position: absolute;
-  top: -6px;
-  left: -2px;
-  font-size: 10px;
+  top: -8px;
+  left: -1px;
+  font-size: 12px;
 }
 .note-db{
   color: #255625;

@@ -18,14 +18,30 @@
               <form class="modal-form" #f="ngForm" (ngSubmit)="onSubmitUser(f.value)">
                 <label>User</label>
                 <input class="form-control sizeMedium marginMedium"
+                       type="text"
                        [(ngModel)]="oneuser" name="oneuser" required>
-                <br/><label>Password</label>
+                <br/>
+
+                <label>Password</label>
                 <input class="form-control sizeMedium marginMedium"
                        [(ngModel)]="onepass1" name="onepass1" type="password" required>
-                <br/><label>Re-Type Password</label>
+                <br/>
+
+                <label>Re-Type Password</label>
                 <input class="form-control sizeMedium marginMedium"
                        [(ngModel)]="onepass2" name="onepass2" type="password" required>
                 <br/>
+
+                <label>NickName (1~8 carracteres)</label>
+                <input class="form-control sizeMedium marginMedium"
+                       [(ngModel)]="nickname" name="nickname" type="text" >
+                <br/>
+
+                <label>ApiKey (4~32 carracteres [a-zA-Z0-9_])</label>
+                <input class="form-control sizeMedium marginMedium"
+                       [(ngModel)]="apiKey" name="apiKey" type="text" >
+                <br/>
+
                 <label>Role</label>
                 <div class="modal-container">
                 <ul class="modal-container" id="theroleslist">
@@ -33,9 +49,7 @@
                         (click)="changeState(r.role)"
                         *ngFor="let r of allroles">{{r.role}}</li>
                 </ul></div>
-                <!--<select (change)="selectRole()" class="form-control" *ngFor="let r of allroles">
-                  <option value="r.role">{{r.role}}</option>
-                </select>-->
+
                 <br/>
                 <button class="btn btn-primary"
                         ng-disabled="doAuthenticate"
@@ -57,7 +71,7 @@
               <h2 class="mh1">Edit user</h2><h2><span class="mh2" (click)="closeModal('modaledituser')">×</span></h2>
             </div>
             <div class="modal-body">
-              <form class="modal-form" #f="ngForm" (ngSubmit)="onSubmitEditUser(f.value)">
+              <form class="modal-form" #g="ngForm" (ngSubmit)="onSubmitEditUser(g.value)">
                 <label>User</label>
                 <input class="form-control sizeMedium marginMedium"
                        [(ngModel)]="oneuser" name="oneuser" required>
@@ -70,6 +84,12 @@
                 <br/><label>Re-Type Password</label>
                 <input class="form-control sizeMedium marginMedium"
                        [(ngModel)]="onepass2" name="onepass2" type="password" required>
+                <br/><label>NickName (1~8 carracteres)</label>
+                <input class="form-control sizeMedium marginMedium"
+                       [(ngModel)]="nickname" name="nickname" type="text" required>
+                <br/><label>ApiKey (4~32 carracteres [a-zA-Z0-9_-])</label>
+                <input class="form-control sizeMedium marginMedium"
+                       [(ngModel)]="apiKey" name="apiKey" type="text" required>
                 <br/>
                 <label>Role</label>
                 <div class="modal-container">

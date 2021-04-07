@@ -16,6 +16,8 @@ export class AdminComponent implements OnInit {
   onepass0 = '';
   onepass1 = '';
   onepass2 = '';
+  nickname = '';
+  apiKey = '';
   roleslist = [];
   rolesusr = [];
   id: string;
@@ -49,12 +51,14 @@ export class AdminComponent implements OnInit {
     event.stopPropagation();
     this.readListOfRoles();
     let r = ar.roles;
-    // console.log(r);
+    // console.log(r, ar);
     document.addEventListener('click', this.isClicked);
     let target = document.getElementById('modaledituser');
     target.setAttribute('style', 'display:block;');
     this.id = ar.id;
     this.oneuser = ar.login;
+    this.apiKey = ar.apiKey;
+    this.nickname = ar.nickName;
     this.rolesusr = [];
     for (var i = 0; i < r.length; i++) {
       this.rolesusr = this.rolesusr.concat(r[i].role);
@@ -92,13 +96,15 @@ export class AdminComponent implements OnInit {
   }
 
   private onSubmitUser(data) {
-    // let target = document.getElementsByClassName('modal')
+    console.log(data)
     if (this.verrifyData(data)) {
-      var datausr: usr = {
+      var datausr: usradmin = {
         'id': '',
         'login': this.oneuser,
         'password': this.onepass1,
-        'roles': this.roleslist
+        'roles': this.roleslist,
+        'apiKey': this.apiKey,
+        'nickname': this.nickname
       };
       if (this.savedata(datausr)) {
         this.closeModal('modaluser2');
@@ -112,12 +118,15 @@ export class AdminComponent implements OnInit {
   }
 
   private verrifyData(data) {
+    console.log(data)
     let theroleslist = document.getElementById('theroleslist');
     var listid = theroleslist.getElementsByClassName('selected');
     this.roleslist = [];
     for (var i = 0; i < listid.length; i++) {
       this.roleslist = this.roleslist.concat(listid[i].innerHTML); //second console output
     }
+    console.log(data, this.roleslist)
+
     if (data.oneuser.length > 1
       && data.onepass1.length > 1
       && data.onepass2.length > 1
@@ -152,7 +161,7 @@ export class AdminComponent implements OnInit {
     document.getElementById('role-' + role).classList.toggle('selected');
   }
 
-  private savedata(datausr: usr) {
+  private savedata(datausr: usradmin) {
     console.log(datausr);
     this.catalogueService.postRessourceWithData('/admin/savenewuser', datausr)
       .subscribe(data => {
@@ -165,8 +174,7 @@ export class AdminComponent implements OnInit {
   }
 
   onSubmitEditUser(data: any) {
-    console.log('onSubmitEditUser Begin');
-
+    // console.log('onSubmitEditUser Begin', data);
     if (data.oneuser.length > 1
       && this.rolesusr.length != 0
       && data.onepass0.length > 1
@@ -178,8 +186,11 @@ export class AdminComponent implements OnInit {
           'login': this.oneuser,
           'passwordold': this.onepass0,
           'passwordnew': this.onepass1,
+          'apiKey': this.apiKey,
+          'nickname': this.nickname,
           'roles': this.rolesusr
         };
+        console.log('datausrnp', datausrnp);
         this.catalogueService.postRessourceWithData('/admin/changepassworduser', datausrnp)
           .subscribe(data => {
             console.log(data);
@@ -191,15 +202,18 @@ export class AdminComponent implements OnInit {
           });
 
       } else {
-        var datausr: usr = {
+        var datausr: usradmin = {
           'id': this.id,
           'login': this.oneuser,
           'password': this.onepass0,
-          'roles': this.rolesusr
+          'roles': this.rolesusr,
+          'apiKey': this.apiKey,
+          'nickname': this.nickname
         };
+        // console.log('datausr', datausr);
         this.catalogueService.postRessourceWithData('/admin/changedatauser', datausr)
           .subscribe(data => {
-            console.log(data);
+            // console.log(data);
             this.closeModal('modaledituser');
             this.onepass0 = '';
             this.findallusers();
@@ -260,17 +274,3 @@ export class AdminComponent implements OnInit {
   }
 }
 
-interface usr {
-  id: string;
-  login: string;
-  password: string;
-  roles: string[];
-}
-
-interface usrnewpassword {
-  id: string;
-  login: string;
-  passwordold: string;
-  passwordnew: string;
-  roles: string[];
-}

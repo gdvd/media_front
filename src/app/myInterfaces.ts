@@ -419,7 +419,8 @@ interface UserLight {
 interface UserLightAnsSel {
   idMyUser: number;
   login: string;
-  active: boolean
+  active: boolean;
+  nickname: string
 }
 
 interface UserLightWithScore {
@@ -428,7 +429,8 @@ interface UserLightWithScore {
   used: boolean;
   scoreMin: number;
   scoreMax: number;
-  scoreMayNull: boolean;
+  scoreMayNull: boolean;;
+  nickname: string
 }
 
 interface OneActor {
@@ -814,4 +816,21 @@ interface MmiUser{
   idmmi: string,
   size: number,
   active: boolean,
+}
+interface usradmin {
+  id: string;
+  login: string;
+  password: string;
+  apiKey: string;
+  nickname: string;
+  roles: string[];
+}
+interface usrnewpassword {
+  id: string;
+  login: string;
+  passwordold: string;
+  passwordnew: string;
+  apiKey: string;
+  nickname: string;
+  roles: string[];
 }

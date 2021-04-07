@@ -2025,6 +2025,7 @@ export class VideoidComponent implements OnInit {
     // this.listScores;
     this.catalogueService.getRessource('/videoid/getListForScores')
       .subscribe(data => {
+        // console.log(data)
         // @ts-ignore
         this.listUserScore = data;
         // @ts-ignore
@@ -2477,7 +2478,11 @@ export class VideoidComponent implements OnInit {
     if (this.RemainingListUserScore) {
       this.RemainingListUserScore.forEach(r => {
         if (r.idMyUser == us.id.idMyUser) {
-          login = r.login;
+          if(r.nickname!=null && r.nickname!= ''){
+            login = r.nickname;
+          }else{
+            login = r.login;
+          }
         }
       });
       // console.log(us.commentScoreUser)
